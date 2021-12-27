@@ -45,9 +45,11 @@
     <Compile Include="Interface\IModuleDefinitionRepository.cs" />
     <Compile Include="Interface\IServiceDefinitionService.cs" />
     <Compile Include="Interface\IModuleDefinitionService.cs" />
-    <Compile Include="Model\ModuleBootstrapAttribute.cs" />
+    <Compile Include="Interface\IServiceSession.cs" />
+    <Compile Include="Model\ServiceModuleConfigurationInstance.cs" />
     <Compile Include="Model\ModuleConfigurationDefinition.cs" />
     <Compile Include="Model\ModuleDefinition.cs" />
+    <Compile Include="Model\ServiceModuleInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\ServiceDefinition.cs" />
     <Compile Include="Model\ServiceModule.cs" />
