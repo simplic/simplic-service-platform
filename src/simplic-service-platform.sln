@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ENV", "ENV", "{97BDF73F-295
 		..\release-notes.xml = ..\release-notes.xml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Worker", "Simplic.ServicePlatform.Worker\Simplic.ServicePlatform.Worker.csproj", "{0552CE87-CC0A-41FD-9781-357E0D8B3C29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{39CD0169-1D4D-4A92-9946-7A8AB701CD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39CD0169-1D4D-4A92-9946-7A8AB701CD6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39CD0169-1D4D-4A92-9946-7A8AB701CD6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0552CE87-CC0A-41FD-9781-357E0D8B3C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0552CE87-CC0A-41FD-9781-357E0D8B3C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0552CE87-CC0A-41FD-9781-357E0D8B3C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0552CE87-CC0A-41FD-9781-357E0D8B3C29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

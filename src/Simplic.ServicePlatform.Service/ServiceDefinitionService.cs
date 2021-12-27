@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Simplic.ServicePlatform
@@ -37,7 +36,7 @@ namespace Simplic.ServicePlatform
             foreach (var service in services)
             {
                 foreach (var serviceModule in service.Modules)
-                { 
+                {
                     // Find definition
                     var moduleDefinition = modules.FirstOrDefault(x => x.Name == serviceModule.Name);
 
@@ -57,7 +56,7 @@ namespace Simplic.ServicePlatform
                     {
                         var defaultValue = moduleDefinition.ConfigurationDefinition.FirstOrDefault(x => x.Name == configuation.Name)?.Default;
 
-                        instance.Configuration.Add(new ServiceModuleConfigurationInstance 
+                        instance.Configuration.Add(new ServiceModuleConfigurationInstance
                         {
                             Name = configuation.Name,
                             Value = string.IsNullOrWhiteSpace(configuation.Value) ? defaultValue : configuation.Value
