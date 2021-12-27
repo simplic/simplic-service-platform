@@ -9,6 +9,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Service", "Simplic.ServicePlatform.Service\Simplic.ServicePlatform.Service.csproj", "{39CD0169-1D4D-4A92-9946-7A8AB701CD6C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ENV", "ENV", "{97BDF73F-295D-44E3-BFF5-F6FCC8885900}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		..\documentation_config.json = ..\documentation_config.json
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\release-notes.xml = ..\release-notes.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
