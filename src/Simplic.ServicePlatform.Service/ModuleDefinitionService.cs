@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Simplic.ServicePlatform
+namespace Simplic.ServicePlatform.Service
 {
     public class ModuleDefinitionService : IModuleDefinitionService
     {

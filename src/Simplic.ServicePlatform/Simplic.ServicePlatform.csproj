@@ -41,11 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interface\IServiceModule.cs" />
     <Compile Include="Interface\IServiceDefinitionRepository.cs" />
     <Compile Include="Interface\IModuleDefinitionRepository.cs" />
     <Compile Include="Interface\IServiceDefinitionService.cs" />
     <Compile Include="Interface\IModuleDefinitionService.cs" />
+    <Compile Include="Interface\IServiceModuleLookupService.cs" />
     <Compile Include="Interface\IServiceSession.cs" />
+    <Compile Include="Attribute\ServiceModuleAttribute.cs" />
     <Compile Include="Model\ServiceModuleConfigurationInstance.cs" />
     <Compile Include="Model\ModuleConfigurationDefinition.cs" />
     <Compile Include="Model\ModuleDefinition.cs" />
@@ -54,10 +57,11 @@
     <Compile Include="Model\ServiceDefinition.cs" />
     <Compile Include="Model\ServiceModule.cs" />
     <Compile Include="Model\ServiceModuleConfiguration.cs" />
+    <Compile Include="Model\ServiceInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Unity.Abstractions">
-      <Version>5.11.7</Version>
+      <Version>5.11.6</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

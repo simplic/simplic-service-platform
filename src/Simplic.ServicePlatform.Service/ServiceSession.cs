@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Simplic.ServicePlatform
+namespace Simplic.ServicePlatform.Service
 {
     public class ServiceSession : IServiceSession
     {

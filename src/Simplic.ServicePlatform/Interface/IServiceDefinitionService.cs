@@ -5,6 +5,6 @@ namespace Simplic.ServicePlatform
 {
     public interface IServiceDefinitionService : IServiceDefinitionRepository
     {
-        Task<IList<ServiceModuleInstance>> GetInstances(string serviceName, string machineName, string section = "default");
+        Task<ServiceInstance> GetInstances(string serviceName);
     }
 }

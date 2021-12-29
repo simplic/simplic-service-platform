@@ -27,6 +27,12 @@ namespace Simplic.ServicePlatform.Data.DB
             return Task.FromResult(result);
         }
 
+        public Task<ServiceDefinition> Get(string name)
+        {
+            var json = fileService.ReadAllText($"/services/{name}.json");
+            return Task.FromResult(JsonConvert.DeserializeObject<ServiceDefinition>(json));
+        }
+
         public Task Delete(string name)
         {
             fileService.Delete($"/services/{name}.json");
@@ -38,7 +44,7 @@ namespace Simplic.ServicePlatform.Data.DB
         {
             var json = JsonConvert.SerializeObject(service);
 
-            fileService.WriteAllText($"/services/{service.MachineName}_{service.ServiceName}_{service.Section ?? "Default"}.json", json);
+            fileService.WriteAllText($"/services/{service.ServiceName}.json", json);
 
             return Task.CompletedTask;
         }

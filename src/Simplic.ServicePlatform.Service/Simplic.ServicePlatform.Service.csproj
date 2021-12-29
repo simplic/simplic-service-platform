@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceModuleLookupService.cs" />
     <Compile Include="ServiceSession.cs" />
     <Compile Include="ModuleDefinitionService.cs" />
     <Compile Include="ServiceDefinitionService.cs" />
@@ -51,6 +52,11 @@
       <Project>{a1130bb8-71e4-4ce6-ab45-2dd3585e4877}</Project>
       <Name>Simplic.ServicePlatform</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Unity.Abstractions">
+      <Version>5.11.6</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

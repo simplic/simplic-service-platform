@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Simplic.ServicePlatform
+namespace Simplic.ServicePlatform.Service
 {
     public class ServiceDefinitionService : IServiceDefinitionService
     {
@@ -19,64 +19,58 @@ namespace Simplic.ServicePlatform
         public Task Delete(string name) => repository.Delete(name);
 
         public Task<IList<ServiceDefinition>> GetAll() => repository.GetAll();
+        public Task<ServiceDefinition> Get(string serviceName) => repository.Get(serviceName);
 
         public Task Save(ServiceDefinition service) => repository.Save(service);
 
-        public async Task<IList<ServiceModuleInstance>> GetInstances(string serviceName, string machineName, string section = "default")
+        public async Task<ServiceInstance> GetInstances(string serviceName)
         {
-            var result = new List<ServiceModuleInstance>();
+            var result = new ServiceInstance();
 
             var modules = await moduleDefinitionService.GetAll();
+            var service = await Get(serviceName);
 
-            var services = (await GetAll())
-                           .Where(x => x.MachineName?.ToLower() == machineName?.ToLower())
-                           .Where(x => x.ServiceName?.ToLower() == serviceName?.ToLower())
-                           .Where(x => x.Section?.ToLower() == section?.ToLower());
+            // TODO: Exception handling
 
-            foreach (var service in services)
+            foreach (var serviceModule in service.Modules)
             {
-                foreach (var serviceModule in service.Modules)
+                // Find definition
+                var moduleDefinition = modules.FirstOrDefault(x => x.Name == serviceModule.Name);
+
+                if (moduleDefinition == null)
+                    throw new Exception($"Could not find module definition: `{serviceModule.Name}`");
+
+                var instance = new ServiceModuleInstance
                 {
-                    // Find definition
-                    var moduleDefinition = modules.FirstOrDefault(x => x.Name == serviceModule.Name);
+                    Name = serviceModule.Name,
+                    Description = moduleDefinition.Description,
+                    Assembly = moduleDefinition.Assembly
+                };
 
-                    if (moduleDefinition == null)
-                        throw new Exception($"Could not find module definition: `{serviceModule.Name}`");
+                foreach (var configuation in serviceModule.Configuration)
+                {
+                    var defaultValue = moduleDefinition.ConfigurationDefinition.FirstOrDefault(x => x.Name == configuation.Name)?.Default;
 
-                    var instance = new ServiceModuleInstance
+                    instance.Configuration.Add(new ServiceModuleConfigurationInstance
                     {
-                        Name = serviceModule.Name,
-                        Startup = moduleDefinition.Startup,
-                        Description = moduleDefinition.Description,
-                        Type = moduleDefinition.Type,
-                        Worker = moduleDefinition.Worker
-                    };
-
-                    foreach (var configuation in serviceModule.Configuration)
-                    {
-                        var defaultValue = moduleDefinition.ConfigurationDefinition.FirstOrDefault(x => x.Name == configuation.Name)?.Default;
-
-                        instance.Configuration.Add(new ServiceModuleConfigurationInstance
-                        {
-                            Name = configuation.Name,
-                            Value = string.IsNullOrWhiteSpace(configuation.Value) ? defaultValue : configuation.Value
-                        });
-                    }
-
-                    foreach (var configuation in moduleDefinition.ConfigurationDefinition)
-                    {
-                        if (instance.Configuration.Any(x => x.Name == configuation.Name))
-                            continue;
-
-                        instance.Configuration.Add(new ServiceModuleConfigurationInstance
-                        {
-                            Name = configuation.Name,
-                            Value = configuation.Default
-                        });
-                    }
-
-                    result.Add(instance);
+                        Name = configuation.Name,
+                        Value = string.IsNullOrWhiteSpace(configuation.Value) ? defaultValue : configuation.Value
+                    });
                 }
+
+                foreach (var configuation in moduleDefinition.ConfigurationDefinition)
+                {
+                    if (instance.Configuration.Any(x => x.Name == configuation.Name))
+                        continue;
+
+                    instance.Configuration.Add(new ServiceModuleConfigurationInstance
+                    {
+                        Name = configuation.Name,
+                        Value = configuation.Default
+                    });
+                }
+
+                result.Modules.Add(instance);
             }
 
             return result;
