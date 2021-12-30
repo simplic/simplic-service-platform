@@ -1,22 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Unity;
 using Unity.Lifetime;
 
 namespace Simplic.ServicePlatform.Service
 {
+    /// <inheritdoc/>
     public class ServiceModuleLookupService : IServiceModuleLookupService
     {
         private readonly IServiceSession serviceSession;
         private readonly IUnityContainer unityContainer;
 
-        public ServiceModuleLookupService(IServiceSession serviceSession, IUnityContainer unityContainer)
+        /// <summary>
+        /// Initialize lookup service
+        /// </summary>
+        /// <param name="unityContainer">Unity container</param>
+        /// <param name="serviceSession">Actual service session instance</param>
+        public ServiceModuleLookupService(IUnityContainer unityContainer, IServiceSession serviceSession)
         {
             this.serviceSession = serviceSession;
             this.unityContainer = unityContainer;
         }
-
+        
+        /// <inheritdoc/>
         public void RegisterServices()
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()

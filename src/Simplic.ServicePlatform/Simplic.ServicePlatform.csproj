@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exception\CanNotStartRequiredModuleException.cs" />
     <Compile Include="Interface\IServiceModule.cs" />
     <Compile Include="Interface\IServiceDefinitionRepository.cs" />
     <Compile Include="Interface\IModuleDefinitionRepository.cs" />
@@ -53,10 +54,12 @@
     <Compile Include="Model\ModuleConfigurationDefinition.cs" />
     <Compile Include="Model\ModuleDefinition.cs" />
     <Compile Include="Model\ServiceModuleInstance.cs" />
+    <Compile Include="Exception\ModuleNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\ServiceDefinition.cs" />
     <Compile Include="Model\ServiceModule.cs" />
     <Compile Include="Model\ServiceModuleConfiguration.cs" />
+    <Compile Include="Exception\ServiceConfigurationNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Unity.Abstractions">
