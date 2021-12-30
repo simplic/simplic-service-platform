@@ -19,7 +19,7 @@ namespace Simplic.ServicePlatform.Data.DB
             this.fileService = fileService;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc/> 
         public Task<IList<ServiceDefinition>> GetAll()
         {
             IList<ServiceDefinition> result = new List<ServiceDefinition>();

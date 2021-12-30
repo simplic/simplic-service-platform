@@ -14,7 +14,7 @@ namespace Simplic.ServicePlatform.Service
         /// <inheritdoc/>
         public string Section { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc/> 
         public IList<ServiceModuleInstance> Modules { get; } = new List<ServiceModuleInstance>();
     }
 }
