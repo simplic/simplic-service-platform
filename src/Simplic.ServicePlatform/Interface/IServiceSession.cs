@@ -4,6 +4,9 @@ namespace Simplic.ServicePlatform
 {
     public interface IServiceSession
     {
-        IList<ServiceModuleInstance> Modules { get; set; }
+        string ServiceName { get; set; }
+        string MachineName { get; set; }
+        string Section { get; set; }
+        IList<ServiceModuleInstance> Modules { get; }
     }
 }

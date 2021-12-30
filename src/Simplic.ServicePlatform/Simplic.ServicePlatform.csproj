@@ -57,7 +57,6 @@
     <Compile Include="Model\ServiceDefinition.cs" />
     <Compile Include="Model\ServiceModule.cs" />
     <Compile Include="Model\ServiceModuleConfiguration.cs" />
-    <Compile Include="Model\ServiceInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Unity.Abstractions">

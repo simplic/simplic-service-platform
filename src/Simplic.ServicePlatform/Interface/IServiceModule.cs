@@ -6,7 +6,7 @@ namespace Simplic.ServicePlatform
 {
     public interface IServiceModule
     {
-        void Configure(IUnityContainer container, ServiceDefinition definition, ServiceModuleInstance instance);
+        void Configure(IUnityContainer container, IServiceSession serviceSession, ServiceModuleInstance instance);
         Task Start(CancellationToken cancellationToken);
         Task Stop();
     }

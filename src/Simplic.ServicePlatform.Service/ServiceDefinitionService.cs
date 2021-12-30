@@ -9,11 +9,13 @@ namespace Simplic.ServicePlatform.Service
     {
         private readonly IServiceDefinitionRepository repository;
         private readonly IModuleDefinitionService moduleDefinitionService;
+        private readonly IServiceSession serviceSession;
 
-        public ServiceDefinitionService(IServiceDefinitionRepository repository, IModuleDefinitionService moduleDefinitionService)
+        public ServiceDefinitionService(IServiceDefinitionRepository repository, IModuleDefinitionService moduleDefinitionService, IServiceSession serviceSession)
         {
             this.repository = repository;
             this.moduleDefinitionService = moduleDefinitionService;
+            this.serviceSession = serviceSession;
         }
 
         public Task Delete(string name) => repository.Delete(name);
@@ -23,16 +25,44 @@ namespace Simplic.ServicePlatform.Service
 
         public Task Save(ServiceDefinition service) => repository.Save(service);
 
-        public async Task<ServiceInstance> GetInstances(string serviceName)
+        public async Task<IServiceSession> GetInstances(string serviceName)
         {
-            var result = new ServiceInstance();
-
+            serviceSession.Modules.Clear();
             var modules = await moduleDefinitionService.GetAll();
             var service = await Get(serviceName);
 
+            var services = service.Modules.ToList();
+
+            // Load required services
+            foreach (var serviceModule in services.ToList())
+            {
+                var moduleDefinition = modules.FirstOrDefault(x => x.Name == serviceModule.Name);
+
+                if (moduleDefinition == null || moduleDefinition.Requires == null || !moduleDefinition.Requires.Any())
+                    continue;
+
+                foreach (var requiredModule in moduleDefinition.Requires)
+                {
+                    // Module already loaded
+                    if (services.Any(x => x.Name == requiredModule))
+                        continue;
+
+                    var requiredModuleDefinition = modules.FirstOrDefault(x => x.Name == requiredModule);
+
+                    if (!requiredModuleDefinition.EnableAutoStart)
+                        throw new Exception($"The required module can not be loaded automatically, because EnableAutoStart is not enabled: `{requiredModule}`");
+
+                    services.Add(new ServiceModule 
+                    {
+                        Name = requiredModuleDefinition.Name
+                    });
+                }
+            }
+
+
             // TODO: Exception handling
 
-            foreach (var serviceModule in service.Modules)
+            foreach (var serviceModule in services)
             {
                 // Find definition
                 var moduleDefinition = modules.FirstOrDefault(x => x.Name == serviceModule.Name);
@@ -46,6 +76,8 @@ namespace Simplic.ServicePlatform.Service
                     Description = moduleDefinition.Description,
                     Assembly = moduleDefinition.Assembly
                 };
+
+                var requiredServices = new List<string>();
 
                 foreach (var configuation in serviceModule.Configuration)
                 {
@@ -70,10 +102,10 @@ namespace Simplic.ServicePlatform.Service
                     });
                 }
 
-                result.Modules.Add(instance);
+                serviceSession.Modules.Add(instance);
             }
 
-            return result;
+            return serviceSession;
         }
     }
 }
