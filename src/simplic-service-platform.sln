@@ -16,13 +16,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ENV", "ENV", "{97BDF73F-295
 		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		..\documentation_config.json = ..\documentation_config.json
 		..\LICENSE = ..\LICENSE
+		..\project.repocli.json = ..\project.repocli.json
 		..\README.md = ..\README.md
 		..\release-notes.xml = ..\release-notes.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Test", "Simplic.ServicePlatform.Test\Simplic.ServicePlatform.Test.csproj", "{154944D4-6CAE-4E61-8812-199408A49872}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.PlugIn.ServicePlatform.Server", "Simplic.PlugIn.ServicePlatform.Server\Simplic.PlugIn.ServicePlatform.Server.csproj", "{35A0F7A0-F499-40E3-BA6F-80DF63B37069}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.PlugIn.ServicePlatform.Client", "Simplic.PlugIn.ServicePlatform.Client\Simplic.PlugIn.ServicePlatform.Client.csproj", "{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Client", "Simplic.ServicePlatform.Client\Simplic.ServicePlatform.Client.csproj", "{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{D4C9743C-14B5-42E1-9458-AC84F76986A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{B21F0079-EAB8-4E94-A2AF-1874AB50C781}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Simplic.ServicePlatform.Shared", "Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.shproj", "{96D05E93-D069-4040-8CDC-521305E07E8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{3BAFA57D-9364-452E-A084-3BE99F94BBBB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0A8FFC1A-6FD0-4502-9EAA-C1D4446F1298}"
+	ProjectSection(SolutionItems) = preProject
+		..\simplic-repository\services\definition\simplic.service_platform.json = ..\simplic-repository\services\definition\simplic.service_platform.json
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.projitems*{35a0f7a0-f499-40e3-ba6f-80df63b37069}*SharedItemsImports = 4
+		Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.projitems*{51b0b53b-7dc1-4fd8-bd14-7df6381d480c}*SharedItemsImports = 4
+		Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.projitems*{96d05e93-d069-4040-8cdc-521305e07e8e}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -44,9 +69,31 @@ Global
 		{154944D4-6CAE-4E61-8812-199408A49872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{154944D4-6CAE-4E61-8812-199408A49872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{154944D4-6CAE-4E61-8812-199408A49872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A1130BB8-71E4-4CE6-AB45-2DD3585E4877} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
+		{4900E298-405A-4E15-AF9C-A1F6D9A90B62} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
+		{39CD0169-1D4D-4A92-9946-7A8AB701CD6C} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
+		{154944D4-6CAE-4E61-8812-199408A49872} = {B21F0079-EAB8-4E94-A2AF-1874AB50C781}
+		{35A0F7A0-F499-40E3-BA6F-80DF63B37069} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
+		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D} = {3BAFA57D-9364-452E-A084-3BE99F94BBBB}
+		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C} = {3BAFA57D-9364-452E-A084-3BE99F94BBBB}
+		{0A8FFC1A-6FD0-4502-9EAA-C1D4446F1298} = {97BDF73F-295D-44E3-BFF5-F6FCC8885900}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9CC48-3322-44B6-ADAF-835538CBFB83}

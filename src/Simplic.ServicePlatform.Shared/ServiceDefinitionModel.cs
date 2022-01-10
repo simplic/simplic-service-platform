@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System;
 
-namespace Simplic.ServicePlatform
+namespace Simplic.ServicePlatform.Shared
 {
     /// <summary>
     /// Represents the definition/configuration of an application service (service)
     /// </summary>
-    public class ServiceDefinition
+    public class ServiceDefinitionModel
     {
         /// <summary>
         /// Gets or sets the service id
@@ -21,6 +21,6 @@ namespace Simplic.ServicePlatform
         /// <summary>
         /// Gets or sets all modules in this service
         /// </summary>
-        public IList<ServiceModule> Modules { get; set; } = new List<ServiceModule>();
+        public IList<ServiceModuleModel> Modules { get; set; } = new List<ServiceModuleModel>();
     }
 }

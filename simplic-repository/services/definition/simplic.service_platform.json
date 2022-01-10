@@ -1,0 +1,12 @@
+{
+  "name": "simplic.service_platform",
+  "description": "",
+  "assembly": "Simplic.PlugIn.ServicePlatform.Server",
+  "enableAutoStart": false,
+  "configurationDefinition": [
+
+  ],
+  "requires": [
+    "simplic.webapi"
+  ]
+}

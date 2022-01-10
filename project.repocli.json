@@ -1,0 +1,27 @@
+{
+  "settings": {
+    "connectionString": "server=setup;dbn=simplic;links=tcpip;charset=UTF-8;uid=admin;pwd=school"
+  },
+  "commands": [
+    {
+      "type": "copy",
+      "target": "src\\Simplic.PlugIn.ServicePlatform.Client\\bin\\debug\\Simplic.PlugIn.ServicePlatform.Client.dll",
+      "destination": "/bin/Simplic.PlugIn.ServicePlatform.Client.dll"
+    },
+    {
+      "type": "copy",
+      "target": "src\\Simplic.ServicePlatform.Client\\bin\\debug\\Simplic.ServicePlatform.Client.dll",
+      "destination": "/bin/Simplic.ServicePlatform.Client.dll"
+    },
+    {
+      "type": "copy",
+      "target": "src\\Simplic.PlugIn.ServicePlatform.Server\\bin\\debug\\Simplic.PlugIn.ServicePlatform.Server.dll",
+      "destination": "/bin/Simplic.PlugIn.ServicePlatform.Server.dll"
+    },
+    {
+      "type": "copy",
+      "target": "simplic-repository\\services\\definition\\simplic.service_platform.json",
+      "destination": "/services/definition/simplic.service_platform.json"
+    }
+  ]
+}
