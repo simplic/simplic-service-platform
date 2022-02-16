@@ -9,31 +9,58 @@
         d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Text="{Binding ParsedName}"
                    Foreground="DeepSkyBlue"
                    FontSize="30"/>
-        <StackPanel Grid.Row="1">
-            <telerik:RadWatermarkTextBox WatermarkContent="Name"
-                                         Text="{Binding Name}"/>
-            <telerik:RadWatermarkTextBox WatermarkContent="Description"
-                                         Text="{Binding Description}"/>
-            <telerik:RadWatermarkTextBox WatermarkContent="Assembly"
-                                         Text="{Binding Assembly}"/>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Enable Auto Start"/>
-                <telerik:RadToggleSwitchButton IsEnabled="{Binding EnableAutoStart}"/>
-            </StackPanel>
-            <telerik:RadGridView ItemsSource="{Binding Requires}"/>
-            <telerik:RadGridView ItemsSource="{Binding ConfigurationDefinition}">
-                <telerik:RadGridView.Columns>
-                    <telerik:GridViewDataColumn DataMemberBinding="{Binding Name}"/>
-                    <telerik:GridViewDataColumn DataMemberBinding="{Binding Default}"/>
-                </telerik:RadGridView.Columns>
-            </telerik:RadGridView>
-        </StackPanel>
+        <Border Grid.Row="1" CornerRadius="10" Height="auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <WrapPanel Orientation="Vertical" MinWidth="400">
+                    <StackPanel>
+                        <Label Content="Name"/>
+                        <telerik:RadWatermarkTextBox WatermarkContent="Name"
+                                                     Text="{Binding Name}"/>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Label Content="Description"/>
+                        <telerik:RadWatermarkTextBox WatermarkContent="Description"
+                                                     Text="{Binding Description}"
+                                                     Height="100"/>
+                    </StackPanel>
+                    
+                    <StackPanel>
+                        <Label Content="Assembly"/>
+                        <telerik:RadWatermarkTextBox WatermarkContent="some.assembly.example"
+                                                     Text="{Binding Assembly}"/>
+                    </StackPanel>
+                </WrapPanel>
+
+                <StackPanel Grid.Row="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Enable Auto Start"/>
+                        <telerik:RadToggleButton Content="{Binding EnableAutoStartText, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsEnabled="{Binding EnableAutoStart}"
+                                                 Height="40" Width="40"/>
+
+                    </StackPanel>
+                    <telerik:RadGridView ItemsSource="{Binding Requires}"/>
+                    <telerik:RadGridView ItemsSource="{Binding ConfigurationDefinition}">
+                        <telerik:RadGridView.Columns>
+                            <telerik:GridViewDataColumn DataMemberBinding="{Binding Name}"/>
+                            <telerik:GridViewDataColumn DataMemberBinding="{Binding Default}"/>
+                        </telerik:RadGridView.Columns>
+                    </telerik:RadGridView>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

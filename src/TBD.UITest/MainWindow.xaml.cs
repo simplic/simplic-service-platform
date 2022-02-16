@@ -22,9 +22,9 @@ namespace TBD.UITest
                 {
                     Name = "simplic.does.not.exist",
                     Description = "This plugin doesn't exist",
-                    Assembly = "simplic.plugin.doesntexist",
+                    Assembly = "simplic.plugin.some.assembly",
                     EnableAutoStart = true,
-                    Requires = new List<string>() { "a", "s", "d"},
+                    Requires = new List<string>() { "something", "something else", "someotherthing"},
                     ConfigurationDefinition = new List<ModuleConfigurationDefinition>()
                     {
                         new ModuleConfigurationDefinition() { Default = "default1", Name = "someName" },
