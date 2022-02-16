@@ -34,7 +34,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets whether autostart should be enabled for the module.
         /// </summary>
-        public bool EnableAutoStart { get => moduleDefinition.EnableAutoStart; set => moduleDefinition.EnableAutoStart = value; }
+        public bool EnableAutoStart { get => moduleDefinition.EnableAutoStart; set { moduleDefinition.EnableAutoStart = value; } }
 
         /// <summary>
         /// Gets or sets what the module requires.
@@ -50,10 +50,5 @@ namespace Simplic.ServicePlatform.UI
         /// Gets the name of the module in a more presentable format.
         /// </summary>
         public string ParsedName { get => ParseModuleName(moduleDefinition.Name); }
-
-        /// <summary>
-        /// Gets the string representing the status of EnableAutoStart.
-        /// </summary>
-        public string EnableAutoStartText { get { return moduleDefinition.EnableAutoStart ? "ON" : "OFF"; } }
     }
 }

@@ -26,6 +26,12 @@ namespace Simplic.ServicePlatform.UI
             DataContext = new ModuleViewModel(moduleDefinition);
         }
 
-
+        private void EnableAutoStart_Changed(object sender, EventArgs e)
+        {
+            ModuleViewModel viewModel = (ModuleViewModel)DataContext;
+            if (viewModel == null)
+                return;
+            EnableAutoStartText.Content = viewModel.EnableAutoStart ? "ON" : "OFF";
+        }
     }
 }
