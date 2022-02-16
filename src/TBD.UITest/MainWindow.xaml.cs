@@ -17,7 +17,7 @@ namespace TBD.UITest
         }
         public void testView(object sender, EventArgs e)
         {
-            new ServiceManagerView(
+            new ModuleView(
                 new ModuleDefinition()
                 {
                     Name = "simplic.does.not.exist",

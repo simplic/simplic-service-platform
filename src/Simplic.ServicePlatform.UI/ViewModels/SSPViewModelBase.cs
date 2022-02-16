@@ -1,24 +1,23 @@
-﻿using Simplic.ServicePlatform.Data.DB;
-using Simplic.ServicePlatform.Service;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace Simplic.ServicePlatform.UI
 {
-    /// <summary>
-    /// Interaction logic for UserControl1.xaml
-    /// </summary>
-    public partial class ServiceManagerView : Window
+    public class SSPViewModelBase : INotifyPropertyChanged
     {
         /// <summary>
-        /// Instantiates the view for the given module.
+        /// EventHandler for the PropertyChanged event.
         /// </summary>
-        public ServiceManagerView(ModuleDefinition moduleDefinition)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Invokes the PropertyChanged event for the given caller.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            //DataContext = new ServiceManagerViewModel(new ModuleDefinitionService(new ModuleDefinitionRepository(null)));
-            InitializeComponent();
-            titlebar.Text = ParseModuleName(moduleDefinition.Name);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         /// <summary>
@@ -26,7 +25,7 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         /// <param name="name">Module name</param>
         /// <returns>Parsed name</returns>
-        private string ParseModuleName(string name)
+        protected string ParseModuleName(string name)
         {
             var nameBuilder = new StringBuilder(name);
             nameBuilder[0] -= (char)32;
