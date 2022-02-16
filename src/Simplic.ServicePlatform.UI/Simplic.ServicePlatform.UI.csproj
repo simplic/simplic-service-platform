@@ -33,11 +33,14 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Printing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -46,27 +49,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Telerik.Windows.Controls, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Controls.for.Wpf.Xaml.2021.3.914\lib\net45\Telerik.Windows.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.DesignTools, Version=2021.3.914.0, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Controls.for.Wpf.Xaml.2021.3.914\lib\net45\Design\Telerik.Windows.Controls.DesignTools.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Diagrams, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Controls.Diagrams.for.Wpf.Xaml.2021.3.914\lib\net45\Telerik.Windows.Controls.Diagrams.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Diagrams.DesignTools, Version=2021.3.914.0, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Controls.Diagrams.for.Wpf.Xaml.2021.3.914\lib\net45\Design\Telerik.Windows.Controls.Diagrams.DesignTools.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Core.DesignTools, Version=2021.3.914.0, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Controls.for.Wpf.Xaml.2021.3.914\lib\net45\Design\Telerik.Windows.Core.DesignTools.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Diagrams.Core, Version=2021.3.914.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Diagrams.Core.for.Wpf.Xaml.2021.3.914\lib\net45\Telerik.Windows.Diagrams.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.SuggestedActions.DesignTools, Version=2021.3.914.0, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telerik.Windows.Controls.for.Wpf.Xaml.2021.3.914\lib\net45\Design\Telerik.Windows.SuggestedActions.DesignTools.dll</HintPath>
-    </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
@@ -86,13 +68,29 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Simplic.ServicePlatform.Data.DB\Simplic.ServicePlatform.Data.DB.csproj">
+      <Project>{4900E298-405A-4E15-AF9C-A1F6D9A90B62}</Project>
+      <Name>Simplic.ServicePlatform.Data.DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Simplic.ServicePlatform.Service\Simplic.ServicePlatform.Service.csproj">
+      <Project>{39CD0169-1D4D-4A92-9946-7A8AB701CD6C}</Project>
+      <Name>Simplic.ServicePlatform.Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Simplic.ServicePlatform\Simplic.ServicePlatform.csproj">
       <Project>{a1130bb8-71e4-4ce6-ab45-2dd3585e4877}</Project>
       <Name>Simplic.ServicePlatform</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.DesignTools.Extensibility">
+      <Version>17.0.32112.339</Version>
+    </PackageReference>
+    <PackageReference Include="Telerik.Windows.Controls.Input.for.Wpf.Xaml">
+      <Version>2021.3.914</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
