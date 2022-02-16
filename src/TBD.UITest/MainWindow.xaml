@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TBD.UITest"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="200" Width="200">
     <Grid>
-        <Button Content="CLICK" Click="testView"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Content="Open Service View" Click="OpenServiceView"/>
+        <Button Grid.Row="1" Content="Open Module View" Click="OpenModuleView"/>
     </Grid>
 </Window>

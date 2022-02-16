@@ -16,11 +16,7 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ServiceView(ServiceDefinition serviceDefinition)
         {
-            //DataContext = new ServiceManagerViewModel(new ModuleDefinitionService(new ModuleDefinitionRepository(null)));
             InitializeComponent();
-            
         }
-
-
     }
 }
