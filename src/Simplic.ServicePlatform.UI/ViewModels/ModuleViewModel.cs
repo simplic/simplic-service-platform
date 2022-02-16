@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
+using Simplic.UI.MVC;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -14,7 +16,18 @@ namespace Simplic.ServicePlatform.UI
         public ModuleViewModel(ModuleDefinition moduleDefinition)
         {
             this.moduleDefinition = moduleDefinition;
+            SaveCommand = new RelayCommand(o => Save());
         }
+
+        private void Save()
+        {
+            MessageBox.Show("not implemented");
+        }
+
+        /// <summary>
+        /// Command for saving.
+        /// </summary>
+        public ICommand SaveCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the module.
