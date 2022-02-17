@@ -17,6 +17,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceView(ServiceDefinition serviceDefinition)
         {
             InitializeComponent();
+            DataContext = new ServiceViewModel(serviceDefinition);
         }
     }
 }

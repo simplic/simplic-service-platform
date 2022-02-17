@@ -6,27 +6,73 @@
         xmlns:local="clr-namespace:Simplic.ServicePlatform.UI"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         mc:Ignorable="d" 
-        d:DesignHeight="450" d:DesignWidth="800">
+        d:DesignHeight="450" d:DesignWidth="400"
+        Height="400" Width="400"
+        MinHeight="400" MinWidth="400">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="titlebar"
-                   Foreground="DeepSkyBlue"
-                   FontSize="30"/>
-        <StackPanel Grid.Row="1">
-            <telerik:RadWatermarkTextBox WatermarkContent="Name"
-                                         Text="{Binding Name}"/>
-            <telerik:RadWatermarkTextBox WatermarkContent="Description"
-                                         Text="{Binding Description}"/>
-            <telerik:RadWatermarkTextBox WatermarkContent="Assembly"
-                                         Text="{Binding Assembly}"/>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Enable Auto Start"/>
-                <telerik:RadToggleSwitchButton IsEnabled="{Binding EnableAutoStart}"/>
-            </StackPanel>
-        </StackPanel>
+        <Border CornerRadius="2" Height="auto"
+                BorderBrush="Gray"
+                BorderThickness="1">
+            <TextBlock Text="{Binding ServiceName}"
+                       HorizontalAlignment="Center"
+                       Foreground="DeepSkyBlue"
+                       FontSize="30"/>
+        </Border>
+
+        <telerik:RadButton Grid.Row="1" Width="70"
+                           HorizontalAlignment="Left"
+                           Content="Save"
+                           Command="{Binding SaveCommand}"
+                           Margin="10,0,0,0"/>
+        <Border Grid.Row="2" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Margin="10">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="ID" Foreground="Gray"/>
+                            <TextBlock Text="{Binding Id}"
+                                       Height="25" Width="auto"/>
+                        </StackPanel>
+
+                        <StackPanel>
+                            <Label Content="Service Name" Foreground="Gray"/>
+                            <telerik:RadWatermarkTextBox WatermarkContent="some.service.name"
+                                                         Text="{Binding ServiceName}"
+                                                         Height="25" Width="auto"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Modules"
+                           FontSize="15"
+                           Foreground="Gray"/>
+                        <telerik:RadTreeListView Grid.Row="1" ItemsSource="{Binding Modules}">
+                            <telerik:RadTreeListView.ChildTableDefinitions>
+                                <telerik:TreeListViewTableDefinition ItemsSource="{Binding Configuration}" />
+                            </telerik:RadTreeListView.ChildTableDefinitions>
+                        </telerik:RadTreeListView>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
