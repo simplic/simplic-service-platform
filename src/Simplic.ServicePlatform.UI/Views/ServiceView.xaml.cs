@@ -3,6 +3,7 @@ using Simplic.ServicePlatform.Service;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using Telerik.Windows.Controls;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -14,10 +15,10 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Instantiates the view for the given module.
         /// </summary>
-        public ServiceView(ServiceDefinition serviceDefinition)
+        public ServiceView(IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
         {
             InitializeComponent();
-            DataContext = new ServiceViewModel(serviceDefinition);
+            DataContext = new ServiceViewModel(moduleDefinitionService, serviceDefinition);
         }
     }
 }

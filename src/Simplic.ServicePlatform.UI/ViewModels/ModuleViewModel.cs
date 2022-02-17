@@ -7,14 +7,16 @@ namespace Simplic.ServicePlatform.UI
 {
     public class ModuleViewModel : SSPViewModelBase
     {
+        private IModuleDefinitionService moduleDefinitionService;
         private ModuleDefinition moduleDefinition;
 
         /// <summary>
         /// Instantiates the view model.
         /// </summary>
         /// <param name="moduleDefinition">module</param>
-        public ModuleViewModel(ModuleDefinition moduleDefinition)
+        public ModuleViewModel(IModuleDefinitionService moduleDefinitionService, ModuleDefinition moduleDefinition)
         {
+            this.moduleDefinitionService = moduleDefinitionService;
             this.moduleDefinition = moduleDefinition;
             SaveCommand = new RelayCommand(o => Save());
         }

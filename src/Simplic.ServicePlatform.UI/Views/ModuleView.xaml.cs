@@ -8,10 +8,10 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ModuleView : Window
     {
-        public ModuleView(ModuleDefinition moduleDefinition)
+        public ModuleView(IModuleDefinitionService moduleDefinitionService, ModuleDefinition moduleDefinition)
         {
             InitializeComponent();
-            DataContext = new ModuleViewModel(moduleDefinition);
+            DataContext = new ModuleViewModel(moduleDefinitionService, moduleDefinition);
         }
 
         private void EnableAutoStart_Changed(object sender, EventArgs e)
@@ -20,6 +20,17 @@ namespace Simplic.ServicePlatform.UI
             if (viewModel == null)
                 return;
             EnableAutoStartText.Content = viewModel.EnableAutoStart ? "ON" : "OFF";
+        }
+
+        private void RequiredModulesList_Loaded(object sender, RoutedEventArgs e)
+        {
+            ModuleViewModel viewModel = (ModuleViewModel)DataContext;
+            if (viewModel == null)
+                return;
+
+            // maybe this shouldn't be hidden at all
+            //RequiredModulesLabel.Visibility = viewModel.Requires.Count > 0 ? Visibility.Visible : Visibility.Hidden;
+            //RequiredModulesList.Visibility = viewModel.Requires.Count > 0 ? Visibility.Visible : Visibility.Hidden;
         }
     }
 }
