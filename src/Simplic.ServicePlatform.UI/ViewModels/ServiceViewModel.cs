@@ -43,12 +43,12 @@ namespace Simplic.ServicePlatform.UI
         {
             AvailableModules = new ObservableCollection<ModuleDefinition>
             {
-                new ModuleDefinition { Name = "example.module", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "hello", Default = "nothing" } } },
-                new ModuleDefinition { Name = "example.module.two", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "hello2", Default = "nothing" } } },
-                new ModuleDefinition { Name = "example.module.three", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "hello3", Default = "nothing" } } },
-                new ModuleDefinition { Name = "example.module.four", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "hello4", Default = "nothing" } } },
-                new ModuleDefinition { Name = "example.module.five", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "hello5", Default = "nothing" } } },
-                new ModuleDefinition { Name = "example.module.six", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "hello6", Default = "nothing" } } }
+                new ModuleDefinition { Name = "example.module", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config", Default = "v" } } },
+                new ModuleDefinition { Name = "example.module.two", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config2", Default = "v2" } } },
+                new ModuleDefinition { Name = "example.module.three", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config3", Default = "v3" } } },
+                new ModuleDefinition { Name = "example.module.four", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config4", Default = "v4" } } },
+                new ModuleDefinition { Name = "example.module.five", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config5", Default = "v5" } } },
+                new ModuleDefinition { Name = "example.module.six", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config6", Default = "v6" } } }
             };
 
             ModulesDummy = new ObservableCollection<ServiceModule>() { new ServiceModule { Name = "some.service.module" } };

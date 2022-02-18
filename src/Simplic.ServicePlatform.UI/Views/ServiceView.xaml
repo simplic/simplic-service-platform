@@ -151,20 +151,22 @@
 
                             <telerik:RadListBox x:Name="SelectedModuleConfigurationsRadListBox" Grid.Column="2"
                                                 ItemsSource="{Binding SelectedServiceModuleConfiguration}"
-                                                DisplayMemberPath="Name"
                                                 AllowDrop="False"
                                                 telerik:TouchManager.IsTouchHitTestVisible="True">
-                                <telerik:RadListBox.ItemContainerStyle>
-                                    <Style TargetType="telerik:RadListBoxItem">
-                                        <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
-                                        <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
-                                        <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
-                                    </Style>
-                                </telerik:RadListBox.ItemContainerStyle>
+                                
 
-                                <telerik:RadListBox.DragDropBehavior>
-                                    <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True" />
-                                </telerik:RadListBox.DragDropBehavior>
+                                <telerik:RadListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <telerik:Label Content="{Binding Name}"/>
+                                            <telerik:RadWatermarkTextBox Grid.Column="1" Text="{Binding Value}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </telerik:RadListBox.ItemTemplate>
 
                                 <telerik:RadListBox.DragVisualProvider>
                                     <telerik:ScreenshotDragVisualProvider />

@@ -25,13 +25,11 @@ namespace Simplic.ServicePlatform.UI
             var viewModel = DataContext as ServiceViewModel;
             if (viewModel.SelectedServiceModule == null) return; //no sufficient fix, need to early return when drag&drop was inside the same container
 
-            Application.Current.Dispatcher.Invoke(async () =>
-            {
-                ModuleDefinition newAvailableModule = await moduleDefinitionService.GetByName(viewModel.SelectedServiceModule.Name);
-                viewModel.SelectedAvailableModule = newAvailableModule;
-                viewModel.AvailableModules.Add(newAvailableModule);
-                viewModel.RaisePropertyChanged(nameof(viewModel.AvailableModules));
-            });
+            var newAvailableModule = ServiceModuleToModuleDefinition(viewModel.SelectedServiceModule);
+
+            viewModel.SelectedAvailableModule = newAvailableModule;
+            viewModel.AvailableModules.Add(newAvailableModule);
+            viewModel.RaisePropertyChanged(nameof(viewModel.AvailableModules));
         }
 
         private void UsedModulesRadListBox_Drop(object sender, DragEventArgs e)
@@ -39,14 +37,7 @@ namespace Simplic.ServicePlatform.UI
             var viewModel = DataContext as ServiceViewModel;
             if (viewModel.SelectedAvailableModule == null) return;
 
-            var newServiceModule = new ServiceModule
-            {
-                Name = viewModel.SelectedAvailableModule.Name,
-                Configuration = new List<ServiceModuleConfiguration>()
-            };
-
-            foreach (var config in viewModel.SelectedAvailableModule.ConfigurationDefinition)
-                newServiceModule.Configuration.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
+            ServiceModule newServiceModule = ModuleDefinitionToServiceModule(viewModel.SelectedAvailableModule);
 
             viewModel.SelectedServiceModule = newServiceModule;
             viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModule));
@@ -55,6 +46,29 @@ namespace Simplic.ServicePlatform.UI
 
             viewModel.ModulesDummy.Add(newServiceModule);
             viewModel.RaisePropertyChanged(nameof(viewModel.ModulesDummy));
+        }
+
+        private ModuleDefinition ServiceModuleToModuleDefinition(ServiceModule serviceModule)
+        {
+            ModuleDefinition newModuleDefinition = new ModuleDefinition();
+            Application.Current.Dispatcher.Invoke(async () =>
+            {
+                newModuleDefinition = await moduleDefinitionService.GetByName(serviceModule.Name);
+            });
+            return newModuleDefinition;
+        }
+
+        private static ServiceModule ModuleDefinitionToServiceModule(ModuleDefinition moduleDefinition)
+        {
+            var newServiceModule = new ServiceModule
+            {
+                Name = moduleDefinition.Name,
+                Configuration = new List<ServiceModuleConfiguration>()
+            };
+
+            foreach (var config in moduleDefinition.ConfigurationDefinition)
+                newServiceModule.Configuration.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
+            return newServiceModule;
         }
     }
 }
