@@ -9,6 +9,7 @@
         d:DesignHeight="600" d:DesignWidth="400"
         Height="600" Width="500"
         MinHeight="300" MinWidth="400">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -62,15 +63,19 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="80"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Label Content="Modules" FontSize="15" Foreground="Gray" Grid.ColumnSpan="2"/>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"
+                        <StackPanel>
+                            <Label Content="Modules" FontSize="15" Foreground="Gray" Grid.ColumnSpan="2"/>
+                            <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"
                                     HorizontalAlignment="Right" Height="25">
                             <telerik:RadAutoCompleteBox Width="150" ItemsSource="{Binding AvailableModules}"
                                                         DisplayMemberPath="Name" SelectionMode="Single"/>
                             <telerik:RadButton Content="Add"/>
+                        </StackPanel>-->
+                            <TextBox Height="20" Text="{Binding SelectedAvailableModule.Name}"/>
+                            <TextBox Height="20" Text="{Binding SelectedServiceModule.Name}"/>
                         </StackPanel>
 
                         <!--
@@ -93,32 +98,78 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <telerik:RadListBox Grid.Column="0" ItemsSource="{Binding AvailableModules}"
-                                                DisplayMemberPath="Name">
-                                <telerik:ListBoxDragDrop.Behavior>
-                                    <telerik:ListBoxDragDropBehavior />
-                                </telerik:ListBoxDragDrop.Behavior>
-                            </telerik:RadListBox>
-
-                            <ListBox Grid.Column="1" ItemsSource="{Binding AvailableModules}"
-                                                DisplayMemberPath="Name">
-                                <ListBox.ItemContainerStyle>
-                                    <Style TargetType="ListBoxItem">
-                                        <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="Foreground" Value="#000000" />
+                            <telerik:RadListBox x:Name="AvailableModulesRadListBox" Grid.Column="0"
+                                                ItemsSource="{Binding AvailableModules}"
+                                                DisplayMemberPath="Name"
+                                                SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
+                                                AllowDrop="True"
+                                                Drop="AvailableModulesRadListBox_Drop"
+                                                telerik:TouchManager.IsTouchHitTestVisible="True">
+                                <telerik:RadListBox.ItemContainerStyle>
+                                    <Style TargetType="telerik:RadListBoxItem">
                                         <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
                                         <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
                                         <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
                                     </Style>
-                                </ListBox.ItemContainerStyle>
-                                
-                                <telerik:ListBoxDragDrop.Behavior>
-                                    <telerik:ListBoxDragDropBehavior telerik:DragDropManager.AllowDrag="True" />
-                                </telerik:ListBoxDragDrop.Behavior>
-                            </ListBox>
+                                </telerik:RadListBox.ItemContainerStyle>
+
+                                <telerik:RadListBox.DragDropBehavior>
+                                    <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True" />
+                                </telerik:RadListBox.DragDropBehavior>
+
+                                <telerik:RadListBox.DragVisualProvider>
+                                    <telerik:ScreenshotDragVisualProvider />
+                                </telerik:RadListBox.DragVisualProvider>
+                            </telerik:RadListBox>
+
+                            <telerik:RadListBox x:Name="UsedModulesRadListBox" Grid.Column="1"
+                                                ItemsSource="{Binding ModulesDummy}"
+                                                DisplayMemberPath="Name"
+                                                SelectedItem="{Binding SelectedServiceModule, Mode=TwoWay}"
+                                                AllowDrop="True"
+                                                Drop="UsedModulesRadListBox_Drop"
+                                                telerik:TouchManager.IsTouchHitTestVisible="True">
+                                <telerik:RadListBox.ItemContainerStyle>
+                                    <Style TargetType="telerik:RadListBoxItem">
+                                        <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                                        <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
+                                        <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
+                                    </Style>
+                                </telerik:RadListBox.ItemContainerStyle>
+
+                                <telerik:RadListBox.DragDropBehavior>
+                                    <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True" />
+                                </telerik:RadListBox.DragDropBehavior>
+
+                                <telerik:RadListBox.DragVisualProvider>
+                                    <telerik:ScreenshotDragVisualProvider />
+                                </telerik:RadListBox.DragVisualProvider>
+                            </telerik:RadListBox>
+
+                            <telerik:RadListBox x:Name="SelectedModuleConfigurationsRadListBox" Grid.Column="2"
+                                                ItemsSource="{Binding SelectedServiceModuleConfiguration}"
+                                                DisplayMemberPath="Name"
+                                                AllowDrop="False"
+                                                telerik:TouchManager.IsTouchHitTestVisible="True">
+                                <telerik:RadListBox.ItemContainerStyle>
+                                    <Style TargetType="telerik:RadListBoxItem">
+                                        <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                                        <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
+                                        <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
+                                    </Style>
+                                </telerik:RadListBox.ItemContainerStyle>
+
+                                <telerik:RadListBox.DragDropBehavior>
+                                    <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True" />
+                                </telerik:RadListBox.DragDropBehavior>
+
+                                <telerik:RadListBox.DragVisualProvider>
+                                    <telerik:ScreenshotDragVisualProvider />
+                                </telerik:RadListBox.DragVisualProvider>
+                            </telerik:RadListBox>
                         </Grid>
 
                     </Grid>

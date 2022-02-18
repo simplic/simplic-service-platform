@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Telerik.Windows.Controls;
 
 namespace TBD.UITest
 {
@@ -13,5 +14,9 @@ namespace TBD.UITest
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            StyleManager.ApplicationTheme = new CrystalTheme();
+        }
     }
 }

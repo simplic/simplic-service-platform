@@ -8,6 +8,12 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ModuleView : Window
     {
+
+        /// <summary>
+        /// Instantiates the module view for given module definition.
+        /// </summary>
+        /// <param name="moduleDefinitionService">Service for module definitions</param>
+        /// <param name="moduleDefinition">Module definition</param>
         public ModuleView(IModuleDefinitionService moduleDefinitionService, ModuleDefinition moduleDefinition)
         {
             InitializeComponent();
