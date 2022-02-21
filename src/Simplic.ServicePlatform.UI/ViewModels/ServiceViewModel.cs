@@ -12,7 +12,8 @@ namespace Simplic.ServicePlatform.UI
 {
     public class ServiceViewModel : SSPViewModelBase
     {
-        private IModuleDefinitionService moduleDefinitionService;
+        private readonly IServiceDefinitionService serviceDefinitionService;
+        private readonly IModuleDefinitionService moduleDefinitionService;
         private ServiceDefinition serviceDefinition;
         private ModuleDefinition selectedAvailableModule;
         private ServiceModule selectedServiceModule;
@@ -21,17 +22,18 @@ namespace Simplic.ServicePlatform.UI
         /// Instantiates the view model.
         /// </summary>
         /// <param name="serviceDefinition">service</param>
-        public ServiceViewModel(IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
+        public ServiceViewModel(IServiceDefinitionService serviceDefinitionService, IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
         {
+            this.serviceDefinitionService = serviceDefinitionService;
             this.moduleDefinitionService = moduleDefinitionService;
             this.serviceDefinition = serviceDefinition;
 
-            SaveCommand = new RelayCommand(o => Save());
-            //Initialize();
-            InitDummies();
+            SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+            //LoadAvailableModules();
+            LoadDummies();
         }
 
-        private void Initialize()
+        private void LoadAvailableModules()
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
@@ -39,16 +41,48 @@ namespace Simplic.ServicePlatform.UI
             });
         }
 
-        private void InitDummies()
+        private void LoadDummies()
         {
             AvailableModules = new ObservableCollection<ModuleDefinition>
             {
-                new ModuleDefinition { Name = "example.module", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config", Default = "v" } } },
-                new ModuleDefinition { Name = "example.module.two", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config2", Default = "v2" } } },
-                new ModuleDefinition { Name = "example.module.three", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config3", Default = "v3" } } },
-                new ModuleDefinition { Name = "example.module.four", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config4", Default = "v4" } } },
-                new ModuleDefinition { Name = "example.module.five", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config5", Default = "v5" } } },
-                new ModuleDefinition { Name = "example.module.six", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config6", Default = "v6" } } }
+                new ModuleDefinition
+                {
+                    Name = "example.module",
+                    ConfigurationDefinition = new List<ModuleConfigurationDefinition>
+                    {
+                        new ModuleConfigurationDefinition { Name = "some config", Default = "v" }
+                    }
+                },
+                new ModuleDefinition
+                {
+                    Name = "example.module.two",
+                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config2", Default = "v2" }
+                    }
+                },
+                new ModuleDefinition
+                {
+                    Name = "example.module.three",
+                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config3", Default = "v3" }
+                    }
+                },
+                new ModuleDefinition
+                {
+                    Name = "example.module.four",
+                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config4", Default = "v4" }
+                    }
+                },
+                new ModuleDefinition
+                {
+                    Name = "example.module.five",
+                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config5", Default = "v5" }
+                    }
+                },
+                new ModuleDefinition
+                {
+                    Name = "example.module.six",
+                    ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config6", Default = "v6" }
+                    }
+                }
             };
 
             ModulesDummy = new ObservableCollection<ServiceModule>() { new ServiceModule { Name = "some.service.module" } };
@@ -56,7 +90,12 @@ namespace Simplic.ServicePlatform.UI
 
         private void Save()
         {
-            MessageBox.Show("not implemented");
+            serviceDefinitionService.Save(serviceDefinition);
+        }
+
+        private bool CanSave()
+        {
+            return !string.IsNullOrEmpty(ServiceName);
         }
 
         /// <summary>
@@ -108,6 +147,6 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the modules of the service.
         /// </summary>
         public IList<ServiceModule> Modules { get => serviceDefinition.Modules; set => serviceDefinition.Modules = value; }
-        public IList<ServiceModule> ModulesDummy { get; set; }
+        public IList<ServiceModule> ModulesDummy { get; set; } //TBR
     }
 }

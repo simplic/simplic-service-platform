@@ -8,6 +8,7 @@ namespace Simplic.ServicePlatform.UI
 {
     public class ApplicationHelper
     {
+        IServiceDefinitionService serviceDefinitionService;
         IModuleDefinitionService moduleDefinitionService;
 
         public void ShowWindow(UInt16 choice)
@@ -31,7 +32,7 @@ namespace Simplic.ServicePlatform.UI
                         }
                     }
                     };
-                    ShowServiceView(moduleDefinitionService, serviceDummy);
+                    ShowServiceView(serviceDefinitionService, moduleDefinitionService, serviceDummy);
                     break;
 
                 case 1:
@@ -59,9 +60,9 @@ namespace Simplic.ServicePlatform.UI
 
         }
 
-        private void ShowServiceView(IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
+        private void ShowServiceView(IServiceDefinitionService serviceDefinitionService, IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
         {
-            var view = new ServiceView(moduleDefinitionService, serviceDefinition);
+            var view = new ServiceView(serviceDefinitionService, moduleDefinitionService, serviceDefinition);
             view.Show();
         }
 

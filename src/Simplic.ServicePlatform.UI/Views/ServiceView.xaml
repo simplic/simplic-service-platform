@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:Simplic.ServicePlatform.UI"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         mc:Ignorable="d" 
-        d:DesignHeight="600" d:DesignWidth="400"
-        Height="600" Width="500"
-        MinHeight="300" MinWidth="400">
+        d:DesignHeight="300" d:DesignWidth="400"
+        MinHeight="300" MinWidth="400"
+        Height="600" Width="600">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -39,60 +39,33 @@
 
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height=".4*"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Margin="10">
-                        <StackPanel Orientation="Vertical">
-                            <Label Content="ID" Foreground="Gray"/>
-                            <TextBlock Text="{Binding Id}"
+                    <StackPanel Orientation="Vertical">
+                        <Label Content="ID" Foreground="Gray"/>
+                        <TextBlock Text="{Binding Id}"
                                        Height="25" Width="auto"/>
-                        </StackPanel>
-
-                        <StackPanel>
-                            <Label Content="Service Name" Foreground="Gray"/>
-                            <telerik:RadWatermarkTextBox WatermarkContent="some.service.name"
-                                                         Text="{Binding ServiceName}"
-                                                         Height="25" Width="auto"/>
-                        </StackPanel>
                     </StackPanel>
 
-                    <Grid Grid.Row="1">
+                    <StackPanel Grid.Row="1">
+                        <Label Content="Service Name" Foreground="Gray"/>
+                        <telerik:RadWatermarkTextBox WatermarkContent="some.service.name"
+                                                         Text="{Binding ServiceName}"
+                                                         Height="25" Width="auto"/>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="80"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <StackPanel>
-                            <Label Content="Modules" FontSize="15" Foreground="Gray" Grid.ColumnSpan="2"/>
-                            <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"
-                                    HorizontalAlignment="Right" Height="25">
-                            <telerik:RadAutoCompleteBox Width="150" ItemsSource="{Binding AvailableModules}"
-                                                        DisplayMemberPath="Name" SelectionMode="Single"/>
-                            <telerik:RadButton Content="Add"/>
-                        </StackPanel>-->
-                            <TextBox Height="20" Text="{Binding SelectedAvailableModule.Name}"/>
-                            <TextBox Height="20" Text="{Binding SelectedServiceModule.Name}"/>
-                        </StackPanel>
-
-                        <!--
-                        <telerik:RadTreeListView Grid.Row="1" ItemsSource="{Binding Modules}"
-                                                 AutoGenerateColumns="False">
-                            
-                            <telerik:RadTreeListView.Columns>
-                                <telerik:GridViewDataColumn DataMemberBinding="{Binding Name}" Width="Auto"/>
-                                <telerik:GridViewDataColumn DataMemberBinding="{Binding Value}" Header="ConfigValue"/>
-                            </telerik:RadTreeListView.Columns>
-                            
-                            <telerik:RadTreeListView.ChildTableDefinitions>
-                                <telerik:TreeListViewTableDefinition ItemsSource="{Binding Configuration}" />
-                            </telerik:RadTreeListView.ChildTableDefinitions>
-                            
-                        </telerik:RadTreeListView>
-                        -->
+                        <Label Content="Modules" FontSize="15" Foreground="Gray" Grid.ColumnSpan="2"/>
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -100,8 +73,14 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                            <telerik:RadListBox x:Name="AvailableModulesRadListBox" Grid.Column="0"
+                            <telerik:Label Content="Available Modules"/>
+                            <telerik:RadListBox x:Name="AvailableModulesRadListBox"
+                                                Grid.Row="1"
                                                 ItemsSource="{Binding AvailableModules}"
                                                 DisplayMemberPath="Name"
                                                 SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
@@ -125,7 +104,10 @@
                                 </telerik:RadListBox.DragVisualProvider>
                             </telerik:RadListBox>
 
-                            <telerik:RadListBox x:Name="UsedModulesRadListBox" Grid.Column="1"
+
+                            <telerik:Label Content="Used Modules" Grid.Column="1"/>
+                            <telerik:RadListBox x:Name="UsedModulesRadListBox"
+                                                Grid.Row="1" Grid.Column="1"
                                                 ItemsSource="{Binding ModulesDummy}"
                                                 DisplayMemberPath="Name"
                                                 SelectedItem="{Binding SelectedServiceModule, Mode=TwoWay}"
@@ -149,11 +131,14 @@
                                 </telerik:RadListBox.DragVisualProvider>
                             </telerik:RadListBox>
 
-                            <telerik:RadListBox x:Name="SelectedModuleConfigurationsRadListBox" Grid.Column="2"
+
+                            <telerik:Label Content="Configuration" Grid.Column="2"/>
+                            <telerik:RadListBox x:Name="SelectedModuleConfigurationsRadListBox"
+                                                Grid.Row="1" Grid.Column="2"
                                                 ItemsSource="{Binding SelectedServiceModuleConfiguration}"
                                                 AllowDrop="False"
                                                 telerik:TouchManager.IsTouchHitTestVisible="True">
-                                
+
 
                                 <telerik:RadListBox.ItemTemplate>
                                     <DataTemplate>

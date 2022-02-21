@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:Simplic.ServicePlatform.UI"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
         mc:Ignorable="d" 
-        d:DesignHeight="400" d:DesignWidth="800"
-        Height="600" Width="800"
-        MinHeight="400" MinWidth="400">
+        d:DesignHeight="500" d:DesignWidth="400"
+        MinHeight="500" MinWidth="400"
+        Height="800" Width="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -34,83 +34,120 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*" MinHeight="100"/>
+                    <RowDefinition Height="21"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="4*"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="0" Margin="10">
-                    <StackPanel>
-                        <Label Content="Name" Foreground="Gray"/>
-                        <telerik:RadWatermarkTextBox WatermarkContent="Name"
-                                                     Text="{Binding Name}"
+                <StackPanel>
+                    <Label Content="Name" Foreground="Gray"/>
+                    <telerik:RadWatermarkTextBox WatermarkContent="Name"
+                                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
                                                      Height="25" Width="auto"/>
-                    </StackPanel>
-
-                    <StackPanel>
-                        <Label Content="Assembly" Foreground="Gray"/>
-                        <telerik:RadWatermarkTextBox WatermarkContent="some.assembly.example"
-                                                     Text="{Binding Assembly}"
-                                                     Height="25" Width="auto"/>
-                    </StackPanel>
                 </StackPanel>
 
-                <Grid Grid.Column="1" Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="4*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Label Content="Description" Foreground="Gray"/>
-                    <telerik:RadWatermarkTextBox Grid.Row="1" WatermarkContent="Description"
-                                                 Text="{Binding Description}"
-                                                 AcceptsReturn="True"
-                                                 VerticalContentAlignment="Top"/>
+                <StackPanel Grid.Row="1">
+                    <Label Content="Assembly" Foreground="Gray"/>
+                    <telerik:RadWatermarkTextBox WatermarkContent="some.assembly.example"
+                                                     Text="{Binding Assembly, UpdateSourceTrigger=PropertyChanged}"
+                                                     Height="25" Width="auto"/>
+                </StackPanel>
 
-                    <StackPanel Grid.Row="2" Orientation="Horizontal"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top">
-                        <Label Content="Enable Auto Start" Height="30"/>
-                        <telerik:RadToggleButton x:Name="EnableAutoStartText"
-                                                     Click="EnableAutoStart_Changed"
-                                                     Loaded="EnableAutoStart_Changed"
-                                                     IsChecked="{Binding EnableAutoStart, UpdateSourceTrigger=PropertyChanged}"
-                                                     Height="20" Width="30"
-                                                     CornerRadius="5"/>
-                    </StackPanel>
-                </Grid>
+                <Label Grid.Row="2" Content="Description" Foreground="Gray"/>
+                <telerik:RadWatermarkTextBox Grid.Row="3" MinHeight="100" Height="auto"
+                                             WatermarkContent="Description"
+                                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                             AcceptsReturn="True"
+                                             VerticalContentAlignment="Top"/>
 
+                <StackPanel Grid.Row="4" Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Height="30" MinWidth="142">
+                    <Label Content="Enable Auto Start" Height="30"/>
+                    <telerik:RadToggleButton x:Name="EnableAutoStartText"
+                                             Click="EnableAutoStart_Changed"
+                                             Loaded="EnableAutoStart_Changed"
+                                             IsChecked="{Binding EnableAutoStart, UpdateSourceTrigger=PropertyChanged}"
+                                             Height="25" Width="40"
+                                             HorizontalContentAlignment="Center"
+                                             VerticalContentAlignment="Center"
+                                             CornerRadius="5"/>
+                </StackPanel>
 
-                <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid Grid.Row="5" Grid.RowSpan="2" Margin="0,9,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Margin="10">
-                        <telerik:Label x:Name="AvailableModulesLabel"
-                                       Content="Available Modules"
-                                       FontSize="15"
-                                       Foreground="Gray"
-                                       Loaded="RequiredModulesList_Loaded"/>
-                        <telerik:RadListBox x:Name="AvailableModulesList"
-                                            ItemsSource="{Binding AvailableModules}"
-                                            Loaded="RequiredModulesList_Loaded"/>
-                    </StackPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="1" Margin="10">
-                        <telerik:Label x:Name="RequiredModulesLabel"
-                                       Content="Required Modules"
-                                       FontSize="15"
-                                       Foreground="Gray"
-                                       Loaded="RequiredModulesList_Loaded"/>
-                        <telerik:RadListBox x:Name="RequiredModulesList"
-                                            ItemsSource="{Binding Requires}"
-                                            Loaded="RequiredModulesList_Loaded"/>
-                    </StackPanel>
-                    
+                    <telerik:Label x:Name="AvailableModulesLabel"
+                                   Content="Available Modules"
+                                   FontSize="15"
+                                   Foreground="Gray"
+                                   Loaded="RequiredModulesList_Loaded"/>
+                    <telerik:RadListBox Grid.Row="1"
+                                        ItemsSource="{Binding AvailableModules}"
+                                        DisplayMemberPath="Name"
+                                        SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
+                                        AllowDrop="True"
+                                        Drop="AvailableModulesRadListBox_Drop"
+                                        telerik:TouchManager.IsTouchHitTestVisible="True">
+                        <telerik:RadListBox.ItemContainerStyle>
+                            <Style TargetType="telerik:RadListBoxItem">
+                                <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                                <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
+                                <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
+                            </Style>
+                        </telerik:RadListBox.ItemContainerStyle>
+
+                        <telerik:RadListBox.DragDropBehavior>
+                            <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True" />
+                        </telerik:RadListBox.DragDropBehavior>
+
+                        <telerik:RadListBox.DragVisualProvider>
+                            <telerik:ScreenshotDragVisualProvider />
+                        </telerik:RadListBox.DragVisualProvider>
+                    </telerik:RadListBox>
+
+                    <telerik:Label x:Name="RequiredModulesLabel"
+                                   Grid.Column="1"
+                                   Content="Required Modules"
+                                   FontSize="15"
+                                   Foreground="Gray"
+                                   Loaded="RequiredModulesList_Loaded"/>
+                    <telerik:RadListBox Grid.Row="1" Grid.Column="1"
+                                        ItemsSource="{Binding ObservableRequires}"
+                                        SelectedItem="{Binding SelectedRequiredModule, Mode=TwoWay}"
+                                        AllowDrop="True"
+                                        Drop="RequiredModulesRadListBox_Drop"
+                                        telerik:TouchManager.IsTouchHitTestVisible="True">
+                        <telerik:RadListBox.ItemContainerStyle>
+                            <Style TargetType="telerik:RadListBoxItem">
+                                <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                                <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
+                                <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
+                            </Style>
+                        </telerik:RadListBox.ItemContainerStyle>
+
+                        <telerik:RadListBox.DragDropBehavior>
+                            <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True" />
+                        </telerik:RadListBox.DragDropBehavior>
+
+                        <telerik:RadListBox.DragVisualProvider>
+                            <telerik:ScreenshotDragVisualProvider />
+                        </telerik:RadListBox.DragVisualProvider>
+                    </telerik:RadListBox>
                 </Grid>
             </Grid>
         </Border>
