@@ -17,6 +17,7 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinition serviceDefinition;
         private ModuleDefinition selectedAvailableModule;
         private ServiceModule selectedServiceModule;
+        private ObservableCollection<ServiceModule> observableModules;
 
         /// <summary>
         /// Instantiates the view model.
@@ -28,66 +29,19 @@ namespace Simplic.ServicePlatform.UI
             this.moduleDefinitionService = moduleDefinitionService;
             this.serviceDefinition = serviceDefinition;
 
+            LoadAvailableModules();
+            ObservableModules = new ObservableCollection<ServiceModule>(Modules);
+
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
-            //LoadAvailableModules();
-            LoadDummies();
         }
 
         private void LoadAvailableModules()
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                AvailableModules = await moduleDefinitionService.GetAll();
+                AvailableModules = new ObservableCollection<ModuleDefinition>(await moduleDefinitionService.GetAll());
             });
         }
-
-        private void LoadDummies()
-        {
-            AvailableModules = new ObservableCollection<ModuleDefinition>
-            {
-                new ModuleDefinition
-                {
-                    Name = "example.module",
-                    ConfigurationDefinition = new List<ModuleConfigurationDefinition>
-                    {
-                        new ModuleConfigurationDefinition { Name = "some config", Default = "v" }
-                    }
-                },
-                new ModuleDefinition
-                {
-                    Name = "example.module.two",
-                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config2", Default = "v2" }
-                    }
-                },
-                new ModuleDefinition
-                {
-                    Name = "example.module.three",
-                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config3", Default = "v3" }
-                    }
-                },
-                new ModuleDefinition
-                {
-                    Name = "example.module.four",
-                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config4", Default = "v4" }
-                    }
-                },
-                new ModuleDefinition
-                {
-                    Name = "example.module.five",
-                    ConfigurationDefinition = new List<ModuleConfigurationDefinition> { new ModuleConfigurationDefinition { Name = "some config5", Default = "v5" }
-                    }
-                },
-                new ModuleDefinition
-                {
-                    Name = "example.module.six",
-                    ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config6", Default = "v6" }
-                    }
-                }
-            };
-
-            ModulesDummy = new ObservableCollection<ServiceModule>() { new ServiceModule { Name = "some.service.module" } };
-        }
-
         private void Save()
         {
             serviceDefinitionService.Save(serviceDefinition);
@@ -120,7 +74,7 @@ namespace Simplic.ServicePlatform.UI
         {
             get => (SelectedServiceModule != null && SelectedServiceModule.Configuration != null)
                 ? SelectedServiceModule.Configuration
-                : new List<ServiceModuleConfiguration> { new ServiceModuleConfiguration { Name = "congrats you found", Value = "nothing." } };
+                : new List<ServiceModuleConfiguration>();
         }
 
         /// <summary>
@@ -147,6 +101,10 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the modules of the service.
         /// </summary>
         public IList<ServiceModule> Modules { get => serviceDefinition.Modules; set => serviceDefinition.Modules = value; }
-        public IList<ServiceModule> ModulesDummy { get; set; } //TBR
+
+        /// <summary>
+        /// Gets or sets the observable collection of the modules.
+        /// </summary>
+        public ObservableCollection<ServiceModule> ObservableModules { get => observableModules; set { observableModules = value; RaisePropertyChanged(nameof(ObservableModules)); } }
     }
 }

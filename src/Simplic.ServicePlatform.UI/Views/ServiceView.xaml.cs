@@ -44,11 +44,12 @@ namespace Simplic.ServicePlatform.UI
 
             viewModel.SelectedServiceModule = newServiceModule;
             viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModule));
-
             viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModuleConfiguration));
 
-            viewModel.ModulesDummy.Add(newServiceModule);
-            viewModel.RaisePropertyChanged(nameof(viewModel.ModulesDummy));
+            viewModel.Modules.Add(newServiceModule);
+            viewModel.RaisePropertyChanged(nameof(viewModel.Modules));
+            viewModel.ObservableModules.Add(newServiceModule);
+            viewModel.RaisePropertyChanged(nameof(viewModel.ObservableModules));
         }
 
         private ModuleDefinition ServiceModuleToModuleDefinition(ServiceModule serviceModule)

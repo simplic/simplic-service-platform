@@ -108,7 +108,7 @@
                             <telerik:Label Content="Used Modules" Grid.Column="1"/>
                             <telerik:RadListBox x:Name="UsedModulesRadListBox"
                                                 Grid.Row="1" Grid.Column="1"
-                                                ItemsSource="{Binding ModulesDummy}"
+                                                ItemsSource="{Binding ObservableModules}"
                                                 DisplayMemberPath="Name"
                                                 SelectedItem="{Binding SelectedServiceModule, Mode=TwoWay}"
                                                 AllowDrop="True"

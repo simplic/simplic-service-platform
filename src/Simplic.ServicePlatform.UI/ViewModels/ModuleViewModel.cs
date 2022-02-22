@@ -22,8 +22,7 @@ namespace Simplic.ServicePlatform.UI
         {
             this.moduleDefinitionService = moduleDefinitionService;
             this.moduleDefinition = moduleDefinition;
-            //LoadAvailableModules();
-            LoadDummies();
+            LoadAvailableModules();
             ObservableRequires = new ObservableCollection<string>(Requires);
 
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
@@ -35,19 +34,6 @@ namespace Simplic.ServicePlatform.UI
             {
                 this.AvailableModules = await moduleDefinitionService.GetAll();
             });
-        }
-
-        private void LoadDummies()
-        {
-            AvailableModules = new ObservableCollection<ModuleDefinition>
-            {
-                new ModuleDefinition { Name = "example.module", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config", Default = "v" } }, Requires = new List<string> { "asdasdd" } },
-                new ModuleDefinition { Name = "example.module.two", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config2", Default = "v2" } } },
-                new ModuleDefinition { Name = "example.module.three", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config3", Default = "v3" } } },
-                new ModuleDefinition { Name = "example.module.four", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config4", Default = "v4" } } },
-                new ModuleDefinition { Name = "example.module.five", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config5", Default = "v5" } } },
-                new ModuleDefinition { Name = "example.module.six", ConfigurationDefinition = new List<ModuleConfigurationDefinition>{ new ModuleConfigurationDefinition { Name = "some config6", Default = "v6" } } }
-            };
         }
 
         private void Save()

@@ -8,7 +8,7 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ModuleView : Window
     {
-        IModuleDefinitionService moduleDefinitionService;
+        private readonly IModuleDefinitionService moduleDefinitionService;
 
         /// <summary>
         /// Instantiates the module view for given module definition.
@@ -18,6 +18,7 @@ namespace Simplic.ServicePlatform.UI
         public ModuleView(IModuleDefinitionService moduleDefinitionService, ModuleDefinition moduleDefinition)
         {
             InitializeComponent();
+            this.moduleDefinitionService = moduleDefinitionService;
             DataContext = new ModuleViewModel(moduleDefinitionService, moduleDefinition);
         }
 
