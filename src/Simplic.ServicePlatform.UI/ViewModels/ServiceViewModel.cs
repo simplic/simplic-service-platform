@@ -1,7 +1,4 @@
-﻿using Simplic.PlugIn.ServicePlatform.Server;
-using Simplic.ServicePlatform.Data.DB;
-using Simplic.ServicePlatform.Service;
-using Simplic.UI.MVC;
+﻿using Simplic.UI.MVC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,8 +10,8 @@ namespace Simplic.ServicePlatform.UI
 {
     public class ServiceViewModel : SSPViewModelBase
     {
-        private readonly IServiceDefinitionService serviceDefinitionService;
-        private readonly IModuleDefinitionService moduleDefinitionService;
+        private readonly IServiceClient serviceClient;
+
         private ServiceDefinition serviceDefinition;
         private ModuleDefinition selectedAvailableModule;
         private ServiceModule selectedServiceModule;
@@ -25,10 +22,9 @@ namespace Simplic.ServicePlatform.UI
         /// Instantiates the view model.
         /// </summary>
         /// <param name="serviceDefinition">service</param>
-        public ServiceViewModel(IServiceDefinitionService serviceDefinitionService, IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
+        public ServiceViewModel(IServiceClient serviceClient, ServiceDefinition serviceDefinition)
         {
-            this.serviceDefinitionService = serviceDefinitionService;
-            this.moduleDefinitionService = moduleDefinitionService;
+            this.serviceClient = serviceClient;
             this.serviceDefinition = serviceDefinition;
 
             LoadAvailableServices();
@@ -53,12 +49,12 @@ namespace Simplic.ServicePlatform.UI
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                AvailableModules = new ObservableCollection<ModuleDefinition>(await moduleDefinitionService.GetAll());
+                AvailableModules = new ObservableCollection<ModuleDefinition>(await serviceClient.GetAllModules());
             });
         }
         private void Save()
         {
-            serviceDefinitionService.Save(serviceDefinition);
+            serviceClient.SaveService(serviceDefinition);
         }
 
         private bool CanSave()

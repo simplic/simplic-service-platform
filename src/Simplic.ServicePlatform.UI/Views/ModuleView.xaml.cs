@@ -8,18 +8,18 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ModuleView : Window
     {
-        private readonly IModuleDefinitionService moduleDefinitionService;
+        private readonly IServiceClient serviceClient;
 
         /// <summary>
         /// Instantiates the module view for given module definition.
         /// </summary>
-        /// <param name="moduleDefinitionService">Service for module definitions</param>
+        /// <param name="serviceClient">Client for managing requests</param>
         /// <param name="moduleDefinition">Module definition</param>
-        public ModuleView(IModuleDefinitionService moduleDefinitionService, ModuleDefinition moduleDefinition)
+        public ModuleView(IServiceClient serviceClient, ModuleDefinition moduleDefinition)
         {
             InitializeComponent();
-            this.moduleDefinitionService = moduleDefinitionService;
-            DataContext = new ModuleViewModel(moduleDefinitionService, moduleDefinition);
+            this.serviceClient = serviceClient;
+            DataContext = new ModuleViewModel(serviceClient, moduleDefinition);
         }
 
         private void RequiredModulesList_Loaded(object sender, RoutedEventArgs e)
@@ -55,7 +55,7 @@ namespace Simplic.ServicePlatform.UI
 
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                var availableModule = await moduleDefinitionService.GetByName(targetModuleName);
+                var availableModule = await serviceClient.GetModule(targetModuleName);
                 if (availableModule != null)
                 {
                     viewModel.AvailableModules.Add(availableModule);

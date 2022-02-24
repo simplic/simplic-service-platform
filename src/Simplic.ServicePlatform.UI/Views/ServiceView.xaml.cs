@@ -8,18 +8,16 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ServiceView : Window
     {
-        private readonly IServiceDefinitionService serviceDefinitionService;
-        private readonly IModuleDefinitionService moduleDefinitionService;
+        private readonly IServiceClient serviceClient;
 
         /// <summary>
         /// Instantiates the view for the given module.
         /// </summary>
-        public ServiceView(IServiceDefinitionService serviceDefinitionService, IModuleDefinitionService moduleDefinitionService, ServiceDefinition serviceDefinition)
+        public ServiceView(IServiceClient serviceClient, ServiceDefinition serviceDefinition)
         {
             InitializeComponent();
-            this.serviceDefinitionService = serviceDefinitionService;
-            this.moduleDefinitionService = moduleDefinitionService;
-            DataContext = new ServiceViewModel(serviceDefinitionService, moduleDefinitionService, serviceDefinition);
+            this.serviceClient = serviceClient;
+            DataContext = new ServiceViewModel(serviceClient, serviceDefinition);
         }
 
         private void AvailableModulesRadListBox_Drop(object sender, DragEventArgs e)
@@ -57,7 +55,7 @@ namespace Simplic.ServicePlatform.UI
             ModuleDefinition newModuleDefinition = new ModuleDefinition();
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                newModuleDefinition = await moduleDefinitionService.GetByName(serviceModule.Name);
+                newModuleDefinition = await serviceClient.GetModule(serviceModule.Name);
             });
             return newModuleDefinition;
         }
