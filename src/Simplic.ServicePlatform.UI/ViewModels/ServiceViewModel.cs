@@ -5,6 +5,7 @@ using Simplic.UI.MVC;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -18,6 +19,7 @@ namespace Simplic.ServicePlatform.UI
         private ModuleDefinition selectedAvailableModule;
         private ServiceModule selectedServiceModule;
         private ObservableCollection<ServiceModule> observableModules;
+        private ObservableCollection<ServiceDefinition> serviceModules;
 
         /// <summary>
         /// Instantiates the view model.
@@ -40,7 +42,10 @@ namespace Simplic.ServicePlatform.UI
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                AvailableServices = new ObservableCollection<ServiceDefinition>(await serviceDefinitionService.GetAll());
+               serviceModules = new ObservableCollection<ServiceDefinition>(await serviceDefinitionService.GetAll());
+            }).ContinueWith(o =>
+            {
+                AvailableServices = new ObservableCollection<ServiceDefinitionViewModel>(serviceModules.Select(m => new ServiceDefinitionViewModel { Model = m }));
             });
         }
 
@@ -89,7 +94,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets a list of available modules.
         /// </summary>
-        public IList<ModuleDefinition> AvailableModules { get; set; }
+        public ObservableCollection<ModuleDefinition> AvailableModules { get; set; }
 
         /// <summary>
         /// Gets or sets the collection that represents the modules of the service.
@@ -119,6 +124,6 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets available services.
         /// </summary>
-        public ObservableCollection<ServiceDefinition> AvailableServices { get; set; }
+        public ObservableCollection<ServiceDefinitionViewModel> AvailableServices { get; set; }
     }
 }
