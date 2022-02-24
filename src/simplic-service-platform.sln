@@ -44,8 +44,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0A8F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.UI", "Simplic.ServicePlatform.UI\Simplic.ServicePlatform.UI.csproj", "{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBD.UITest", "TBD.UITest\TBD.UITest.csproj", "{30F9E659-11B6-4D7D-87BB-562641F59408}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.projitems*{35a0f7a0-f499-40e3-ba6f-80df63b37069}*SharedItemsImports = 4
@@ -89,10 +87,6 @@ Global
 		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30F9E659-11B6-4D7D-87BB-562641F59408}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30F9E659-11B6-4D7D-87BB-562641F59408}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30F9E659-11B6-4D7D-87BB-562641F59408}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30F9E659-11B6-4D7D-87BB-562641F59408}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,7 +101,6 @@ Global
 		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C} = {3BAFA57D-9364-452E-A084-3BE99F94BBBB}
 		{0A8FFC1A-6FD0-4502-9EAA-C1D4446F1298} = {97BDF73F-295D-44E3-BFF5-F6FCC8885900}
 		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
-		{30F9E659-11B6-4D7D-87BB-562641F59408} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9CC48-3322-44B6-ADAF-835538CBFB83}
