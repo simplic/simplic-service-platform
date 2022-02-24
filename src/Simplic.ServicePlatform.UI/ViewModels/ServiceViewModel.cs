@@ -41,7 +41,10 @@ namespace Simplic.ServicePlatform.UI
                serviceModules = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
             }).ContinueWith(o =>
             {
-                AvailableServices = new ObservableCollection<ServiceDefinitionViewModel>(serviceModules.Select(m => new ServiceDefinitionViewModel { Model = m }));
+                AvailableServices = new ObservableCollection<ServiceDefinitionViewModel>(
+                    serviceModules.Select(m =>
+                    new ServiceDefinitionViewModel() { Model = m, UsedModules = new ObservableCollection<ServiceModule>(m.Modules) })
+                );
             });
         }
 

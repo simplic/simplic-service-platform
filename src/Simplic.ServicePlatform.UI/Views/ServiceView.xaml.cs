@@ -37,6 +37,7 @@ namespace Simplic.ServicePlatform.UI
         {
             var viewModel = DataContext as ServiceViewModel;
             if (viewModel.SelectedAvailableModule == null) return;
+            
 
             ServiceModule newServiceModule = ModuleDefinitionToServiceModule(viewModel.SelectedAvailableModule);
 
@@ -44,7 +45,10 @@ namespace Simplic.ServicePlatform.UI
             viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModule));
             viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModuleConfiguration));
 
-            viewModel.Modules.Add(newServiceModule);
+            //viewModel.Modules.Add(newServiceModule);
+            viewModel.AvailableServices[0].AddModule(newServiceModule);
+            viewModel.AvailableServices[0].Update();
+
             viewModel.RaisePropertyChanged(nameof(viewModel.Modules));
             viewModel.ObservableModules.Add(newServiceModule);
             viewModel.RaisePropertyChanged(nameof(viewModel.ObservableModules));
