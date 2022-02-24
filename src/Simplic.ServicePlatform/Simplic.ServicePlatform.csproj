@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exception\CanNotStartRequiredModuleException.cs" />
+    <Compile Include="Interface\IServiceClient.cs" />
     <Compile Include="Interface\IServiceModule.cs" />
     <Compile Include="Interface\IServiceDefinitionRepository.cs" />
     <Compile Include="Interface\IModuleDefinitionRepository.cs" />

@@ -8,7 +8,7 @@ namespace Simplic.ServicePlatform.UI
 {
     public class ModuleViewModel : SSPViewModelBase
     {
-        private IModuleDefinitionService moduleDefinitionService;
+        private IServiceClient serviceClient;
         private ModuleDefinition moduleDefinition;
         private ModuleDefinition selectedAvailableModule;
         private string selectedRequiredModule;
@@ -18,9 +18,9 @@ namespace Simplic.ServicePlatform.UI
         /// Instantiates the view model.
         /// </summary>
         /// <param name="moduleDefinition">module</param>
-        public ModuleViewModel(IModuleDefinitionService moduleDefinitionService, ModuleDefinition moduleDefinition)
+        public ModuleViewModel(IServiceClient serviceClient, ModuleDefinition moduleDefinition)
         {
-            this.moduleDefinitionService = moduleDefinitionService;
+            this.serviceClient = serviceClient;
             this.moduleDefinition = moduleDefinition;
             LoadAvailableModules();
             ObservableRequires = new ObservableCollection<string>(Requires);
@@ -32,13 +32,13 @@ namespace Simplic.ServicePlatform.UI
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                this.AvailableModules = new ObservableCollection<ModuleDefinition>(await moduleDefinitionService.GetAll());
+                this.AvailableModules = new ObservableCollection<ModuleDefinition>(await serviceClient.GetAllModules());
             });
         }
 
         private void Save()
         {
-            moduleDefinitionService.Save(moduleDefinition);
+            serviceClient.SaveModule(moduleDefinition);
         }
 
         //maybe add some regex
