@@ -104,8 +104,20 @@
     <PackageReference Include="Microsoft.VisualStudio.DesignTools.Extensibility">
       <Version>17.0.32112.339</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.Localization">
+      <Version>6.1.20.322</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.Localization.Service">
+      <Version>6.2.121.318</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.Localization.UI">
+      <Version>1.1.20.1208</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.UI">
       <Version>7.2.1222.201</Version>
+    </PackageReference>
+    <PackageReference Include="Telerik.Windows.Controls.Data.for.Wpf.Xaml">
+      <Version>2021.3.914</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.for.Wpf.Xaml">
       <Version>2021.3.914</Version>
@@ -114,6 +126,9 @@
       <Version>2021.3.914</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.Input.for.Wpf.Xaml">
+      <Version>2021.3.914</Version>
+    </PackageReference>
+    <PackageReference Include="Telerik.Windows.Data.for.Wpf.Xaml">
       <Version>2021.3.914</Version>
     </PackageReference>
   </ItemGroup>

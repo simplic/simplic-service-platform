@@ -32,7 +32,7 @@ namespace Simplic.ServicePlatform.UI
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                this.AvailableModules = await moduleDefinitionService.GetAll();
+                this.AvailableModules = new ObservableCollection<ModuleDefinition>(await moduleDefinitionService.GetAll());
             });
         }
 
@@ -70,7 +70,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets a list of available modules.
         /// </summary>
-        public IList<ModuleDefinition> AvailableModules { get; set; }
+        public ObservableCollection<ModuleDefinition> AvailableModules { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the module.

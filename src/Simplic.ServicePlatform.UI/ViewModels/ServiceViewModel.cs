@@ -29,10 +29,19 @@ namespace Simplic.ServicePlatform.UI
             this.moduleDefinitionService = moduleDefinitionService;
             this.serviceDefinition = serviceDefinition;
 
+            LoadAvailableServices();
             LoadAvailableModules();
             ObservableModules = new ObservableCollection<ServiceModule>(Modules);
 
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+        }
+
+        private void LoadAvailableServices()
+        {
+            Application.Current.Dispatcher.Invoke(async () =>
+            {
+                AvailableServices = new ObservableCollection<ServiceDefinition>(await serviceDefinitionService.GetAll());
+            });
         }
 
         private void LoadAvailableModules()
@@ -106,5 +115,10 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the observable collection of the modules.
         /// </summary>
         public ObservableCollection<ServiceModule> ObservableModules { get => observableModules; set { observableModules = value; RaisePropertyChanged(nameof(ObservableModules)); } }
+
+        /// <summary>
+        /// Gets or sets available services.
+        /// </summary>
+        public ObservableCollection<ServiceDefinition> AvailableServices { get; set; }
     }
 }

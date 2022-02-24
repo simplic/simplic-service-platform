@@ -22,14 +22,6 @@ namespace Simplic.ServicePlatform.UI
             DataContext = new ModuleViewModel(moduleDefinitionService, moduleDefinition);
         }
 
-        private void EnableAutoStart_Changed(object sender, EventArgs e)
-        {
-            var viewModel = DataContext as ModuleViewModel;
-            if (viewModel == null)
-                return;
-            EnableAutoStartText.Content = viewModel.EnableAutoStart ? "ON" : "OFF";
-        }
-
         private void RequiredModulesList_Loaded(object sender, RoutedEventArgs e)
         {
             var viewModel = DataContext as ModuleViewModel;
