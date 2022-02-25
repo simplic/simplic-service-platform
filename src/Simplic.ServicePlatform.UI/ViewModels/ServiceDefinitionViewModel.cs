@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace Simplic.ServicePlatform.UI
 {
+    //ViewModel Stufe 2
     public class ServiceDefinitionViewModel : ViewModelBase
     {
         private ServiceDefinition model;
@@ -22,7 +23,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceDefinitionViewModel(ServiceDefinition model)
         {
             Model = model;
-            UsedModules = new ObservableCollection<ServiceModule>(model.Modules);
+            UsedModules = new ObservableCollection<ServiceModuleViewModel>();
         }
 
         /// <summary>
@@ -31,7 +32,6 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="serviceModule">Module</param>
         public void AddModule(ServiceModule serviceModule)
         {
-            UsedModules.Add(serviceModule);
             Model.Modules.Add(serviceModule);
         }
 
@@ -47,7 +47,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the collection of used modules.
         /// </summary>
-        public ObservableCollection<ServiceModule> UsedModules { get; set; }
+        public ObservableCollection<ServiceModuleViewModel> UsedModules { get; set; }
 
         /// <summary>
         /// Gets or sets the model for the service definition.

@@ -57,6 +57,24 @@
                                 <telerik:RadListBox.DragDropBehavior>
                                     <telerik:ListBoxDragDropBehavior  AllowReorder="True"  telerik:TouchManager.DragStartTrigger="TapHoldAndMove" telerik:DragDropManager.AllowDrag="True"/>
                                 </telerik:RadListBox.DragDropBehavior>
+                                <telerik:RadListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            
+                                        <TextBlock Text="{Binding Name}"/>
+                                            <telerik:RadExpander>
+                                                <telerik:RadExpander.Content>
+                                                    <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}">
+                                                        
+                                                    </telerik:RadListBox>
+                                                </telerik:RadExpander.Content>
+                                            </telerik:RadExpander>
+                                        
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </telerik:RadListBox.ItemTemplate>
+
+
                             </telerik:RadListBox>
                             <!--#endregion-->
                         </DataTemplate>

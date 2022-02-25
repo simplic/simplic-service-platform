@@ -6,10 +6,11 @@ using System.Windows.Input;
 
 namespace Simplic.ServicePlatform.UI
 {
+
+    //ViewModel Stufe 1
     public class ServiceViewModel : Simplic.UI.MVC.ViewModelBase
     {
         private readonly IServiceClient serviceClient;
-
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
 
@@ -19,6 +20,7 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="serviceDefinition">service</param>
         public ServiceViewModel(IServiceClient serviceClient)
         {
+
             this.serviceClient = serviceClient;
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             LoadAvailableServices();
@@ -83,5 +85,6 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets services.
         /// </summary>
         public ObservableCollection<ServiceDefinitionViewModel> Services { get; set; }
+
     }
 }
