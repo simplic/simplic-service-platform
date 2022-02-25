@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 namespace Simplic.ServicePlatform.UI
 {
+    //ViewModel Stufe 2
     public class ServiceDefinitionViewModel : ViewModelBase
     {
         private ServiceDefinition model;
@@ -25,8 +26,9 @@ namespace Simplic.ServicePlatform.UI
         public ServiceDefinitionViewModel(ServiceDefinition model)
         {
             Model = model;
-            UsedModules = new ObservableCollection<ServiceModule>(model.Modules);
+            //[old] UsedModules = new ObservableCollection<ServiceModule>(model.Modules);
             DropCommand = new RelayCommand(o => AddFromModuleDefinition(o as ModuleDefinition));
+            UsedModules = new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)));
         }
 
         /// <summary>
@@ -35,10 +37,10 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="serviceModule">Module</param>
         public void AddModule(ServiceModule serviceModule)
         {
-            UsedModules.Add(serviceModule);
             Model.Modules.Add(serviceModule);
-            RaisePropertyChanged(nameof(UsedModules));
+            UsedModules.Add(new ServiceModuleViewModel(serviceModule));
             RaisePropertyChanged(nameof(Model));
+            RaisePropertyChanged(nameof(UsedModules));
         }
 
         public void AddFromModuleDefinition(ModuleDefinition moduleDefinition)
@@ -57,52 +59,47 @@ namespace Simplic.ServicePlatform.UI
 
             AddModule(newServiceModule);
         }
-        //viewModel.SelectedServiceModule = newServiceModule;
-        //viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModule));
-        //viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModuleConfiguration));
 
-        ////viewModel.Modules.Add(newServiceModule);
-        //viewModel.Services[0].AddModule(newServiceModule);
-        //viewModel.Services[0].Update();
+        /// <summary>
+        /// Update the view.
+        /// </summary>
+        public void Update()
+        {
+            RaisePropertyChanged(nameof(Model));
+            RaisePropertyChanged(nameof(UsedModules));
+        }
 
-        //viewModel.RaisePropertyChanged(nameof(viewModel.Modules));
-        //viewModel.ObservableModules.Add(newServiceModule);
-        //viewModel.RaisePropertyChanged(nameof(viewModel.ObservableModules));
+        /* [old]
+        /// <summary>
+        /// Gets or sets the collection of used modules.
+        /// </summary>
+        public ObservableCollection<ServiceModule> UsedModules { get; set; }
+        */
+        /// <summary>
+        /// Gets or sets the collection of used modules.
+        /// </summary>
+        public ObservableCollection<ServiceModuleViewModel> UsedModules { get; set; }
 
-    /// <summary>
-    /// Update the view.
-    /// </summary>
-    public void Update()
-    {
-        RaisePropertyChanged(nameof(UsedModules));
-        RaisePropertyChanged(nameof(Model));
+        /// <summary>
+        /// Gets or sets the model for the service definition.
+        /// </summary>
+        public ServiceDefinition Model { get => model; set => model = value; }
+
+        /// <summary>
+        /// Gets or sets the selected module.
+        /// </summary>
+        public ServiceModule SelectedServiceModule { get => selectedServiceModule; set { selectedServiceModule = value; RaisePropertyChanged(nameof(SelectedServiceModule)); RaisePropertyChanged(nameof(SelectedServiceModuleConfiguration)); } }
+
+        /// <summary>
+        /// Gets the configuration of the selected service module.
+        /// </summary>
+        public IList<ServiceModuleConfiguration> SelectedServiceModuleConfiguration
+        {
+            get => (SelectedServiceModule != null && SelectedServiceModule.Configuration != null)
+                ? SelectedServiceModule.Configuration
+                : new List<ServiceModuleConfiguration>();
+        }
+
+        public ICommand DropCommand { get; set; }
     }
-
-    /// <summary>
-    /// Gets or sets the collection of used modules.
-    /// </summary>
-    public ObservableCollection<ServiceModule> UsedModules { get; set; }
-
-    /// <summary>
-    /// Gets or sets the model for the service definition.
-    /// </summary>
-    public ServiceDefinition Model { get => model; set => model = value; }
-
-    /// <summary>
-    /// Gets or sets the selected module.
-    /// </summary>
-    public ServiceModule SelectedServiceModule { get => selectedServiceModule; set { selectedServiceModule = value; RaisePropertyChanged(nameof(SelectedServiceModule)); RaisePropertyChanged(nameof(SelectedServiceModuleConfiguration)); } }
-
-    /// <summary>
-    /// Gets the configuration of the selected service module.
-    /// </summary>
-    public IList<ServiceModuleConfiguration> SelectedServiceModuleConfiguration
-    {
-        get => (SelectedServiceModule != null && SelectedServiceModule.Configuration != null)
-            ? SelectedServiceModule.Configuration
-            : new List<ServiceModuleConfiguration>();
-    }
-
-    public ICommand DropCommand { get; set; }
-}
 }

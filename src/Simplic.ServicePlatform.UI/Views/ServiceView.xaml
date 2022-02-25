@@ -68,22 +68,40 @@
                                                     SelectedItem="{Binding SelectedServiceModule}"
                                                     DisplayMemberPath="Name" MinHeight="50" AllowDrop="True"
                                                     VerticalAlignment="Stretch">
+                                    <!--#region Behaviors-->
                                     <telerik:EventToCommandBehavior.EventBindings>
-                                        <telerik:EventBinding Command="{Binding DropCommand}" EventName="Drop"/>
+                                        <telerik:EventBinding Command="{Binding DropCommand}" EventName="Drop"
+                                                              CommandParameter="{Binding SelectedAvailableModule}"/>
                                     </telerik:EventToCommandBehavior.EventBindings>
                                     <telerik:RadListBox.DragDropBehavior>
                                         <telerik:ListBoxDragDropBehavior AllowReorder="True"
                                                                  telerik:TouchManager.DragStartTrigger="TapHoldAndMove"
                                                                  telerik:DragDropManager.AllowDrag="True"/>
                                     </telerik:RadListBox.DragDropBehavior>
+                                    <!--#endregion-->
+                                    <!--#region Expanders for Configuration-->
+                                    <telerik:RadListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+
+                                                <TextBlock Text="{Binding Model.Name}"/>
+                                                <telerik:RadExpander>
+                                                    <telerik:RadExpander.Content>
+                                                        <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}"/>
+                                                    </telerik:RadExpander.Content>
+                                                </telerik:RadExpander>
+
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </telerik:RadListBox.ItemTemplate>
+                                    <!--#endregion-->
+
                                 </telerik:RadListBox>
                                 <!--#endregion-->
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </telerik:RadCardView.CardReadOnlyTemplate>
-
-
             </telerik:RadCardView>
             <!--#endregion-->
         </Border>
