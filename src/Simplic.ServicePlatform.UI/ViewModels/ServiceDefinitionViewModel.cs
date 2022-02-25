@@ -25,9 +25,10 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ServiceDefinitionViewModel(ServiceDefinition model)
         {
+            // TODO check configuration of the service module and remove or add according to definition
             Model = model;
             //[old] UsedModules = new ObservableCollection<ServiceModule>(model.Modules);
-            DropCommand = new RelayCommand(o => AddFromModuleDefinition(o as ModuleDefinition));
+            DropCommand = new RelayCommand(o => AddAvailableModule(), o => { MessageBox.Show("No Available Module Selected"); return SelectedAvailableModule != null; });
             UsedModules = new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)));
         }
 
@@ -43,14 +44,14 @@ namespace Simplic.ServicePlatform.UI
             RaisePropertyChanged(nameof(UsedModules));
         }
 
-        public void AddFromModuleDefinition(ModuleDefinition moduleDefinition)
+        public void AddAvailableModule()
         {
             var newServiceModule = new ServiceModule
             {
-                Name = moduleDefinition.Name,
+                Name = SelectedAvailableModule.Name,
                 Configuration = new List<ServiceModuleConfiguration>
                 (
-                    moduleDefinition.ConfigurationDefinition.Select(config =>
+                    SelectedAvailableModule.ConfigurationDefinition.Select(config =>
                     {
                         return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
                     })
@@ -100,6 +101,14 @@ namespace Simplic.ServicePlatform.UI
                 : new List<ServiceModuleConfiguration>();
         }
 
+        /// <summary>
+        /// Gets or sets the commmand that is responsible for drop event.
+        /// </summary>
         public ICommand DropCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected available module.
+        /// </summary>
+        public ModuleDefinition SelectedAvailableModule { get; set; }
     }
 }
