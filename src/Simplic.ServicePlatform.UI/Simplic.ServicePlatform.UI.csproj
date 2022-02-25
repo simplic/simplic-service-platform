@@ -103,6 +103,9 @@
     <PackageReference Include="Microsoft.VisualStudio.DesignTools.Extensibility">
       <Version>17.0.32112.339</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
+      <Version>1.1.39</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.Localization">
       <Version>6.1.20.322</Version>
     </PackageReference>

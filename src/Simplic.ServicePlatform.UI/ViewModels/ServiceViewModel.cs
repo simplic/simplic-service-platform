@@ -48,12 +48,14 @@ namespace Simplic.ServicePlatform.UI
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 AvailableModules = new ObservableCollection<ModuleDefinition>(await serviceClient.GetAllModules());
+                RaisePropertyChanged(nameof(AvailableModules));
             });
         }
         private void Save()
         {
-            foreach (var service in Services)
-                serviceClient.SaveService(service.Model);
+            MessageBox.Show("Noooo dont do it!");
+            //foreach (var service in Services)
+            //    serviceClient.SaveService(service.Model);
         }
 
         private bool CanSave()
