@@ -20,7 +20,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceViewModel(IServiceClient serviceClient)
         {
             this.serviceClient = serviceClient;
-
+            Services = new ObservableCollection<ServiceDefinitionViewModel>();
             LoadAvailableServices();
             LoadAvailableModules();
 
@@ -39,6 +39,7 @@ namespace Simplic.ServicePlatform.UI
                 //    new ServiceDefinitionViewModel() { Model = m, UsedModules = new ObservableCollection<ServiceModule>(m.Modules) })
                 //);
                 Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m)));
+                RaisePropertyChanged(nameof(Services));
             });
         }
 
@@ -79,7 +80,7 @@ namespace Simplic.ServicePlatform.UI
         public ObservableCollection<ModuleDefinition> AvailableModules { get; set; }
 
         /// <summary>
-        /// Gets or sets available services.
+        /// Gets or sets services.
         /// </summary>
         public ObservableCollection<ServiceDefinitionViewModel> Services { get; set; }
     }

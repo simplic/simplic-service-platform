@@ -13,7 +13,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Instantiates the view for the given module.
         /// </summary>
-        public ServiceView(IServiceClient serviceClient, ServiceDefinition serviceDefinition)
+        public ServiceView(IServiceClient serviceClient)
         {
             InitializeComponent();
             this.serviceClient = serviceClient;
