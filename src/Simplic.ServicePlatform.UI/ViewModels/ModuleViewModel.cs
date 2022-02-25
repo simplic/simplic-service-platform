@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Simplic.UI.MVC;
 
 namespace Simplic.ServicePlatform.UI
 {
-    public class ModuleViewModel : SSPViewModelBase
+    public class ModuleViewModel : Simplic.UI.MVC.ViewModelBase
     {
         private IServiceClient serviceClient;
         private ModuleDefinition moduleDefinition;
@@ -47,6 +48,26 @@ namespace Simplic.ServicePlatform.UI
             return !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(Description) && !string.IsNullOrEmpty(Assembly);
         }
 
+        /// <summary>
+        /// Parse module name to a more presentable format.
+        /// </summary>
+        /// <param name="name">Module name</param>
+        /// <returns>Parsed name</returns>
+        private string ParseModuleName(string name)
+        {
+            var nameBuilder = new StringBuilder(name);
+            nameBuilder[0] -= (char)32;
+            for (int i = 0; i < name.Length; i++)
+                if (name[i] == '.')
+                {
+                    nameBuilder[i] = ' ';
+                    if (i + 1 < name.Length)
+                        nameBuilder[i + 1] = (char)(nameBuilder[i + 1] - 32);
+                }
+
+            return nameBuilder.ToString();
+        }
+
         public void UpdateRequires()
         {
             Requires = ObservableRequires;
@@ -60,12 +81,12 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the selected available module.
         /// </summary>
-        public ModuleDefinition SelectedAvailableModule { get => selectedAvailableModule; set { selectedAvailableModule = value; OnPropertyChanged(); } }
+        public ModuleDefinition SelectedAvailableModule { get => selectedAvailableModule; set { selectedAvailableModule = value; RaisePropertyChanged(nameof(SelectedAvailableModule)); } }
 
         /// <summary>
         /// Gets or sets the selected available module.
         /// </summary>
-        public string SelectedRequiredModule { get => selectedRequiredModule; set { selectedRequiredModule = value; OnPropertyChanged(); } }
+        public string SelectedRequiredModule { get => selectedRequiredModule; set { selectedRequiredModule = value; RaisePropertyChanged(nameof(SelectedRequiredModule)); } }
 
         /// <summary>
         /// Gets a list of available modules.
@@ -95,12 +116,12 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets what the module requires.
         /// </summary>
-        public IList<string> Requires { get => moduleDefinition.Requires; set { moduleDefinition.Requires = value; OnPropertyChanged(); } }
+        public IList<string> Requires { get => moduleDefinition.Requires; set { moduleDefinition.Requires = value; RaisePropertyChanged(nameof(Requires)); } }
         
         /// <summary>
         /// Gets or sets what the module requires.
         /// </summary>
-        public ObservableCollection<string> ObservableRequires { get => observableRequires; set { observableRequires = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> ObservableRequires { get => observableRequires; set { observableRequires = value; RaisePropertyChanged(nameof(ObservableRequires)); } }
 
         /// <summary>
         /// Gets or sets the configuration for the module.

@@ -61,7 +61,6 @@
     <Compile Include="Views\ServiceView.xaml.cs">
       <DependentUpon>ServiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\SSPViewModelBase.cs" />
     <Compile Include="Views\ModuleView.xaml.cs">
       <DependentUpon>ModuleView.xaml</DependentUpon>
     </Compile>

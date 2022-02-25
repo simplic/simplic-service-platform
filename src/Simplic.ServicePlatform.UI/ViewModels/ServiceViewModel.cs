@@ -1,6 +1,4 @@
 ﻿using Simplic.UI.MVC;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -8,28 +6,23 @@ using System.Windows.Input;
 
 namespace Simplic.ServicePlatform.UI
 {
-    public class ServiceViewModel : SSPViewModelBase
+    public class ServiceViewModel : Simplic.UI.MVC.ViewModelBase
     {
         private readonly IServiceClient serviceClient;
 
-        private ServiceDefinition serviceDefinition;
         private ModuleDefinition selectedAvailableModule;
-        private ServiceModule selectedServiceModule;
-        private ObservableCollection<ServiceModule> observableModules;
-        private ObservableCollection<ServiceDefinition> serviceModules;
+        private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
 
         /// <summary>
         /// Instantiates the view model.
         /// </summary>
         /// <param name="serviceDefinition">service</param>
-        public ServiceViewModel(IServiceClient serviceClient, ServiceDefinition serviceDefinition)
+        public ServiceViewModel(IServiceClient serviceClient)
         {
             this.serviceClient = serviceClient;
-            this.serviceDefinition = serviceDefinition;
 
             LoadAvailableServices();
             LoadAvailableModules();
-            ObservableModules = new ObservableCollection<ServiceModule>(Modules);
 
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
         }
@@ -38,13 +31,14 @@ namespace Simplic.ServicePlatform.UI
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-               serviceModules = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
+                availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
             }).ContinueWith(o =>
             {
-                AvailableServices = new ObservableCollection<ServiceDefinitionViewModel>(
-                    serviceModules.Select(m =>
-                    new ServiceDefinitionViewModel() { Model = m, UsedModules = new ObservableCollection<ServiceModule>(m.Modules) })
-                );
+                //AvailableServices = new ObservableCollection<ServiceDefinitionViewModel>(
+                //    serviceDefinitions.Select(m =>
+                //    new ServiceDefinitionViewModel() { Model = m, UsedModules = new ObservableCollection<ServiceModule>(m.Modules) })
+                //);
+                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m)));
             });
         }
 
@@ -57,12 +51,16 @@ namespace Simplic.ServicePlatform.UI
         }
         private void Save()
         {
-            serviceClient.SaveService(serviceDefinition);
+            foreach (var service in Services)
+                serviceClient.SaveService(service.Model);
         }
 
         private bool CanSave()
         {
-            return !string.IsNullOrEmpty(ServiceName);
+            foreach (var service in Services)
+                if (!string.IsNullOrEmpty(service.Model.ServiceName))
+                    return false;
+            return true;
         }
 
         /// <summary>
@@ -73,22 +71,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the selected available module.
         /// </summary>
-        public ModuleDefinition SelectedAvailableModule { get => selectedAvailableModule; set { selectedAvailableModule = value; OnPropertyChanged(); } }
-
-        /// <summary>
-        /// Gets or sets the selected module.
-        /// </summary>
-        public ServiceModule SelectedServiceModule { get => selectedServiceModule; set { selectedServiceModule = value; OnPropertyChanged(); OnPropertyChanged(nameof(SelectedServiceModuleConfiguration)); } }
-
-        /// <summary>
-        /// Gets the configuration of the selected service module.
-        /// </summary>
-        public IList<ServiceModuleConfiguration> SelectedServiceModuleConfiguration
-        {
-            get => (SelectedServiceModule != null && SelectedServiceModule.Configuration != null)
-                ? SelectedServiceModule.Configuration
-                : new List<ServiceModuleConfiguration>();
-        }
+        public ModuleDefinition SelectedAvailableModule { get => selectedAvailableModule; set { selectedAvailableModule = value; RaisePropertyChanged(nameof(SelectedAvailableModule)); } }
 
         /// <summary>
         /// Gets a list of available modules.
@@ -96,33 +79,8 @@ namespace Simplic.ServicePlatform.UI
         public ObservableCollection<ModuleDefinition> AvailableModules { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection that represents the modules of the service.
-        /// </summary>
-        public ObservableCollection<ModuleDefinition> ModulesBridge { get ; set; }
-
-        /// <summary>
-        /// Gets or sets the id of the service.
-        /// </summary>
-        public Guid Id { get => serviceDefinition.Id; set => serviceDefinition.Id = value; }
-
-        /// <summary>
-        /// Gets or sets the service name of the service.
-        /// </summary>
-        public string ServiceName { get => serviceDefinition.ServiceName; set => serviceDefinition.ServiceName = value; }
-
-        /// <summary>
-        /// Gets or sets the modules of the service.
-        /// </summary>
-        public IList<ServiceModule> Modules { get => serviceDefinition.Modules; set => serviceDefinition.Modules = value; }
-
-        /// <summary>
-        /// Gets or sets the observable collection of the modules.
-        /// </summary>
-        public ObservableCollection<ServiceModule> ObservableModules { get => observableModules; set { observableModules = value; RaisePropertyChanged(nameof(ObservableModules)); } }
-
-        /// <summary>
         /// Gets or sets available services.
         /// </summary>
-        public ObservableCollection<ServiceDefinitionViewModel> AvailableServices { get; set; }
+        public ObservableCollection<ServiceDefinitionViewModel> Services { get; set; }
     }
 }

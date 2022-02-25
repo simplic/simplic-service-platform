@@ -17,41 +17,41 @@ namespace Simplic.ServicePlatform.UI
         {
             InitializeComponent();
             this.serviceClient = serviceClient;
-            DataContext = new ServiceViewModel(serviceClient, serviceDefinition);
+            DataContext = new ServiceViewModel(serviceClient);
         }
 
         private void AvailableModulesRadListBox_Drop(object sender, DragEventArgs e)
         {
-            var viewModel = DataContext as ServiceViewModel;
-            if (viewModel.SelectedServiceModule == null) return; //no sufficient fix, need to early return when drag&drop was inside the same container
+            //var viewModel = DataContext as ServiceViewModel;
+            //if (viewModel.SelectedServiceModule == null) return; //no sufficient fix, need to early return when drag&drop was inside the same container
 
-            var newAvailableModule = ServiceModuleToModuleDefinition(viewModel.SelectedServiceModule);
+            //var newAvailableModule = ServiceModuleToModuleDefinition(viewModel.SelectedServiceModule);
 
-            if (newAvailableModule == null) return;
-            viewModel.SelectedAvailableModule = newAvailableModule;
-            viewModel.AvailableModules.Add(newAvailableModule);
-            viewModel.RaisePropertyChanged(nameof(viewModel.AvailableModules));
+            //if (newAvailableModule == null) return;
+            //viewModel.SelectedAvailableModule = newAvailableModule;
+            //viewModel.AvailableModules.Add(newAvailableModule);
+            //viewModel.RaisePropertyChanged(nameof(viewModel.AvailableModules));
         }
 
         private void UsedModulesRadListBox_Drop(object sender, DragEventArgs e)
         {
-            var viewModel = DataContext as ServiceViewModel;
-            if (viewModel.SelectedAvailableModule == null) return;
+            //var viewModel = DataContext as ServiceViewModel;
+            //if (viewModel.SelectedAvailableModule == null) return;
             
 
-            ServiceModule newServiceModule = ModuleDefinitionToServiceModule(viewModel.SelectedAvailableModule);
+            //ServiceModule newServiceModule = ModuleDefinitionToServiceModule(viewModel.SelectedAvailableModule);
 
-            viewModel.SelectedServiceModule = newServiceModule;
-            viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModule));
-            viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModuleConfiguration));
+            //viewModel.SelectedServiceModule = newServiceModule;
+            //viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModule));
+            //viewModel.RaisePropertyChanged(nameof(viewModel.SelectedServiceModuleConfiguration));
 
-            //viewModel.Modules.Add(newServiceModule);
-            viewModel.AvailableServices[0].AddModule(newServiceModule);
-            viewModel.AvailableServices[0].Update();
+            ////viewModel.Modules.Add(newServiceModule);
+            //viewModel.Services[0].AddModule(newServiceModule);
+            //viewModel.Services[0].Update();
 
-            viewModel.RaisePropertyChanged(nameof(viewModel.Modules));
-            viewModel.ObservableModules.Add(newServiceModule);
-            viewModel.RaisePropertyChanged(nameof(viewModel.ObservableModules));
+            //viewModel.RaisePropertyChanged(nameof(viewModel.Modules));
+            //viewModel.ObservableModules.Add(newServiceModule);
+            //viewModel.RaisePropertyChanged(nameof(viewModel.ObservableModules));
         }
 
         private ModuleDefinition ServiceModuleToModuleDefinition(ServiceModule serviceModule)
