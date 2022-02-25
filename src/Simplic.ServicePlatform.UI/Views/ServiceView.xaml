@@ -120,7 +120,6 @@
                                 DisplayMemberPath="Name"
                                 SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
                                 AllowDrop="True"
-                                Drop="AvailableModulesRadListBox_Drop"
                                 telerik:TouchManager.IsTouchHitTestVisible="True">
                     <telerik:RadListBox.ItemContainerStyle>
                         <Style TargetType="telerik:RadListBoxItem">
