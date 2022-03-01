@@ -1,6 +1,4 @@
-﻿using Simplic.ServicePlatform.UI.ViewModels;
-using Simplic.ServicePlatform.UI.Views;
-using Simplic.UI.MVC;
+﻿using Simplic.UI.MVC;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -15,6 +13,7 @@ namespace Simplic.ServicePlatform.UI
         private readonly IServiceClient serviceClient;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
+        private ServiceDefinitionViewModel selectedServiceCard;
 
         /// <summary>
         /// Instantiates the view model.
@@ -27,18 +26,11 @@ namespace Simplic.ServicePlatform.UI
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             LoadAvailableServices();
             LoadAvailableModules();
-            AddCardCommand = new RelayCommand(AddNewCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+            DeleteCardCommand = new RelayCommand(DeleteCard);
+
         }
 
-        public void AddNewCard(object obj)
-        {
-            //var window = new AddCardView();
-            //window.ShowDialog();
-
-            Services.Add(new ServiceDefinitionViewModel(new ServiceDefinition { Id = new System.Guid() }, this));
-            RaisePropertyChanged(nameof(Services));
-        }
 
         private void LoadAvailableServices()
         {
@@ -64,6 +56,18 @@ namespace Simplic.ServicePlatform.UI
                 RaisePropertyChanged(nameof(AvailableModules));
             });
         }
+
+        private void DeleteCard(object obj)
+        {
+            var deleteCard = Services.FirstOrDefault(x => x.Model.ServiceName == selectedServiceCard.Model.ServiceName);
+            if(deleteCard == null)
+            {
+                return;
+            }
+            Services.Remove(deleteCard);
+            RaisePropertyChanged(nameof(Services));
+        }
+
         private void Save()
         {
             MessageBox.Show("Noooo dont do it!");
@@ -111,10 +115,16 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ICommand SaveCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command for adding cards.
-        /// </summary>
-        public ICommand AddCardCommand { get; set; }
+        public ICommand DeleteCardCommand { get; set; }
 
+        public ServiceDefinitionViewModel SelectedServiceCard
+        {
+            get => selectedServiceCard;
+
+            set {
+                selectedServiceCard = value;
+                RaisePropertyChanged(nameof(SelectedServiceCard));
+            }
+        }
     }
 }
