@@ -12,6 +12,7 @@ namespace Simplic.ServicePlatform.UI
     {
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
+        private ServiceViewModel parent;
 
         /// <summary>
         /// Instantiates the view model.
@@ -23,7 +24,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Instantiates the view model for given model.
         /// </summary>
-        public ServiceDefinitionViewModel(ServiceDefinition model)
+        public ServiceDefinitionViewModel(ServiceDefinition model, ServiceViewModel parent)
         {
             // TODO check configuration of the service module and remove or add according to definition
             Model = model;
@@ -110,5 +111,10 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the selected available module.
         /// </summary>
         public ModuleDefinition SelectedAvailableModule { get; set; }
+
+        /// <summary>
+        /// Gets and sets the parent of this viewmodel.
+        /// </summary>
+        public ServiceViewModel Parent { get => parent; set => parent = value; }
     }
 }

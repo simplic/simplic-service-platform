@@ -40,7 +40,7 @@ namespace Simplic.ServicePlatform.UI
                 //    serviceDefinitions.Select(m =>
                 //    new ServiceDefinitionViewModel() { Model = m, UsedModules = new ObservableCollection<ServiceModule>(m.Modules) })
                 //);
-                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m)));
+                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)));
                 RaisePropertyChanged(nameof(Services));
             });
         }
@@ -68,13 +68,6 @@ namespace Simplic.ServicePlatform.UI
             return true;
         }
 
-        private void UpdateViewModels()
-        {
-            Services.Select(o => o.SelectedAvailableModule = SelectedAvailableModule);
-            foreach (var service in Services)
-                service.SelectedAvailableModule = SelectedAvailableModule;
-        }
-
         /// <summary>
         /// Command for saving.
         /// </summary>
@@ -90,7 +83,6 @@ namespace Simplic.ServicePlatform.UI
             {
                 selectedAvailableModule = value;
                 RaisePropertyChanged(nameof(SelectedAvailableModule));
-                UpdateViewModels();
             }
         }
 
