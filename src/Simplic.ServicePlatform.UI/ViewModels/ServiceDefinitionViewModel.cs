@@ -13,7 +13,6 @@ namespace Simplic.ServicePlatform.UI
     {
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
-        private ModuleDefinition selectedAvailableModule;
         private ServiceViewModel parent;
 
         /// <summary>
@@ -30,8 +29,8 @@ namespace Simplic.ServicePlatform.UI
         {
             // TODO check configuration of the service module and remove or add according to definition
             Model = model;
-            //[old] UsedModules = new ObservableCollection<ServiceModule>(model.Modules);
-            DropCommand = new RelayCommand(o => AddAvailableModule(), o => { MessageBox.Show("No Available Module Selected"); return SelectedAvailableModule != null; });
+            Parent = parent;
+            DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
             UsedModules = new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)));
         }
 
@@ -47,24 +46,34 @@ namespace Simplic.ServicePlatform.UI
             RaisePropertyChanged(nameof(UsedModules));
         }
 
+        /// <summary>
+        /// Adds the selected available module to this service's module collection.
+        /// </summary>
         public void AddAvailableModule()
         {
             
                 var newServiceModule = new ServiceModule
                 {
-                    Name = moduleDefinition.Name,
+                    Name = Parent.SelectedAvailableModule.Name,
                     Configuration = new List<ServiceModuleConfiguration>
                         (
-                            moduleDefinition.ConfigurationDefinition.Select(config =>
+                            Parent.SelectedAvailableModule.ConfigurationDefinition.Select(config =>
                             {
                                 return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
                             })
                         )
                 };
                 AddModule(newServiceModule);
+        }
 
-
-
+        /// <summary>
+        /// Checks whether the conditions are met for adding a module.
+        /// </summary>
+        public bool CanAddAvailableModule()
+        {
+            if (Parent.SelectedAvailableModule != null)
+                return true;
+            return false;
         }
 
         /// <summary>
@@ -107,18 +116,10 @@ namespace Simplic.ServicePlatform.UI
                 : new List<ServiceModuleConfiguration>();
         }
 
-        public ModuleDefinition SelectedAvailableModule 
-        { 
-            get { return selectedAvailableModule; } 
-            set { selectedAvailableModule = value;  RaisePropertyChanged(nameof(SelectedAvailableModule)); } 
-        }
-
-        public ICommand DropCommand { get; set; }
-
         /// <summary>
-        /// Gets or sets the selected available module.
+        /// Gets or sets the command for handling drop events.
         /// </summary>
-        public ModuleDefinition SelectedAvailableModule { get; set; }
+        public ICommand DropCommand { get; set; }
 
         /// <summary>
         /// Gets and sets the parent of this viewmodel.

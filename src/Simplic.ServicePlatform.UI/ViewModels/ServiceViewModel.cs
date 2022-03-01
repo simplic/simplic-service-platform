@@ -15,7 +15,7 @@ namespace Simplic.ServicePlatform.UI
         private readonly IServiceClient serviceClient;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
-        private ICommand addCard;
+
         /// <summary>
         /// Instantiates the view model.
         /// </summary>
@@ -27,15 +27,17 @@ namespace Simplic.ServicePlatform.UI
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             LoadAvailableServices();
             LoadAvailableModules();
-            AddCard = new RelayCommand(AddNewCard);
+            AddCardCommand = new RelayCommand(AddNewCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
         }
 
         public void AddNewCard(object obj)
         {
-            var window = new AddCardView();
-            window.ShowDialog();
-            
+            //var window = new AddCardView();
+            //window.ShowDialog();
+
+            Services.Add(new ServiceDefinitionViewModel(new ServiceDefinition { Id = new System.Guid() }, this));
+            RaisePropertyChanged(nameof(Services));
         }
 
         private void LoadAvailableServices()
@@ -69,6 +71,10 @@ namespace Simplic.ServicePlatform.UI
             //    serviceClient.SaveService(service.Model);
         }
 
+        /// <summary>
+        /// Returns whether it should be possible to save.
+        /// </summary>
+        /// <returns>True or False</returns>
         private bool CanSave()
         {
             foreach (var service in Services)
@@ -76,11 +82,6 @@ namespace Simplic.ServicePlatform.UI
                     return false;
             return true;
         }
-
-        /// <summary>
-        /// Command for saving.
-        /// </summary>
-        public ICommand SaveCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the selected available module.
@@ -99,13 +100,21 @@ namespace Simplic.ServicePlatform.UI
         /// Gets a list of available modules.
         /// </summary>
         public ObservableCollection<ModuleDefinition> AvailableModules { get; set; }
-        
+
         /// <summary>
         /// Gets or sets services.
         /// </summary>
         public ObservableCollection<ServiceDefinitionViewModel> Services { get; set; }
 
-        public ICommand AddCard{ get => addCard; set => addCard = value; }
+        /// <summary>
+        /// Gets or sets the command for saving.
+        /// </summary>
+        public ICommand SaveCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for adding cards.
+        /// </summary>
+        public ICommand AddCardCommand { get; set; }
 
     }
 }
