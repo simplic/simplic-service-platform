@@ -1,6 +1,4 @@
-﻿using Simplic.ServicePlatform.UI.ViewModels;
-using Simplic.ServicePlatform.UI.Views;
-using Simplic.UI.MVC;
+﻿using Simplic.UI.MVC;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,6 +15,7 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
+        private ServiceDefinitionViewModel selectedServiceCard;
 
 
         /// <summary>
@@ -32,16 +31,10 @@ namespace Simplic.ServicePlatform.UI
             
             AddCardCommand = new RelayCommand(AddNewCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+            DeleteCardCommand = new RelayCommand(DeleteCard);
+
         }
 
-        public void AddNewCard(object obj)
-        {
-            //var window = new AddCardView();
-            //window.ShowDialog();
-
-            Services.Add(new ServiceDefinitionViewModel(new ServiceDefinition { Id = new System.Guid() }, this));
-            RaisePropertyChanged(nameof(Services));
-        }
 
         private void LoadServicesAndModules()
         {
@@ -84,6 +77,17 @@ namespace Simplic.ServicePlatform.UI
             foreach (var config in configurations)
                 newConfig.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
             return newConfig;
+        }
+
+        private void DeleteCard(object obj)
+        {
+            var deleteCard = Services.FirstOrDefault(x => x.Model.ServiceName == selectedServiceCard.Model.ServiceName);
+            if(deleteCard == null)
+            {
+                return;
+            }
+            Services.Remove(deleteCard);
+            RaisePropertyChanged(nameof(Services));
         }
 
         private void Save()
@@ -147,10 +151,16 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ICommand SaveCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command for adding cards.
-        /// </summary>
-        public ICommand AddCardCommand { get; set; }
+        public ICommand DeleteCardCommand { get; set; }
 
+        public ServiceDefinitionViewModel SelectedServiceCard
+        {
+            get => selectedServiceCard;
+
+            set {
+                selectedServiceCard = value;
+                RaisePropertyChanged(nameof(SelectedServiceCard));
+            }
+        }
     }
 }
