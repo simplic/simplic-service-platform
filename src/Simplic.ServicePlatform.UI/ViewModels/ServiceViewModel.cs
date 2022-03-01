@@ -1,6 +1,7 @@
 ﻿using Simplic.ServicePlatform.UI.ViewModels;
 using Simplic.ServicePlatform.UI.Views;
 using Simplic.UI.MVC;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -13,8 +14,10 @@ namespace Simplic.ServicePlatform.UI
     public class ServiceViewModel : Simplic.UI.MVC.ViewModelBase
     {
         private readonly IServiceClient serviceClient;
+        private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
+
 
         /// <summary>
         /// Instantiates the view model.
@@ -25,8 +28,8 @@ namespace Simplic.ServicePlatform.UI
 
             this.serviceClient = serviceClient;
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
-            LoadAvailableServices();
-            LoadAvailableModules();
+            LoadServicesAndModules();
+            
             AddCardCommand = new RelayCommand(AddNewCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
         }
@@ -40,30 +43,49 @@ namespace Simplic.ServicePlatform.UI
             RaisePropertyChanged(nameof(Services));
         }
 
-        private void LoadAvailableServices()
+        private void LoadServicesAndModules()
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
+                AvailableModules = new ObservableCollection<ModuleDefinition>(await serviceClient.GetAllModules());
             }).ContinueWith(o =>
             {
-                //AvailableServices = new ObservableCollection<ServiceDefinitionViewModel>(
-                //    serviceDefinitions.Select(m =>
-                //    new ServiceDefinitionViewModel() { Model = m, UsedModules = new ObservableCollection<ServiceModule>(m.Modules) })
-                //);
                 Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)));
+                UpdateServiceModules();
                 RaisePropertyChanged(nameof(Services));
-            });
-        }
-
-        private void LoadAvailableModules()
-        {
-            Application.Current.Dispatcher.Invoke(async () =>
-            {
-                AvailableModules = new ObservableCollection<ModuleDefinition>(await serviceClient.GetAllModules());
                 RaisePropertyChanged(nameof(AvailableModules));
             });
         }
+
+        /// <summary>
+        /// Updates all service modules accordingly to module definitions.
+        /// </summary>
+        private void UpdateServiceModules()
+        {
+            foreach (var availableModule in AvailableModules)
+            {
+                var newConfigurations = ModuleConfigurationConverter(availableModule.ConfigurationDefinition);
+                foreach (var service in Services)
+                {
+                    service.UpdateConfigurations(availableModule.Name, newConfigurations);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts configurations from module definitions to configurations for service modules.
+        /// </summary>
+        /// <param name="configurations">Configurations from a module definition</param>
+        /// <returns>New configurations.</returns>
+        private IEnumerable<ServiceModuleConfiguration> ModuleConfigurationConverter(IEnumerable<ModuleConfigurationDefinition> configurations)
+        {
+            var newConfig = new List<ServiceModuleConfiguration>();
+            foreach (var config in configurations)
+                newConfig.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
+            return newConfig;
+        }
+
         private void Save()
         {
             MessageBox.Show("Noooo dont do it!");
@@ -81,6 +103,20 @@ namespace Simplic.ServicePlatform.UI
                 if (!string.IsNullOrEmpty(service.Model.ServiceName))
                     return false;
             return true;
+        }
+
+        /// <summary>
+        /// Gets or sets the selected service card.
+        /// </summary>
+        public ServiceDefinitionViewModel SelectedServiceCard
+        {
+            get => selectedServiceCard;
+            set
+            {
+                selectedServiceCard = value;
+                RaisePropertyChanged(nameof(SelectedServiceCard));
+                MessageBox.Show($"Selected a new service card ({value.Model.ServiceName})");
+            }
         }
 
         /// <summary>

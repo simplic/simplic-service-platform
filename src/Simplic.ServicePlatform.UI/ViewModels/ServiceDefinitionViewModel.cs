@@ -51,19 +51,19 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public void AddAvailableModule()
         {
-            
-                var newServiceModule = new ServiceModule
-                {
-                    Name = Parent.SelectedAvailableModule.Name,
-                    Configuration = new List<ServiceModuleConfiguration>
-                        (
-                            Parent.SelectedAvailableModule.ConfigurationDefinition.Select(config =>
-                            {
-                                return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
-                            })
-                        )
-                };
-                AddModule(newServiceModule);
+
+            var newServiceModule = new ServiceModule
+            {
+                Name = Parent.SelectedAvailableModule.Name,
+                Configuration = new List<ServiceModuleConfiguration>
+                    (
+                        Parent.SelectedAvailableModule.ConfigurationDefinition.Select(config =>
+                        {
+                            return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
+                        })
+                    )
+            };
+            AddModule(newServiceModule);
         }
 
         /// <summary>
@@ -85,12 +85,36 @@ namespace Simplic.ServicePlatform.UI
             RaisePropertyChanged(nameof(UsedModules));
         }
 
-        /* [old]
         /// <summary>
-        /// Gets or sets the collection of used modules.
+        /// Updates the configurations of the given module with given ones.
         /// </summary>
-        public ObservableCollection<ServiceModule> UsedModules { get; set; }
-        */
+        /// <param name="moduleName">Module</param>
+        /// <param name="newConfigurations">New configurations</param>
+        public void UpdateConfigurations(string moduleName, IEnumerable<ServiceModuleConfiguration> newConfigurations)
+        {
+            foreach (var module in UsedModules)
+            {
+                if (module.Model.Name.Equals(moduleName))
+                {
+                    overwriteConfigValues(module.ConfigurationDefinitions, newConfigurations);
+                    module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(newConfigurations);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Overwrites target configuration values with native configuration values.
+        /// </summary>
+        /// <param name="nativeConfigurations">Used configuration values</param>
+        /// <param name="targetConfigurations">Configurations that should be overwritten</param>
+        private void overwriteConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
+        {
+            foreach (var newConfiguration in targetConfigurations)
+                foreach (var configuration in nativeConfigurations)
+                    if (configuration.Name.Equals(newConfiguration.Name))
+                        configuration.Value = newConfiguration.Value;
+        }
+
         /// <summary>
         /// Gets or sets the collection of used modules.
         /// </summary>
