@@ -18,9 +18,6 @@ namespace Simplic.ServicePlatform.UI
         {
             Model = model;
             configurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(model.Configuration);
-            configurationDefinitions.Add(new ServiceModuleConfiguration() { Name = "Config1", Value = "Einstellung1"});
-            configurationDefinitions.Add(new ServiceModuleConfiguration() { Name = "Config2", Value = "Einstellung2"});
-            configurationDefinitions.Add(new ServiceModuleConfiguration() { Name = "Config3", Value = "Einstellung3"});
         }
 
         /// <summary>

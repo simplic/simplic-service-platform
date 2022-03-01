@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Linq;
 using System.Windows.Input;
+using System;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -12,6 +13,7 @@ namespace Simplic.ServicePlatform.UI
     {
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
+        private ModuleDefinition selectedAvailableModule;
 
         /// <summary>
         /// Instantiates the view model.
@@ -45,19 +47,22 @@ namespace Simplic.ServicePlatform.UI
 
         public void AddFromModuleDefinition(ModuleDefinition moduleDefinition)
         {
-            var newServiceModule = new ServiceModule
-            {
-                Name = moduleDefinition.Name,
-                Configuration = new List<ServiceModuleConfiguration>
-                (
-                    moduleDefinition.ConfigurationDefinition.Select(config =>
-                    {
-                        return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
-                    })
-                )
-            };
+            
+                var newServiceModule = new ServiceModule
+                {
+                    Name = moduleDefinition.Name,
+                    Configuration = new List<ServiceModuleConfiguration>
+                        (
+                            moduleDefinition.ConfigurationDefinition.Select(config =>
+                            {
+                                return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
+                            })
+                        )
+                };
+                AddModule(newServiceModule);
 
-            AddModule(newServiceModule);
+
+
         }
 
         /// <summary>
@@ -98,6 +103,12 @@ namespace Simplic.ServicePlatform.UI
             get => (SelectedServiceModule != null && SelectedServiceModule.Configuration != null)
                 ? SelectedServiceModule.Configuration
                 : new List<ServiceModuleConfiguration>();
+        }
+
+        public ModuleDefinition SelectedAvailableModule 
+        { 
+            get { return selectedAvailableModule; } 
+            set { selectedAvailableModule = value;  RaisePropertyChanged(nameof(SelectedAvailableModule)); } 
         }
 
         public ICommand DropCommand { get; set; }

@@ -1,4 +1,6 @@
-﻿using Simplic.UI.MVC;
+﻿using Simplic.ServicePlatform.UI.ViewModels;
+using Simplic.ServicePlatform.UI.Views;
+using Simplic.UI.MVC;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -13,7 +15,7 @@ namespace Simplic.ServicePlatform.UI
         private readonly IServiceClient serviceClient;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
-
+        private ICommand addCard;
         /// <summary>
         /// Instantiates the view model.
         /// </summary>
@@ -25,8 +27,15 @@ namespace Simplic.ServicePlatform.UI
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             LoadAvailableServices();
             LoadAvailableModules();
-
+            AddCard = new RelayCommand(AddNewCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+        }
+
+        public void AddNewCard(object obj)
+        {
+            var window = new AddCardView();
+            window.ShowDialog();
+            
         }
 
         private void LoadAvailableServices()
@@ -82,11 +91,13 @@ namespace Simplic.ServicePlatform.UI
         /// Gets a list of available modules.
         /// </summary>
         public ObservableCollection<ModuleDefinition> AvailableModules { get; set; }
-
+        
         /// <summary>
         /// Gets or sets services.
         /// </summary>
         public ObservableCollection<ServiceDefinitionViewModel> Services { get; set; }
+
+        public ICommand AddCard{ get => addCard; set => addCard = value; }
 
     }
 }
