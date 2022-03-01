@@ -15,7 +15,6 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
-        private ServiceDefinitionViewModel selectedServiceCard;
 
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace Simplic.ServicePlatform.UI
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             LoadServicesAndModules();
             
-            AddCardCommand = new RelayCommand(AddNewCard);
+            AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
             DeleteCardCommand = new RelayCommand(DeleteCard);
 
@@ -77,6 +76,11 @@ namespace Simplic.ServicePlatform.UI
             foreach (var config in configurations)
                 newConfig.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
             return newConfig;
+        }
+
+        private void AddCard(object obj)
+        {
+            Services.Add(new ServiceDefinitionViewModel(new ServiceDefinition(), this));
         }
 
         private void DeleteCard(object obj)
@@ -151,16 +155,14 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ICommand SaveCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the commadn for adding a card.
+        /// </summary>
+        public ICommand AddCardCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for deleting a card.
+        /// </summary>
         public ICommand DeleteCardCommand { get; set; }
-
-        public ServiceDefinitionViewModel SelectedServiceCard
-        {
-            get => selectedServiceCard;
-
-            set {
-                selectedServiceCard = value;
-                RaisePropertyChanged(nameof(SelectedServiceCard));
-            }
-        }
     }
 }
