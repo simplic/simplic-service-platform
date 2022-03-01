@@ -27,9 +27,10 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ServiceDefinitionViewModel(ServiceDefinition model)
         {
+            // TODO check configuration of the service module and remove or add according to definition
             Model = model;
             //[old] UsedModules = new ObservableCollection<ServiceModule>(model.Modules);
-            DropCommand = new RelayCommand(o => AddFromModuleDefinition(o as ModuleDefinition));
+            DropCommand = new RelayCommand(o => AddAvailableModule(), o => { MessageBox.Show("No Available Module Selected"); return SelectedAvailableModule != null; });
             UsedModules = new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)));
         }
 
@@ -45,7 +46,7 @@ namespace Simplic.ServicePlatform.UI
             RaisePropertyChanged(nameof(UsedModules));
         }
 
-        public void AddFromModuleDefinition(ModuleDefinition moduleDefinition)
+        public void AddAvailableModule()
         {
             
                 var newServiceModule = new ServiceModule
@@ -112,5 +113,10 @@ namespace Simplic.ServicePlatform.UI
         }
 
         public ICommand DropCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected available module.
+        /// </summary>
+        public ModuleDefinition SelectedAvailableModule { get; set; }
     }
 }

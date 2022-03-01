@@ -77,6 +77,13 @@ namespace Simplic.ServicePlatform.UI
             return true;
         }
 
+        private void UpdateViewModels()
+        {
+            Services.Select(o => o.SelectedAvailableModule = SelectedAvailableModule);
+            foreach (var service in Services)
+                service.SelectedAvailableModule = SelectedAvailableModule;
+        }
+
         /// <summary>
         /// Command for saving.
         /// </summary>
@@ -85,7 +92,16 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the selected available module.
         /// </summary>
-        public ModuleDefinition SelectedAvailableModule { get => selectedAvailableModule; set { selectedAvailableModule = value; RaisePropertyChanged(nameof(SelectedAvailableModule)); } }
+        public ModuleDefinition SelectedAvailableModule
+        {
+            get => selectedAvailableModule;
+            set
+            {
+                selectedAvailableModule = value;
+                RaisePropertyChanged(nameof(SelectedAvailableModule));
+                UpdateViewModels();
+            }
+        }
 
         /// <summary>
         /// Gets a list of available modules.
