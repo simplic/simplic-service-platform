@@ -54,6 +54,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\CollectionToInvisibilityConverter.cs" />
+    <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
+    <Compile Include="Converters\NullToBooleanConverter.cs" />
     <Compile Include="ServiceModuleViewModel.cs" />
     <Compile Include="ViewModels\ServiceDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ServiceViewModel.cs" />

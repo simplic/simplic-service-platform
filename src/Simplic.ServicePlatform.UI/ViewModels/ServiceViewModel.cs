@@ -85,13 +85,15 @@ namespace Simplic.ServicePlatform.UI
 
         private void DeleteCard(object obj)
         {
-            var deleteCard = Services.FirstOrDefault(x => x.Model.ServiceName == selectedServiceCard.Model.ServiceName);
-            if(deleteCard == null)
-            {
-                return;
-            }
-            Services.Remove(deleteCard);
+            //var deleteCard = Services.FirstOrDefault(x => x.Model.ServiceName == selectedServiceCard.Model.ServiceName);
+            //if(deleteCard == null)
+            //{
+            //    return;
+            //}
+            //Services.Remove(deleteCard);
+            Services.Remove(SelectedServiceCard);
             RaisePropertyChanged(nameof(Services));
+            SelectedServiceCard = null;
         }
 
         private void Save()
@@ -123,7 +125,6 @@ namespace Simplic.ServicePlatform.UI
             {
                 selectedServiceCard = value;
                 RaisePropertyChanged(nameof(SelectedServiceCard));
-                MessageBox.Show($"Selected a new service card ({value.Model.ServiceName})");
             }
         }
 
