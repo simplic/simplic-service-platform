@@ -21,6 +21,7 @@
         <local:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
         <local:CollectionToInvisibilityConverter x:Key="CollectionToInvisibilityConverter"/>
         <local:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+        <local:ModuleDataConverter x:Key="ModuleDataConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -99,15 +100,18 @@
                                                     HorizontalContentAlignment="Center"
                                                     VerticalAlignment="Stretch">
                                     <!--#region Behaviors-->
-                                    <telerik:EventToCommandBehavior.EventBindings>
+                                    <!--<telerik:EventToCommandBehavior.EventBindings>
                                         <telerik:EventBinding Command="{Binding DropCommand}" EventName="Drop"
                                                               CommandParameter="{Binding SelectedAvailableModule}"/>
-                                    </telerik:EventToCommandBehavior.EventBindings>
+                                    </telerik:EventToCommandBehavior.EventBindings>-->
                                     <telerik:RadListBox.DragDropBehavior>
                                         <telerik:ListBoxDragDropBehavior AllowReorder="True"
                                                                  telerik:TouchManager.DragStartTrigger="TapHoldAndMove"
                                                                  telerik:DragDropManager.AllowDrag="True"/>
                                     </telerik:RadListBox.DragDropBehavior>
+                                    <telerik:RadListBox.DataConverter>
+                                        <local:ModuleDataConverter/>
+                                    </telerik:RadListBox.DataConverter>
                                     <!--#endregion-->
                                     <!--#region Expanders for Configuration-->
                                     <telerik:RadListBox.ItemTemplate>
@@ -160,7 +164,7 @@
                                 ItemsSource="{Binding AvailableModules}"
                                 DisplayMemberPath="Name"
                                 SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
-                                AllowDrop="True"
+                                AllowDrop="False"
                                 telerik:TouchManager.IsTouchHitTestVisible="True">
                     <telerik:RadListBox.ItemContainerStyle>
                         <Style TargetType="telerik:RadListBoxItem">
