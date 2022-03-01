@@ -30,7 +30,7 @@
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
         <telerik:RadButton Width="70"
                            HorizontalAlignment="Left"
                            Content="Save"
@@ -82,27 +82,42 @@
                                     <!--#region Expanders for Configuration-->
                                     <telerik:RadListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <StackPanel>
-
-                                                <TextBlock Text="{Binding Model.Name}"/>
+                                            <StackPanel Orientation="Horizontal">
                                                 <telerik:RadExpander>
                                                     <telerik:RadExpander.Content>
-                                                        <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}"/>
+                                                        <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}">
+                                                            <telerik:RadListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="{Binding Name}"/>
+                                                                        <TextBox Text="{Binding Value}" Margin="4 0 0 0 "/>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </telerik:RadListBox.ItemTemplate>
+                                                        </telerik:RadListBox>
                                                     </telerik:RadExpander.Content>
                                                 </telerik:RadExpander>
-
+                                                <TextBlock Text="{Binding Model.Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </telerik:RadListBox.ItemTemplate>
                                     <!--#endregion-->
-
                                 </telerik:RadListBox>
                                 <!--#endregion-->
+
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </telerik:RadCardView.CardReadOnlyTemplate>
+                <telerik:RadCardView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem  Header="Add Card" Command="{Binding AddCard}"/>
+                        <MenuItem  Header="Delete Card"/>
+                        <MenuItem  Header="Edit Card"/>
+                    </ContextMenu>
+                </telerik:RadCardView.ContextMenu>
             </telerik:RadCardView>
+            
             <!--#endregion-->
         </Border>
 
@@ -139,6 +154,7 @@
                 </telerik:RadListBox>
             </Grid>
         </Border>
+        
         <!--#endregion-->
     </Grid>
 </Window>

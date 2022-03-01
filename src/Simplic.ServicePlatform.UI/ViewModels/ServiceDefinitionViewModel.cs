@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Linq;
 using System.Windows.Input;
+using System;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -12,6 +13,7 @@ namespace Simplic.ServicePlatform.UI
     {
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
+        private ModuleDefinition selectedAvailableModule;
         private ServiceViewModel parent;
 
         /// <summary>
@@ -47,19 +49,22 @@ namespace Simplic.ServicePlatform.UI
 
         public void AddAvailableModule()
         {
-            var newServiceModule = new ServiceModule
-            {
-                Name = SelectedAvailableModule.Name,
-                Configuration = new List<ServiceModuleConfiguration>
-                (
-                    SelectedAvailableModule.ConfigurationDefinition.Select(config =>
-                    {
-                        return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
-                    })
-                )
-            };
+            
+                var newServiceModule = new ServiceModule
+                {
+                    Name = moduleDefinition.Name,
+                    Configuration = new List<ServiceModuleConfiguration>
+                        (
+                            moduleDefinition.ConfigurationDefinition.Select(config =>
+                            {
+                                return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
+                            })
+                        )
+                };
+                AddModule(newServiceModule);
 
-            AddModule(newServiceModule);
+
+
         }
 
         /// <summary>
@@ -102,9 +107,12 @@ namespace Simplic.ServicePlatform.UI
                 : new List<ServiceModuleConfiguration>();
         }
 
-        /// <summary>
-        /// Gets or sets the commmand that is responsible for drop event.
-        /// </summary>
+        public ModuleDefinition SelectedAvailableModule 
+        { 
+            get { return selectedAvailableModule; } 
+            set { selectedAvailableModule = value;  RaisePropertyChanged(nameof(SelectedAvailableModule)); } 
+        }
+
         public ICommand DropCommand { get; set; }
 
         /// <summary>

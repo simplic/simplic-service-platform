@@ -55,10 +55,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ServiceModuleViewModel.cs" />
+    <Compile Include="ViewModels\AddCardViewModel.cs" />
     <Compile Include="ViewModels\ServiceDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ServiceViewModel.cs" />
     <Compile Include="ViewModels\ModuleViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\AddCardView.xaml.cs">
+      <DependentUpon>AddCardView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ServiceView.xaml.cs">
       <DependentUpon>ServiceView.xaml</DependentUpon>
     </Compile>
@@ -67,6 +71,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\AddCardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ServiceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
