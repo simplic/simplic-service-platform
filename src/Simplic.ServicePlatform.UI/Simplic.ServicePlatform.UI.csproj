@@ -127,6 +127,9 @@
     <PackageReference Include="Simplic.Localization.UI">
       <Version>1.1.20.1208</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.PlugIn.Administration">
+      <Version>8.1.21.1209</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.Studio.UI">
       <Version>1.6.2221.923</Version>
     </PackageReference>

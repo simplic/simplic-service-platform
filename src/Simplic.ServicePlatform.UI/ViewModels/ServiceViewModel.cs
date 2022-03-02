@@ -1,9 +1,12 @@
-﻿using Simplic.UI.MVC;
+﻿using Simplic.PlugIn.Administration.UI;
+using Simplic.UI.MVC;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -26,14 +29,21 @@ namespace Simplic.ServicePlatform.UI
 
             this.serviceClient = serviceClient;
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
+            //Console = new Control_Console();
+            Console = new UserControl
+            {
+                Content = new TextBox { Background = Brushes.Black, Foreground = Brushes.LimeGreen, Text = "> " },
+            };
+            InitializeCommands();
             LoadServicesAndModules();
-            
+        }
+
+        private void InitializeCommands()
+        {
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
             DeleteCardCommand = new RelayCommand(DeleteCard);
-
         }
-
 
         private void LoadServicesAndModules()
         {
@@ -172,6 +182,6 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the console.
         /// </summary>
-        public Simplic.Framework.UI.Page Console { get; set; }
+        public UserControl Console { get; set; }
     }
 }

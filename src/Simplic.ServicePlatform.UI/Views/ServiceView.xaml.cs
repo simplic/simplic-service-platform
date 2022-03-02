@@ -12,6 +12,8 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ServiceView : DefaultRibbonWindow 
     {
+        private RibbonButton addCardButton;
+        private RibbonButton removeCardButton;
         /// <summary>
         /// Instantiates the view for the given module.
         /// </summary>
@@ -19,12 +21,67 @@ namespace Simplic.ServicePlatform.UI
         {
             InitializeComponent();
             DataContext = new ServiceViewModel(serviceClient);
-            var addCardButton = new RibbonButton()
+            CreateButtons();
+            Configure();
+        }
+
+        private void CreateButtons()
+        {
+            var cardButtonGroup = new RadRibbonGroup();
+            cardButtonGroup.Header = "Service";
+
+            addCardButton = new RibbonButton()
             {
+                Text = "Add",
                 Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
-                LargeIconName = "preProductList_add_32x",
-                TextLocalizationKey = "shipment_split_window_splitbutton"
+                LargeIconName = "Plus_Orange_32x32",
+                //TextLocalizationKey = "shipment_split_window_splitbutton"
             };
+
+            cardButtonGroup.Items.Add(addCardButton);
+
+            removeCardButton = new RibbonButton()
+            {
+                Text = "Remove",
+                Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
+                LargeIconName = "delete_32x",
+                //TextLocalizationKey = "shipment_split_window_splitbutton"
+            };
+
+            cardButtonGroup.Items.Add(removeCardButton);
+
+            if (DataContext is ServiceViewModel viewModel)
+            {
+
+                addCardButton.Command = viewModel.AddCardCommand;
+                removeCardButton.Command = viewModel.DeleteCardCommand;
+            }
+
+            RadRibbonHomeTab.Items.Add(cardButtonGroup);
+        }
+
+        private void Configure()
+        {
+            AllowPaging = false;
+        }
+
+        public override void OnSave(WindowSaveEventArg e)
+        {
+            MessageBox.Show("Oh no don't do it!");
+            return;
+
+            //if (DataContext is ServiceViewModel viewModel)
+            //{
+            //    viewModel.SaveCommand.Execute(this);
+            //}
+            ////base.OnSave(e);
+        }
+
+        public override void OnDelete(WindowDeleteEventArg e)
+        {
+            MessageBox.Show("Nope.");
+            return;
+            //base.OnDelete(e);
         }
     }
 }
