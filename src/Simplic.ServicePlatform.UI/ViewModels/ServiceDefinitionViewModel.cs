@@ -27,7 +27,6 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ServiceDefinitionViewModel(ServiceDefinition model, ServiceViewModel parent)
         {
-            // TODO check configuration of the service module and remove or add according to definition
             Model = model;
             Parent = parent;
             DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
@@ -51,7 +50,6 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public void AddAvailableModule()
         {
-
             var newServiceModule = new ServiceModule
             {
                 Name = Parent.SelectedAvailableModule.Name,
@@ -83,6 +81,16 @@ namespace Simplic.ServicePlatform.UI
         {
             RaisePropertyChanged(nameof(Model));
             RaisePropertyChanged(nameof(UsedModules));
+        }
+
+        /// <summary>
+        /// Synchronizes the bindings with the model.
+        /// </summary>
+        public void Synch()
+        {
+            foreach (var module in UsedModules)
+                module.Synch();
+            Model.Modules = UsedModules.Select(m => m.Model) as IList<ServiceModule>;
         }
 
         /// <summary>

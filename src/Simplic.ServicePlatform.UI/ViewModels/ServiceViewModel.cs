@@ -99,8 +99,11 @@ namespace Simplic.ServicePlatform.UI
         private void Save()
         {
             MessageBox.Show("Noooo dont do it!");
-            //foreach (var service in Services)
-            //    serviceClient.SaveService(service.Model);
+            foreach (var service in Services)
+            {
+                service.Synch();
+                serviceClient.SaveService(service.Model);
+            }
         }
 
         /// <summary>
@@ -165,5 +168,10 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for deleting a card.
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the console.
+        /// </summary>
+        public Simplic.Framework.UI.Page Console { get; set; }
     }
 }
