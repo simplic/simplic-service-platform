@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Simplic.Framework.UI;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace Simplic.ServicePlatform.UI
@@ -6,7 +7,7 @@ namespace Simplic.ServicePlatform.UI
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class ServiceView : Window
+    public partial class ServiceView : DefaultRibbonWindow 
     {
         private readonly IServiceClient serviceClient;
 
@@ -18,6 +19,7 @@ namespace Simplic.ServicePlatform.UI
             InitializeComponent();
             this.serviceClient = serviceClient;
             DataContext = new ServiceViewModel(serviceClient);
+            
         }
 
         private ModuleDefinition ServiceModuleToModuleDefinition(ServiceModule serviceModule)
