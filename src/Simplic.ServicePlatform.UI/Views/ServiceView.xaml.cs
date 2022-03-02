@@ -1,6 +1,8 @@
 ﻿using Simplic.Framework.UI;
 using System.Collections.Generic;
 using System.Windows;
+using Simplic.Studio.UI.Navigation;
+using Telerik.Windows.Controls;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -10,7 +12,7 @@ namespace Simplic.ServicePlatform.UI
     public partial class ServiceView : DefaultRibbonWindow 
     {
         private readonly IServiceClient serviceClient;
-
+        private ServiceViewModel viewModel;
         /// <summary>
         /// Instantiates the view for the given module.
         /// </summary>
@@ -18,8 +20,14 @@ namespace Simplic.ServicePlatform.UI
         {
             InitializeComponent();
             this.serviceClient = serviceClient;
-            DataContext = new ServiceViewModel(serviceClient);
-            
+            this.viewModel = new ServiceViewModel(serviceClient);
+            DataContext = this.viewModel;
+            var addCardButton = new RibbonButton()
+            {
+                Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
+                LargeIconName = "preProductList_add_32x",
+                TextLocalizationKey = "shipment_split_window_splitbutton"
+            };
         }
 
         private ModuleDefinition ServiceModuleToModuleDefinition(ServiceModule serviceModule)

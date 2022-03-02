@@ -44,6 +44,7 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <telerik:RadButton Content=" + "
+                               x:Name="addNewCard"
                            HorizontalAlignment="Right"
                            Command="{Binding AddCardCommand}"
                            Margin="0,0,0,10"/>
