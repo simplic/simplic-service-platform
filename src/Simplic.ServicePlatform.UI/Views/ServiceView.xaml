@@ -30,7 +30,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
-            <!--<RowDefinition Height="*"/>-->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -112,10 +112,10 @@
                                             <StackPanel>
                                                 <telerik:Label Content="{Binding Model.Name}"
                                                                Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToInvisibilityConverter}}"
-															   Margin="32,0,0,0" AllowDrop="False"/>
+															   Margin="32,0,0,0"/>
                                                 <telerik:RadExpander Grid.Column="1" Header="{Binding Model.Name}"
                                                                      Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToVisibilityConverter}}"
-                                                                     MaxWidth="280" AllowDrop="False">
+                                                                     MaxWidth="280">
                                                     <telerik:RadExpander.Content>
                                                         <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}" AllowDrop="False">
                                                             <telerik:RadListBox.ItemTemplate>
@@ -188,7 +188,7 @@
         <!--#endregion-->
 
         <!--#region Console-->
-        <!--<ContentPresenter Grid.Row="1" Content="{Binding Console}"/>-->
+        <ContentPresenter Grid.Row="1" Content="{Binding Console}"/>
         <!--<simplic:Control_Console Grid.Row="1" />-->
         <!--#endregion-->
     </Grid>
