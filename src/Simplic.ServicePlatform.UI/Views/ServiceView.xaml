@@ -112,10 +112,10 @@
                                             <StackPanel>
                                                 <telerik:Label Content="{Binding Model.Name}"
                                                                Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToInvisibilityConverter}}"
-															   Margin="32,0,0,0"/>
+															   Margin="32,0,0,0" AllowDrop="False"/>
                                                 <telerik:RadExpander Grid.Column="1" Header="{Binding Model.Name}"
                                                                      Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToVisibilityConverter}}"
-                                                                     MaxWidth="280">
+                                                                     MaxWidth="280" AllowDrop="False">
                                                     <telerik:RadExpander.Content>
                                                         <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}" AllowDrop="False">
                                                             <telerik:RadListBox.ItemTemplate>
