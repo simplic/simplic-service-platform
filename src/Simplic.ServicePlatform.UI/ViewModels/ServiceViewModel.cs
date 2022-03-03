@@ -18,6 +18,7 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
+        private List<ServiceDefinitionViewModel> servicesToRemove;
 
 
         /// <summary>
@@ -29,11 +30,7 @@ namespace Simplic.ServicePlatform.UI
 
             this.serviceClient = serviceClient;
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
-            //Console = new Control_Console();
-            Console = new UserControl
-            {
-                Content = new TextBox { Background = Brushes.Black, Foreground = Brushes.LimeGreen, Text = "> " },
-            };
+            servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
             LoadServicesAndModules();
         }
@@ -97,17 +94,22 @@ namespace Simplic.ServicePlatform.UI
         private void DeleteCard(object obj)
         {
             Services.Remove(SelectedServiceCard);
+            servicesToRemove.Add(SelectedServiceCard);
             RaisePropertyChanged(nameof(Services));
             SelectedServiceCard = null;
         }
 
         private void Save()
         {
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(Services.FirstOrDefault().Model); //just for debugging purposes
             foreach (var service in Services)
             {
                 service.Synch();
                 serviceClient.SaveService(service.Model);
+            }
+
+            foreach (var service in servicesToRemove)
+            {
+                serviceClient.DeleteService(service.Model);
             }
         }
 
@@ -186,11 +188,5 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for deleting a card.
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets the console.
-        /// </summary>
-        public UserControl Console { get; set; }
     }
 }
