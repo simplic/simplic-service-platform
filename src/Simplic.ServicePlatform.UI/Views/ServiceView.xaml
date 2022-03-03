@@ -30,7 +30,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -185,11 +184,6 @@
                 </telerik:RadListBox>
             </Grid>
         </Border>
-        <!--#endregion-->
-
-        <!--#region Console-->
-        <ContentPresenter Grid.Row="1" Content="{Binding Console}"/>
-        <!--<simplic:Control_Console Grid.Row="1" />-->
         <!--#endregion-->
     </Grid>
 </ui:DefaultRibbonWindow>

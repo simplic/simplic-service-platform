@@ -42,10 +42,10 @@ namespace Simplic.ServicePlatform
         Task SaveService(ServiceDefinition service);
 
         /// <summary>
-        /// Saves the given module definition.
+        /// Deletes the given service.
         /// </summary>
-        /// <param name="module">Module</param>
+        /// <param name="service">Service</param>
         /// <returns></returns>
-        Task SaveModule(ModuleDefinition module);
+        Task DeleteService(ServiceDefinition service);
     }
 }
