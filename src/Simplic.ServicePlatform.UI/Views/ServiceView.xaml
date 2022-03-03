@@ -8,38 +8,39 @@
 						xmlns:ui="clr-namespace:Simplic.Framework.UI;assembly=Simplic.Framework.Base"
 						xmlns:simplic="http://schemas.simplic-systems.com/2016/xaml/presentation"
 						xmlns:i = "http://schemas.microsoft.com/xaml/behaviors"
-						mc:Ignorable="d"
+                        mc:Ignorable="d"
 						d:DesignHeight="400" d:DesignWidth="800"
 						MinHeight="400" MinWidth="400"
 						Height="800" Width="1300"
 						Title="Services">
+    <!--xmlns:simplic_admin="clr-namespace:Simplic.PlugIn.Administration.UI;assembly=Simplic.PlugIn.Administration"-->
 
-	<ui:DefaultRibbonWindow.Resources>
-		<Style x:Key="RadListBoxItemStyle" TargetType="telerik:RadListBoxItem" >
-			<Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
-		</Style>
-		<telerik:NullToVisibilityConverter			x:Key="NullToVisibilityConverter"/>
-		<local:CollectionToVisibilityConverter		x:Key="CollectionToVisibilityConverter"/>
-		<local:CollectionToInvisibilityConverter	x:Key="CollectionToInvisibilityConverter"/>
-		<local:NullToBooleanConverter				x:Key="NullToBooleanConverter"/>
-		<local:ModuleDataConverter					x:Key="ModuleDataConverter"/>
-		<local:CustomListBoxDragDropBehavior		x:Key="CustomListBoxDragDropBehavior"/>
-	</ui:DefaultRibbonWindow.Resources>
+    <ui:DefaultRibbonWindow.Resources>
+        <Style x:Key="RadListBoxItemStyle" TargetType="telerik:RadListBoxItem" >
+            <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
+        </Style>
+        <telerik:NullToVisibilityConverter			x:Key="NullToVisibilityConverter"/>
+        <local:CollectionToVisibilityConverter		x:Key="CollectionToVisibilityConverter"/>
+        <local:CollectionToInvisibilityConverter	x:Key="CollectionToInvisibilityConverter"/>
+        <local:NullToBooleanConverter				x:Key="NullToBooleanConverter"/>
+        <local:ModuleDataConverter					x:Key="ModuleDataConverter"/>
+        <local:CustomListBoxDragDropBehavior		x:Key="CustomListBoxDragDropBehavior"/>
+    </ui:DefaultRibbonWindow.Resources>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="1.5*"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="4*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-		<!--#region CardView for all Services-->
-		<Border Padding="10">
-			<telerik:RadCardView x:Name="ServicesCardView"
+        <!--#region CardView for all Services-->
+        <Border Padding="10">
+            <telerik:RadCardView x:Name="ServicesCardView"
                                  CardHeaderBinding="{Binding Model.ServiceName}"
                                  ItemsSource="{Binding Services}"
                                  SelectedItem="{Binding SelectedServiceCard, Mode=TwoWay}"
@@ -47,42 +48,42 @@
 								 AllowDrop="False"
                                  ShowGroupPanel="False"
                                  DataFieldDescriptorsButtonVisibility="Hidden">
-				<telerik:RadCardView.ContextMenu>
-					<ContextMenu>
-						<MenuItem Header="Add Card" Command="{Binding AddCard}"/>
-						<MenuItem Header="Delete Card" Command="{Binding DeleteCardCommand}"
+                <telerik:RadCardView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add Card" Command="{Binding AddCard}"/>
+                        <MenuItem Header="Delete Card" Command="{Binding DeleteCardCommand}"
                                   IsEnabled="{Binding SelectedServiceCard, Converter={StaticResource NullToBooleanConverter}}"/>
-						<MenuItem Header="Edit Card"
+                        <MenuItem Header="Edit Card"
                                   IsEnabled="{Binding SelectedServiceCard, Converter={StaticResource NullToBooleanConverter}}"/>
-					</ContextMenu>
-				</telerik:RadCardView.ContextMenu>
-				<telerik:RadCardView.CardReadOnlyTemplate>
-					<DataTemplate>
-						<Border Padding="5" Width="295">
-							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="20"/>
-									<RowDefinition Height="25"/>
-									<RowDefinition Height="*"/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="70"/>
-									<ColumnDefinition Width="*"/>
-								</Grid.ColumnDefinitions>
-								<telerik:Label Grid.Column="0" Grid.Row="0" Content="ID"/>
-								<telerik:Label Grid.Column="1" Grid.Row="0" Content="{Binding Model.Id}"
+                    </ContextMenu>
+                </telerik:RadCardView.ContextMenu>
+                <telerik:RadCardView.CardReadOnlyTemplate>
+                    <DataTemplate>
+                        <Border Padding="5" Width="295">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <telerik:Label Grid.Column="0" Grid.Row="0" Content="ID"/>
+                                <telerik:Label Grid.Column="1" Grid.Row="0" Content="{Binding Model.Id}"
                                                FontSize="11"
                                                HorizontalAlignment="Right"
                                                Grid.ColumnSpan="2"
                                                Margin="0,0,5,0"/>
-								<telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
-								<telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
+                                <telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
+                                <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
                                                              WatermarkContent="Service Example"
                                                              Text="{Binding Model.ServiceName}"
                                                              HorizontalAlignment="Right"/>
 
-								<!--#region Used modules of the service definition-->
-								<telerik:RadListBox x:Name="ServiceModulesListBox" Grid.Row="2"
+                                <!--#region Used modules of the service definition-->
+                                <telerik:RadListBox x:Name="ServiceModulesListBox" Grid.Row="2"
                                                     Grid.ColumnSpan="2"
                                                     ItemsSource="{Binding UsedModules, Mode=TwoWay}"
                                                     ItemContainerStyle="{StaticResource RadListBoxItemStyle}"
@@ -90,104 +91,105 @@
                                                     MinHeight="50" AllowDrop="True"
                                                     HorizontalContentAlignment="Center"
                                                     VerticalAlignment="Stretch">
-									<!--#region Behaviors-->
-									
-									<!--[old] Remove when confident in D&D converter-->
-									<!--<telerik:EventToCommandBehavior.EventBindings>
+                                    <!--#region Behaviors-->
+
+                                    <!--[old] Remove when confident in D&D converter-->
+                                    <!--<telerik:EventToCommandBehavior.EventBindings>
                                         <telerik:EventBinding Command="{Binding DropCommand}" EventName="Drop"
                                                               CommandParameter="{Binding SelectedAvailableModule}"/>
                                     </telerik:EventToCommandBehavior.EventBindings>-->
-									<telerik:RadListBox.DragDropBehavior>
-										<telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
-									</telerik:RadListBox.DragDropBehavior>
+                                    <telerik:RadListBox.DragDropBehavior>
+                                        <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
+                                    </telerik:RadListBox.DragDropBehavior>
 
-									<telerik:RadListBox.DataConverter>
-										<local:ModuleDataConverter/>
-									</telerik:RadListBox.DataConverter>
-									<!--#endregion-->
-									<!--#region Expanders for Configuration-->
-									<telerik:RadListBox.ItemTemplate>
-										<DataTemplate>
-											<StackPanel>
-												<telerik:Label Content="{Binding Model.Name}"
+                                    <telerik:RadListBox.DataConverter>
+                                        <local:ModuleDataConverter/>
+                                    </telerik:RadListBox.DataConverter>
+                                    <!--#endregion-->
+                                    <!--#region Expanders for Configuration-->
+                                    <telerik:RadListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <telerik:Label Content="{Binding Model.Name}"
                                                                Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToInvisibilityConverter}}"
 															   Margin="32,0,0,0"/>
-												<telerik:RadExpander Grid.Column="1" Header="{Binding Model.Name}"
+                                                <telerik:RadExpander Grid.Column="1" Header="{Binding Model.Name}"
                                                                      Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToVisibilityConverter}}"
                                                                      MaxWidth="280">
-													<telerik:RadExpander.Content>
-														<telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}">
-															<telerik:RadListBox.ItemTemplate>
-																<DataTemplate>
-																	<Grid MaxWidth="280">
-																		<Grid.ColumnDefinitions>
-																			<ColumnDefinition Width="*"/>
-																			<ColumnDefinition Width="*"/>
-																		</Grid.ColumnDefinitions>
-																		<TextBlock Grid.Column="0" Text="{Binding Name}"/>
-																		<TextBox Grid.Column="1" Text="{Binding Value}" Margin="4,0,0,0"/>
-																	</Grid>
-																</DataTemplate>
-															</telerik:RadListBox.ItemTemplate>
-														</telerik:RadListBox>
-													</telerik:RadExpander.Content>
-												</telerik:RadExpander>
-											</StackPanel>
-										</DataTemplate>
-									</telerik:RadListBox.ItemTemplate>
-									<!--#endregion-->
-								</telerik:RadListBox>
-								<!--#endregion-->
+                                                    <telerik:RadExpander.Content>
+                                                        <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}" AllowDrop="False">
+                                                            <telerik:RadListBox.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <Grid MaxWidth="280">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+                                                                        <TextBox Grid.Column="1" Text="{Binding Value}" Margin="4,0,0,0"/>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </telerik:RadListBox.ItemTemplate>
+                                                        </telerik:RadListBox>
+                                                    </telerik:RadExpander.Content>
+                                                </telerik:RadExpander>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </telerik:RadListBox.ItemTemplate>
+                                    <!--#endregion-->
+                                </telerik:RadListBox>
+                                <!--#endregion-->
 
-							</Grid>
-						</Border>
-					</DataTemplate>
-				</telerik:RadCardView.CardReadOnlyTemplate>
-			</telerik:RadCardView>
-		</Border>
-		<!--#endregion-->
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </telerik:RadCardView.CardReadOnlyTemplate>
+            </telerik:RadCardView>
+        </Border>
+        <!--#endregion-->
 
-		<!--#region Available Modules-->
-		<Border Grid.Column="1" Grid.RowSpan="2" Padding="0,10,0,10">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="40"/>
-					<RowDefinition Height="*"/>
-				</Grid.RowDefinitions>
-				<telerik:Label Content="{simplic:Localization Key=xaml_available_modules}"/>
-				<telerik:RadListBox Grid.Row="1"
+        <!--#region Available Modules-->
+        <Border Grid.Column="1" Grid.RowSpan="2" Padding="0,10,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <telerik:Label Content="{simplic:Localization Key=xaml_available_modules}"/>
+                <telerik:RadListBox Grid.Row="1"
                                 x:Name="AvailableModulesRadListBox"
                                 ItemsSource="{Binding AvailableModules}"
                                 DisplayMemberPath="Name"
                                 SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
                                 AllowDrop="False"
                                 telerik:TouchManager.IsTouchHitTestVisible="True">
-					<telerik:RadListBox.ItemContainerStyle>
-						<Style TargetType="telerik:RadListBoxItem">
-							<Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
-							<Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
-							<Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
-						</Style>
-					</telerik:RadListBox.ItemContainerStyle>
+                    <telerik:RadListBox.ItemContainerStyle>
+                        <Style TargetType="telerik:RadListBoxItem">
+                            <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
+                            <Setter Property="telerik:DragDropManager.AllowCapturedDrag" Value="True" />
+                            <Setter Property="telerik:TouchManager.DragStartTrigger" Value="TapHoldAndMove"/>
+                        </Style>
+                    </telerik:RadListBox.ItemContainerStyle>
 
-					<telerik:RadListBox.DragDropBehavior>
-						<local:CustomListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
-					</telerik:RadListBox.DragDropBehavior>
+                    <telerik:RadListBox.DragDropBehavior>
+                        <local:CustomListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
+                    </telerik:RadListBox.DragDropBehavior>
 
-					<telerik:RadListBox.DataConverter>
-						<local:ModuleDataConverter/>
-					</telerik:RadListBox.DataConverter>
+                    <telerik:RadListBox.DataConverter>
+                        <local:ModuleDataConverter/>
+                    </telerik:RadListBox.DataConverter>
 
-					<telerik:RadListBox.DragVisualProvider>
-						<telerik:ScreenshotDragVisualProvider />
-					</telerik:RadListBox.DragVisualProvider>
-				</telerik:RadListBox>
-			</Grid>
-		</Border>
-		<!--#endregion-->
+                    <telerik:RadListBox.DragVisualProvider>
+                        <telerik:ScreenshotDragVisualProvider />
+                    </telerik:RadListBox.DragVisualProvider>
+                </telerik:RadListBox>
+            </Grid>
+        </Border>
+        <!--#endregion-->
 
-		<!--#region Console-->
-		<ContentPresenter Grid.Row="1" Content="{Binding Console}"/>
-		<!--#endregion-->
-	</Grid>
+        <!--#region Console-->
+        <ContentPresenter Grid.Row="1" Content="{Binding Console}"/>
+        <!--<simplic:Control_Console Grid.Row="1" />-->
+        <!--#endregion-->
+    </Grid>
 </ui:DefaultRibbonWindow>

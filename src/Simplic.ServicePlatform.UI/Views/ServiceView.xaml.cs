@@ -67,20 +67,19 @@ namespace Simplic.ServicePlatform.UI
 
         public override void OnSave(WindowSaveEventArg e)
         {
-            MessageBox.Show("Oh no don't do it!");
-            return;
-
-            //if (DataContext is ServiceViewModel viewModel)
-            //{
-            //    viewModel.SaveCommand.Execute(this);
-            //}
-            ////base.OnSave(e);
+            if (DataContext is ServiceViewModel viewModel)
+            {
+                viewModel.SaveCommand.Execute(this);
+            }
+            //base.OnSave(e);
         }
 
         public override void OnDelete(WindowDeleteEventArg e)
         {
-            MessageBox.Show("Nope.");
-            return;
+            if (DataContext is ServiceViewModel viewModel)
+            {
+                viewModel.DeleteCommand.Execute(this);
+            }
             //base.OnDelete(e);
         }
     }

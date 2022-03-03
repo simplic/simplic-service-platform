@@ -42,6 +42,7 @@ namespace Simplic.ServicePlatform.UI
         {
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+            //DeleteCommand = new RelayCommand(Delete);
             DeleteCardCommand = new RelayCommand(DeleteCard);
         }
 
@@ -95,12 +96,6 @@ namespace Simplic.ServicePlatform.UI
 
         private void DeleteCard(object obj)
         {
-            //var deleteCard = Services.FirstOrDefault(x => x.Model.ServiceName == selectedServiceCard.Model.ServiceName);
-            //if(deleteCard == null)
-            //{
-            //    return;
-            //}
-            //Services.Remove(deleteCard);
             Services.Remove(SelectedServiceCard);
             RaisePropertyChanged(nameof(Services));
             SelectedServiceCard = null;
@@ -108,11 +103,19 @@ namespace Simplic.ServicePlatform.UI
 
         private void Save()
         {
-            MessageBox.Show("Noooo dont do it!");
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(Services.FirstOrDefault().Model); //just for debugging purposes
             foreach (var service in Services)
             {
                 service.Synch();
                 serviceClient.SaveService(service.Model);
+            }
+        }
+
+        private void Delete()
+        {
+            foreach (var service in Services)
+            {
+                //serviceClient.DeleteService(service.Model);
             }
         }
 
@@ -170,6 +173,11 @@ namespace Simplic.ServicePlatform.UI
         public ICommand SaveCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets the command for deleting.
+        /// </summary>
+        public ICommand DeleteCommand { get; set; }
+
+        /// <summary>
         /// Gets or sets the commadn for adding a card.
         /// </summary>
         public ICommand AddCardCommand { get; set; }
@@ -178,6 +186,7 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for deleting a card.
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
+
 
         /// <summary>
         /// Gets or sets the console.

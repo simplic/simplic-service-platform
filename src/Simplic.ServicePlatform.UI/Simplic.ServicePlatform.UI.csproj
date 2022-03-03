@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="ReachFramework" />
@@ -103,6 +106,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AvalonEdit">
+      <Version>6.0.1</Version>
+    </PackageReference>
     <PackageReference Include="CommonServiceLocator">
       <Version>2.0.6</Version>
     </PackageReference>
@@ -112,11 +118,17 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
       <Version>1.1.39</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.CoreLib">
+      <Version>7.3.121.426</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.Framework">
       <Version>8.1.322.201</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Framework.Base">
       <Version>8.1.422.228</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.Framework.EF">
+      <Version>8.1.21.1209</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Localization">
       <Version>6.1.20.322</Version>

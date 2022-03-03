@@ -57,7 +57,8 @@ namespace Simplic.ServicePlatform.Data.DB
         {
             var json = JsonConvert.SerializeObject(service);
 
-            fileService.WriteAllText($"/services/{service.ServiceName}.json", json);
+            fileService.WriteAllText($"/services/{service.ServiceName}.tbd.json", json);
+            //fileService.WriteAllText($@"C:\Users\schapera\Documents\Services\{service.ServiceName}.json", json);
 
             return Task.CompletedTask;
         }

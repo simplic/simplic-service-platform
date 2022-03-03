@@ -30,7 +30,9 @@ namespace Simplic.ServicePlatform.UI
             Model = model;
             Parent = parent;
             DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
-            UsedModules = new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)));
+            UsedModules = model.Modules != null
+                ? new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)))
+                : new ObservableCollection<ServiceModuleViewModel>();
         }
 
         /// <summary>
@@ -90,7 +92,7 @@ namespace Simplic.ServicePlatform.UI
         {
             foreach (var module in UsedModules)
                 module.Synch();
-            Model.Modules = UsedModules.Select(m => m.Model) as IList<ServiceModule>;
+            Model.Modules = new List<ServiceModule>(UsedModules.Select(m => m.Model));
         }
 
         /// <summary>
@@ -119,8 +121,12 @@ namespace Simplic.ServicePlatform.UI
         {
             foreach (var newConfiguration in targetConfigurations)
                 foreach (var configuration in nativeConfigurations)
+                {
+                    if (configuration.Name == null) return;
                     if (configuration.Name.Equals(newConfiguration.Name))
                         configuration.Value = newConfiguration.Value;
+
+                }
         }
 
         /// <summary>
