@@ -78,7 +78,7 @@ namespace Simplic.ServicePlatform.UI
         {
             if (DataContext is ServiceViewModel viewModel)
             {
-                viewModel.DeleteCommand.Execute(this);
+                //viewModel.DeleteCommand.Execute(this);
             }
             //base.OnDelete(e);
         }

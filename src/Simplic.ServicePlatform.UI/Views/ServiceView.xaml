@@ -13,7 +13,6 @@
 						MinHeight="400" MinWidth="400"
 						Height="800" Width="1300"
 						Title="Services">
-    <!--xmlns:simplic_admin="clr-namespace:Simplic.PlugIn.Administration.UI;assembly=Simplic.PlugIn.Administration"-->
 
     <ui:DefaultRibbonWindow.Resources>
         <Style x:Key="RadListBoxItemStyle" TargetType="telerik:RadListBoxItem" >
@@ -92,11 +91,6 @@
                                                     VerticalAlignment="Stretch">
                                     <!--#region Behaviors-->
 
-                                    <!--[old] Remove when confident in D&D converter-->
-                                    <!--<telerik:EventToCommandBehavior.EventBindings>
-                                        <telerik:EventBinding Command="{Binding DropCommand}" EventName="Drop"
-                                                              CommandParameter="{Binding SelectedAvailableModule}"/>
-                                    </telerik:EventToCommandBehavior.EventBindings>-->
                                     <telerik:RadListBox.DragDropBehavior>
                                         <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
                                     </telerik:RadListBox.DragDropBehavior>

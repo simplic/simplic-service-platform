@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -113,13 +111,13 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-        private void Delete()
-        {
-            foreach (var service in Services)
-            {
-                //serviceClient.DeleteService(service.Model);
-            }
-        }
+        //private void Delete()
+        //{
+        //    foreach (var service in Services)
+        //    {
+        //        //serviceClient.DeleteService(service.Model);
+        //    }
+        //}
 
         /// <summary>
         /// Returns whether it should be possible to save.
@@ -174,10 +172,10 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ICommand SaveCommand { get; set; }
 
-        /// <summary>
-        /// Gets or sets the command for deleting.
-        /// </summary>
-        public ICommand DeleteCommand { get; set; }
+        ///// <summary>
+        ///// Gets or sets the command for deleting.
+        ///// </summary>
+        //public ICommand DeleteCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the commadn for adding a card.

@@ -98,9 +98,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AvalonEdit">
-      <Version>6.0.1</Version>
-    </PackageReference>
     <PackageReference Include="CommonServiceLocator">
       <Version>2.0.6</Version>
     </PackageReference>
@@ -109,9 +106,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
       <Version>1.1.39</Version>
-    </PackageReference>
-    <PackageReference Include="Simplic.CoreLib">
-      <Version>7.3.121.426</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Framework">
       <Version>8.1.322.201</Version>
@@ -130,9 +124,6 @@
     </PackageReference>
     <PackageReference Include="Simplic.Localization.UI">
       <Version>1.1.20.1208</Version>
-    </PackageReference>
-    <PackageReference Include="Simplic.PlugIn.Administration">
-      <Version>8.1.21.1209</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Studio.UI">
       <Version>1.6.2221.923</Version>

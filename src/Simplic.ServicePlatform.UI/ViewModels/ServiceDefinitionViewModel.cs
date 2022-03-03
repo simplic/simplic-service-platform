@@ -1,10 +1,8 @@
 ﻿using Simplic.UI.MVC;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Linq;
 using System.Windows.Input;
-using System;
 
 namespace Simplic.ServicePlatform.UI
 {
