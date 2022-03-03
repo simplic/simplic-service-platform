@@ -37,7 +37,7 @@ namespace Simplic.ServicePlatform.UI
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
             //DeleteCommand = new RelayCommand(Delete);
-            DeleteCardCommand = new RelayCommand(DeleteCard);
+            DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
         }
 
         private void LoadServicesAndModules()

@@ -47,7 +47,7 @@ namespace Simplic.ServicePlatform.Data.DB
         /// <inheritdoc/>
         public Task Delete(string name)
         {
-            fileService.Delete($"/services/{name}.json");
+            fileService.Delete($"/services/{name}.tbd.json");
 
             return Task.CompletedTask;
         }

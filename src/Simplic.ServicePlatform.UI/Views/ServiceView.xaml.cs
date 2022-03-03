@@ -4,6 +4,7 @@ using System.Windows;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
 using Telerik.Windows.DragDrop;
+using System.Windows.Data;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -48,13 +49,18 @@ namespace Simplic.ServicePlatform.UI
                 //TextLocalizationKey = "shipment_split_window_splitbutton"
             };
 
+            BindingOperations.SetBinding(removeCardButton, RibbonButton.CommandProperty, new Binding(nameof(ServiceViewModel.DeleteCardCommand)) 
+            {
+                Source = DataContext
+            });
+
             cardButtonGroup.Items.Add(removeCardButton);
 
             if (DataContext is ServiceViewModel viewModel)
             {
 
                 addCardButton.Command = viewModel.AddCardCommand;
-                removeCardButton.Command = viewModel.DeleteCardCommand;
+                // removeCardButton.Command = viewModel.DeleteCardCommand;
             }
 
             RadRibbonHomeTab.Items.Add(cardButtonGroup);
