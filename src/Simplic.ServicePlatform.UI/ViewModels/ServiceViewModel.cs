@@ -1,9 +1,14 @@
 ﻿using Simplic.UI.MVC;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -16,6 +21,9 @@ namespace Simplic.ServicePlatform.UI
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
         private List<ServiceDefinitionViewModel> servicesToRemove;
+        private string searchTerm;
+        private DispatcherTimer filterTimer;
+        private int keyCounter;
 
 
         /// <summary>
@@ -30,6 +38,10 @@ namespace Simplic.ServicePlatform.UI
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
             LoadServicesAndModules();
+            filterTimer = new DispatcherTimer();
+            filterTimer.Interval = TimeSpan.FromSeconds(0.2);
+            filterTimer.Tick += Timer_Tick;
+            keyCounter = 0;
         }
 
         private void InitializeCommands()
@@ -45,10 +57,13 @@ namespace Simplic.ServicePlatform.UI
             Application.Current.Dispatcher.Invoke(async () =>
             {
                 availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
-                AvailableModules = new ObservableCollection<ModuleDefinition>(await serviceClient.GetAllModules());
+                AvailableModules = new ObservableCollection<ModuleDefinition>((await serviceClient.GetAllModules()).OrderBy(x => x.Name));
+
+                AvailableModulesCollectionView = CollectionViewSource.GetDefaultView(AvailableModules);
+                AvailableModulesCollectionView.Filter = FilterModules;
             }).ContinueWith(o =>
             {
-                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)));
+                Services = new ObservableCollection<ServiceDefinitionViewModel>((availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this))).OrderBy(x => x.Model.ServiceName));
                 UpdateServiceModules();
                 RaisePropertyChanged(nameof(Services));
                 RaisePropertyChanged(nameof(AvailableModules));
@@ -132,6 +147,47 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
+        /// Event handler for timer tick event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Timer_Tick(object sender, EventArgs e)
+        {
+            keyCounter++;
+
+            if (keyCounter >= 2)
+            {
+                await UpdateAvailableModulesView();
+                keyCounter = 0;
+                filterTimer.Stop();
+            }
+        }
+
+        private Task UpdateAvailableModulesView()
+        {
+            if (AvailableModulesCollectionView != null)
+                AvailableModulesCollectionView.Refresh();
+
+            return Task.CompletedTask;
+        }
+
+        public bool FilterModules(object obj)
+        {
+            if (!(obj is ModuleDefinition))
+                return true;
+
+            if (string.IsNullOrWhiteSpace(SearchTerm))
+                return true;
+
+            var moduleDefinition = obj as ModuleDefinition;
+
+            if (moduleDefinition.Name.Contains(SearchTerm))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets or sets the selected service card.
         /// </summary>
         public ServiceDefinitionViewModel SelectedServiceCard
@@ -186,5 +242,21 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for deleting a card.
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
+
+        public string SearchTerm
+        {
+            get => searchTerm;
+            set
+            {
+                searchTerm = value;
+                RaisePropertyChanged(nameof(SearchTerm));
+                filterTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the available modules collection view
+        /// </summary>
+        public ICollectionView AvailableModulesCollectionView { get; set; }
     }
 }

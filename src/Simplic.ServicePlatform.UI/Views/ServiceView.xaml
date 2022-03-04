@@ -48,15 +48,6 @@
 								 AllowDrop="False"
                                  ShowGroupPanel="False"
                                  DataFieldDescriptorsButtonVisibility="Hidden">
-                <telerik:RadCardView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Add Card" Command="{Binding AddCard}"/>
-                        <MenuItem Header="Delete Card" Command="{Binding DeleteCardCommand}"
-                                  IsEnabled="{Binding SelectedServiceCard, Converter={StaticResource NullToBooleanConverter}}"/>
-                        <MenuItem Header="Edit Card"
-                                  IsEnabled="{Binding SelectedServiceCard, Converter={StaticResource NullToBooleanConverter}}"/>
-                    </ContextMenu>
-                </telerik:RadCardView.ContextMenu>
                 <telerik:RadCardView.CardReadOnlyTemplate>
                     <DataTemplate>
                         <Border Padding="5" Width="295">
@@ -148,16 +139,18 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
+                    <RowDefinition Height="28"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <telerik:Label Content="{simplic:Localization Key=xaml_available_modules}"/>
-                <telerik:RadListBox Grid.Row="1"
-                                x:Name="AvailableModulesRadListBox"
-                                ItemsSource="{Binding AvailableModules}"
-                                DisplayMemberPath="Name"
-                                SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
-                                AllowDrop="False"
-                                telerik:TouchManager.IsTouchHitTestVisible="True">
+                <telerik:RadWatermarkTextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             WatermarkContent="{simplic:Localization Key=search}" Grid.Row="1"/>
+                <telerik:RadListBox Grid.Row="2"
+                                    ItemsSource="{Binding AvailableModules}"
+                                    SelectedItem="{Binding SelectedAvailableModule, Mode=TwoWay}"
+                                    DisplayMemberPath="Name"
+                                    AllowDrop="False"
+                                    telerik:TouchManager.IsTouchHitTestVisible="True">
                     <telerik:RadListBox.ItemContainerStyle>
                         <Style TargetType="telerik:RadListBoxItem">
                             <Setter Property="telerik:DragDropManager.AllowDrag" Value="True" />
@@ -167,7 +160,7 @@
                     </telerik:RadListBox.ItemContainerStyle>
 
                     <telerik:RadListBox.DragDropBehavior>
-                        <local:CustomListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
+                        <local:CustomListBoxDragDropBehavior AllowReorder="False" telerik:DragDropManager.AllowDrag="True"/>
                     </telerik:RadListBox.DragDropBehavior>
 
                     <telerik:RadListBox.DataConverter>
