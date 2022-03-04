@@ -1,18 +1,30 @@
 ﻿using Simplic.UI.MVC;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Simplic.ServicePlatform.UI
 {
     //Viewmodel Stufe 3
     public class ServiceModuleViewModel : ViewModelBase
     {
-        private ObservableCollection<ServiceModuleConfiguration> configurationDefinitions;
         private ServiceModule model;
 
         public ServiceModuleViewModel(ServiceModule model)
         {
             Model = model;
-            configurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(model.Configuration);
+            ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(Model.Configuration);
+            UpdateValuesCommand = new RelayCommand(O =>
+            {
+                Model.Configuration = ConfigurationDefinitions;
+                RaisePropertyChanged(nameof(ConfigurationDefinitions));
+            });
+            UndoUpdateValuesCommand = new RelayCommand(O =>
+            {
+                for (int i = 0; i < ConfigurationDefinitions.Count && i < Model.Configuration.Count; i++)
+                    ConfigurationDefinitions[i] = Model.Configuration[i];
+                RaisePropertyChanged(nameof(ConfigurationDefinitions));
+            });
+
         }
 
         /// <summary>
@@ -24,6 +36,8 @@ namespace Simplic.ServicePlatform.UI
         }
 
         public ServiceModule Model { get => model; set => model = value; }
-        public ObservableCollection<ServiceModuleConfiguration> ConfigurationDefinitions { get => configurationDefinitions; set => configurationDefinitions = value; }
+        public ObservableCollection<ServiceModuleConfiguration> ConfigurationDefinitions { get; set; }
+        public ICommand UpdateValuesCommand { get; set; }
+        public ICommand UndoUpdateValuesCommand { get; set; }
     }
 }

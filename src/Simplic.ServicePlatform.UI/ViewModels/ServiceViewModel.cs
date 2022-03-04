@@ -120,7 +120,7 @@ namespace Simplic.ServicePlatform.UI
                 service.Synch();
                 serviceClient.SaveService(service.Model);
 
-                if (!service.OldServiceName.Equals(service.Model.ServiceName))
+                if (service.OldServiceName != null && !service.OldServiceName.Equals(service.Model.ServiceName))
                     servicesToRemove.Add(new ServiceDefinitionViewModel { Model = new ServiceDefinition { ServiceName = service.OldServiceName } });
             }
 

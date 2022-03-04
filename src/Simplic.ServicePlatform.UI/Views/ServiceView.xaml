@@ -116,13 +116,17 @@
                                                                             <ColumnDefinition Width="*"/>
                                                                             <ColumnDefinition Width="*"/>
                                                                         </Grid.ColumnDefinitions>
-                                                                        <TextBlock Grid.Column="0" Text="{Binding Name}"/>
-                                                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0,0,0"/>
+                                                                        <telerik:Label Grid.Column="0" Content="{Binding Name}"/>
+                                                                        <telerik:RadWatermarkTextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0,0,0"/>
                                                                     </Grid>
                                                                 </DataTemplate>
                                                             </telerik:RadListBox.ItemTemplate>
                                                         </telerik:RadListBox>
                                                     </telerik:RadExpander.Content>
+                                                    <telerik:RadExpander.InputBindings>
+                                                        <KeyBinding Key="Return" Command="{Binding UpdateValuesCommand}"/>
+                                                        <KeyBinding Key="F1" Command="{Binding UndoUpdateValuesCommand}"/>
+                                                    </telerik:RadExpander.InputBindings>
                                                 </telerik:RadExpander>
                                             </StackPanel>
                                         </DataTemplate>
