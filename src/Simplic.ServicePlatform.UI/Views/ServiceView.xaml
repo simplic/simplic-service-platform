@@ -68,10 +68,19 @@
                                                Grid.ColumnSpan="2"
                                                Margin="0,0,5,0"/>
                                 <telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
-                                <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
+                                <telerik:RadWatermarkTextBox x:Name="ServiceNameTextBox" Grid.Row="1" Grid.Column="1"
                                                              WatermarkContent="Service Example"
-                                                             Text="{Binding ServiceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                             HorizontalAlignment="Right">
+                                                             HorizontalAlignment="Right"
+                                                             FocusManager.FocusedElement="{Binding ElementName=ServiceNameTextBox}"
+                                                             Validation.ErrorTemplate="{StaticResource }">
+                                    <!--Text="{Binding ServiceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
+                                    <telerik:RadWatermarkTextBox.Text>
+                                        <Binding Path="ServiceName"
+                                                 ValidatesOnDataErrors="True"
+                                                 UpdateSourceTrigger="PropertyChanged"/>
+                                    </telerik:RadWatermarkTextBox.Text>
+
+
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
                                         <KeyBinding Key="F1" Command="{Binding UndoRenameCommand}"/>
@@ -117,7 +126,7 @@
                                                                             <ColumnDefinition Width="*"/>
                                                                         </Grid.ColumnDefinitions>
                                                                         <telerik:Label Grid.Column="0" Content="{Binding Name}"/>
-                                                                        <telerik:RadWatermarkTextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0,0,0"/>
+                                                                        <telerik:RadWatermarkTextBox Grid.Column="1" CurrentText="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="4,0,0,0"/>
                                                                     </Grid>
                                                                 </DataTemplate>
                                                             </telerik:RadListBox.ItemTemplate>

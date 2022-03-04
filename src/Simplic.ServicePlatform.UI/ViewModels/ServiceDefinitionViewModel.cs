@@ -1,6 +1,7 @@
 ﻿using Simplic.UI.MVC;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Input;
 
@@ -12,6 +13,7 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private ServiceViewModel parent;
+        private string serviceName;
 
         /// <summary>
         /// Instantiates the view model.
@@ -167,7 +169,18 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the service name.
         /// </summary>
-        public string ServiceName { get; set; }
+        [Required(ErrorMessage = "Cannot be empty.")]
+        [StringLength(18, MinimumLength = 3, ErrorMessage = "Must be at least 3 characters.")]
+        public string ServiceName
+        {
+            get => serviceName;
+            set
+            {
+                Validator.ValidateProperty(value, new ValidationContext(this) { MemberName = nameof(ServiceName) });
+                serviceName = value;
+                RaisePropertyChanged(nameof(ServiceName));
+            }
+        }
 
         /// <summary>
         /// Gets or sets the old service name.
