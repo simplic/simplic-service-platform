@@ -35,7 +35,7 @@ namespace Simplic.ServicePlatform.UI
             {
                 Text = "Add",
                 Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
-                LargeIconName = "Plus_Orange_32x32",
+                LargeIconName = "service_add_32x",
                 //TextLocalizationKey = "shipment_split_window_splitbutton"
             };
 
@@ -60,7 +60,6 @@ namespace Simplic.ServicePlatform.UI
             {
 
                 addCardButton.Command = viewModel.AddCardCommand;
-                // removeCardButton.Command = viewModel.DeleteCardCommand;
             }
 
             RadRibbonHomeTab.Items.Add(cardButtonGroup);

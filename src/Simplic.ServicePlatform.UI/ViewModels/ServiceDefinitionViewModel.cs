@@ -27,10 +27,47 @@ namespace Simplic.ServicePlatform.UI
         {
             Model = model;
             Parent = parent;
-            DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
             UsedModules = model.Modules != null
                 ? new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)))
                 : new ObservableCollection<ServiceModuleViewModel>();
+
+            ServiceName = model.ServiceName;
+            OldServiceName = model.ServiceName;
+
+            InitializeCommands();
+        }
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="other"></param>
+        public ServiceDefinitionViewModel(ServiceDefinitionViewModel other)
+        {
+            Model = other.Model;
+            Parent = other.Parent;
+            UsedModules = other.UsedModules;
+            ServiceName = other.ServiceName;
+            OldServiceName = other.OldServiceName;
+
+            InitializeCommands();
+        }
+
+        private void InitializeCommands()
+        {
+            DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
+            RenameCommand = new RelayCommand(o =>
+            {
+                Model.ServiceName = ServiceName;
+                RaisePropertyChanged(nameof(ServiceName));
+                Parent.FocusedElement = null;
+            });
+            UndoRenameCommand = new RelayCommand(o =>
+            {
+                ServiceName = Model.ServiceName;
+                RaisePropertyChanged(nameof(ServiceName));
+                Parent.FocusedElement = null;
+            });
+
         }
 
         /// <summary>
@@ -128,6 +165,17 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
+        /// Gets or sets the service name.
+        /// </summary>
+        public string ServiceName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the old service name.
+        /// Equal to service name if service name is not changed.
+        /// </summary>
+        public string OldServiceName { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of used modules.
         /// </summary>
         public ObservableCollection<ServiceModuleViewModel> UsedModules { get; set; }
@@ -156,6 +204,16 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for handling drop events.
         /// </summary>
         public ICommand DropCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rename command.
+        /// </summary>
+        public ICommand RenameCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the undo rename command.
+        /// </summary>
+        public ICommand UndoRenameCommand { get; set; }
 
         /// <summary>
         /// Gets and sets the parent of this viewmodel.

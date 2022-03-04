@@ -62,6 +62,7 @@
     <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
     <Compile Include="Converters\ModuleDataConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
+    <Compile Include="Triggers\ReturnKeyUpEventTrigger.cs" />
     <Compile Include="ViewModels\ServiceModuleViewModel.cs" />
     <Compile Include="ViewModels\ServiceDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ServiceViewModel.cs" />

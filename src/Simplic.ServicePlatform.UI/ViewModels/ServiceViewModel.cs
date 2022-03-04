@@ -16,6 +16,7 @@ namespace Simplic.ServicePlatform.UI
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
         private List<ServiceDefinitionViewModel> servicesToRemove;
+        private UIElement focusedElement;
 
 
         /// <summary>
@@ -103,6 +104,9 @@ namespace Simplic.ServicePlatform.UI
             {
                 service.Synch();
                 serviceClient.SaveService(service.Model);
+
+                if (!service.OldServiceName.Equals(service.Model.ServiceName))
+                    servicesToRemove.Add(new ServiceDefinitionViewModel { Model = new ServiceDefinition { ServiceName = service.OldServiceName } });
             }
 
             foreach (var service in servicesToRemove)
@@ -129,6 +133,15 @@ namespace Simplic.ServicePlatform.UI
                 if (!string.IsNullOrEmpty(service.Model.ServiceName))
                     return false;
             return true;
+        }
+
+        /// <summary>
+        /// Adds service name to remove list.
+        /// </summary>
+        /// <param name="serviceName">Service name</param>
+        public void RegisterServiceRemovalByName(string serviceName)
+        {
+            servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = serviceName }, this));
         }
 
         /// <summary>
@@ -168,14 +181,14 @@ namespace Simplic.ServicePlatform.UI
         public ObservableCollection<ServiceDefinitionViewModel> Services { get; set; }
 
         /// <summary>
+        /// Gets or sets the focused element.
+        /// </summary>
+        public UIElement FocusedElement { get => focusedElement; set { focusedElement = value; RaisePropertyChanged(nameof(FocusedElement)); } }
+
+        /// <summary>
         /// Gets or sets the command for saving.
         /// </summary>
         public ICommand SaveCommand { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the command for deleting.
-        ///// </summary>
-        //public ICommand DeleteCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the commadn for adding a card.
