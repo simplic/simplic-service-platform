@@ -74,25 +74,8 @@ namespace Simplic.ServicePlatform.UI
         {
             if (DataContext is ServiceViewModel viewModel)
             {
-                if (viewModel.SaveCommand.CanExecute(this))
-                {
-                    base.AllowSave = true;
-                    viewModel.SaveCommand.Execute(this);
-                    return;
-                }
-                MessageBox.Show("Es gibt Fehler unter den Servicenamen, prüfen sie die Servicenamen auf Fehler");
+                viewModel.SaveCommand.Execute(this);
             }
-
-            //base.OnSave(e);
-        }
-
-        public override void OnDelete(WindowDeleteEventArg e)
-        {
-            if (DataContext is ServiceViewModel viewModel)
-            {
-                //viewModel.DeleteCommand.Execute(this);
-            }
-            //base.OnDelete(e);
         }
     }
 }

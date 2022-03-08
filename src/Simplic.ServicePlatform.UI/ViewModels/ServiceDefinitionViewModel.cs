@@ -284,7 +284,7 @@ namespace Simplic.ServicePlatform.UI
 
                 switch (checkString)
                 {
-                    case "ServiceName":
+                    case nameof(ServiceName):
                         if (string.IsNullOrWhiteSpace(ServiceName))
                             result = "Service Name kann nicht leer sein";
 
@@ -302,7 +302,7 @@ namespace Simplic.ServicePlatform.UI
                     Result = true;
                 }
 
-                RaisePropertyChanged("ErrorCollection");
+                RaisePropertyChanged(nameof(ErrorCollection));
                 return result;
             }
         }
