@@ -1,17 +1,21 @@
 ﻿using Simplic.UI.MVC;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 
 namespace Simplic.ServicePlatform.UI
 {
     //ViewModel Stufe 2
-    public class ServiceDefinitionViewModel : ViewModelBase
+    public class ServiceDefinitionViewModel : ViewModelBase, IDataErrorInfo
     {
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private ServiceViewModel parent;
+
+        public string Error { get { return null; } }
+
 
         /// <summary>
         /// Instantiates the view model.
@@ -19,6 +23,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceDefinitionViewModel()
         {
         }
+
 
         /// <summary>
         /// Instantiates the view model for given model.
@@ -37,9 +42,42 @@ namespace Simplic.ServicePlatform.UI
             InitializeCommands();
         }
 
+        public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
+
+        public string this[string checkString]
+        {
+            get
+            {
+                string result = null;
+
+                switch (checkString)
+                {
+                    case "ServiceName":
+                        if (string.IsNullOrWhiteSpace(ServiceName))
+                            result = "Service Name kann nicht leer sein";
+
+                        else if (parent.Services.Where(x => x.ServiceName.ToLower() == ServiceName.ToLower()).Count() > 1)
+                            result = "Service Name ist bereits vergeben";
+
+                        break;
+                            //parent.Services.FirstOrDefault(x => x.ServiceName == ServiceName) != null
+                }
+                if (ErrorCollection.ContainsKey(checkString))
+                    ErrorCollection[checkString] = result;
+                else if (result != null)
+                {
+                    ErrorCollection.Add(checkString, result);
+                    
+                }
+
+                RaisePropertyChanged("ErrorCollection");
+                return result;
+            }
+        }
+
         /// <summary>
         /// Copy constructor.
-        /// </summary>
+        /// </summary>B
         /// <param name="other"></param>
         public ServiceDefinitionViewModel(ServiceDefinitionViewModel other)
         {
@@ -167,7 +205,8 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the service name.
         /// </summary>
-        public string ServiceName { get; set; }
+        public string ServiceName 
+        { get; set; }
 
         /// <summary>
         /// Gets or sets the old service name.

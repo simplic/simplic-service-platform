@@ -26,7 +26,6 @@ namespace Simplic.ServicePlatform.UI
         private DispatcherTimer filterTimer;
         private int keyCounter;
 
-
         /// <summary>
         /// Instantiates the view model.
         /// </summary>
@@ -44,6 +43,9 @@ namespace Simplic.ServicePlatform.UI
             filterTimer.Tick += Timer_Tick;
             keyCounter = 0;
         }
+
+
+
 
         private void InitializeCommands()
         {
@@ -266,6 +268,7 @@ namespace Simplic.ServicePlatform.UI
                 filterTimer.Start();
             }
         }
+
 
         /// <summary>
         /// Gets or sets the available modules collection view

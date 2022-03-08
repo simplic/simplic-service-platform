@@ -69,13 +69,16 @@
                                                Margin="0,0,5,0"/>
                                 <telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
                                 <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
-                                                             WatermarkContent="Service Example"
-                                                             Text="{Binding ServiceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                             WatermarkContent="Service Example" 
+                                                             Text="{Binding ServiceName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                                             ToolTip="{Binding ErrorCollection[ServiceName]}"                                                             
                                                              HorizontalAlignment="Right">
+                                    
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
                                         <KeyBinding Key="F1" Command="{Binding UndoRenameCommand}"/>
                                     </telerik:RadWatermarkTextBox.InputBindings>
+                                    
                                 </telerik:RadWatermarkTextBox>
 
                                 <!--#region Used modules of the service definition-->
