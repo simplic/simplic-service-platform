@@ -1,21 +1,19 @@
 ﻿using Simplic.Framework.UI;
-using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls.Primitives;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
-using Telerik.Windows.DragDrop;
 using System.Windows.Data;
 
 namespace Simplic.ServicePlatform.UI
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for ServiceView.xaml
     /// </summary>
     public partial class ServiceView : DefaultRibbonWindow
     {
         private RibbonButton addCardButton;
         private RibbonButton removeCardButton;
+
         /// <summary>
         /// Instantiates the view for the given module.
         /// </summary>
@@ -24,7 +22,6 @@ namespace Simplic.ServicePlatform.UI
             InitializeComponent();
             DataContext = new ServiceViewModel(serviceClient);
             CreateButtons();
-            Configure();
         }
 
         private void CreateButtons()
@@ -65,11 +62,10 @@ namespace Simplic.ServicePlatform.UI
             RadRibbonHomeTab.Items.Add(cardButtonGroup);
         }
 
-        private void Configure()
-        {
-            AllowPaging = false;
-        }
-
+        /// <summary>
+        /// Method that is called when the RibbonButton for saving is pressed.
+        /// </summary>
+        /// <param name="e"></param>
         public override void OnSave(WindowSaveEventArg e)
         {
             if (DataContext is ServiceViewModel viewModel)
@@ -77,5 +73,6 @@ namespace Simplic.ServicePlatform.UI
                 viewModel.SaveCommand.Execute(this);
             }
         }
+
     }
 }

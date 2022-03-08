@@ -21,7 +21,7 @@ namespace Simplic.ServicePlatform.UI
         /// <returns>New configurations.</returns>
         public IList<ServiceModuleConfiguration> ModuleConfigurationConverter(IEnumerable<ModuleConfigurationDefinition> configurations)
         {
-            return configurations.Select(config => new ServiceModuleConfiguration() { Name = config.Name, Value = config.Default }).ToList();
+            return configurations.Select(config => new ServiceModuleConfiguration { Name = config.Name, Value = config.Default }).ToList();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Simplic.ServicePlatform.UI
         /// <returns></returns>
         public ServiceModule ModuleDefinitionConverter(ModuleDefinition moduleDefinition)
         {
-            return new ServiceModule() { Name = moduleDefinition.Name, Configuration = ModuleConfigurationConverter(moduleDefinition.ConfigurationDefinition) };
+            return new ServiceModule { Name = moduleDefinition.Name, Configuration = ModuleConfigurationConverter(moduleDefinition.ConfigurationDefinition) };
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         /// <param name="data"></param>
         /// <param name="format"></param>
-        /// <returns>Service module if correct data and format correct, null otherwise.</returns>
+        /// <returns>Service module view model if correct data and format correct, null otherwise.</returns>
         public override object ConvertTo(object data, string format)
         {
             if (DataObjectHelper.GetData(data, typeof(ModuleDefinition), false) is IEnumerable<object> moduleDefinition && format == typeof(ServiceModuleViewModel).FullName)

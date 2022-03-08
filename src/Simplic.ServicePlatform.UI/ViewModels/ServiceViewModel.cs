@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Simplic.Localization;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -99,7 +100,7 @@ namespace Simplic.ServicePlatform.UI
         /// <returns>New configurations.</returns>
         private static IEnumerable<ServiceModuleConfiguration> ModuleConfigurationConverter(IEnumerable<ModuleConfigurationDefinition> configurations)
         {
-            return configurations.Select(config => new ServiceModuleConfiguration {Name = config.Name, Value = config.Default}).ToList();
+            return configurations.Select(config => new ServiceModuleConfiguration { Name = config.Name, Value = config.Default }).ToList();
         }
 
         private void AddCard(object obj)
@@ -126,21 +127,31 @@ namespace Simplic.ServicePlatform.UI
                 if (service.HasErrors())
                 {
                     errors = true;
-                    continue; //this servers shouldnt be saved, go to next one
+                    continue;
                 }
 
                 serviceClient.SaveService(service.Model);
 
-                if (service.OldServiceName != null && !service.OldServiceName.Equals(service.Model.ServiceName))
-                    servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition() { ServiceName = service.OldServiceName }, this));
+                CheckRenameAndRegisterRemoval(service);
             }
 
+            RemoveServices();
+            
+            if (errors) MessageBox.Show(CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>().Translate("error_save_services"));
+        }
+
+        private void CheckRenameAndRegisterRemoval(ServiceDefinitionViewModel service)
+        {
+            if (service.OldServiceName != null && !service.OldServiceName.Equals(service.Model.ServiceName))
+                servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = service.OldServiceName }, this));
+        }
+
+        private void RemoveServices()
+        {
             foreach (var service in servicesToRemove)
             {
                 serviceClient.DeleteService(service.Model);
             }
-
-            if (errors) MessageBox.Show("Ein oder mehrere Services konnten nicht gespeichert werden.");
         }
 
         private async void Timer_Tick(object sender, EventArgs e)

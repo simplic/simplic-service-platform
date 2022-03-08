@@ -25,24 +25,18 @@
         <local:CollectionToInvisibilityConverter	x:Key="CollectionToInvisibilityConverter"/>
         <local:NullToBooleanConverter				x:Key="NullToBooleanConverter"/>
         <local:ModuleDataConverter					x:Key="ModuleDataConverter"/>
-        <local:CustomListBoxDragDropBehavior		x:Key="CustomListBoxDragDropBehavior"/>
     </ui:DefaultRibbonWindow.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
-            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
-        <!--#region TBD-->
-        <Label Grid.Row="1" Content="7" FontSize="20"/>
-        <!--#endregion-->
-        
+
         <!--#region CardView for all Services-->
         <Border Padding="10">
             <telerik:RadCardView x:Name="ServicesCardView"
@@ -74,15 +68,15 @@
                                                Margin="0,0,5,0"/>
                                 <telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
                                 <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
-                                                             WatermarkContent="Service Example" 
-                                                             Text="{Binding ServiceName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                                             WatermarkContent="{simplic:Localization Key=itembox_servicename}" 
+                                                             Text="{Binding ServiceName, ValidatesOnDataErrors=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                              ToolTip="{Binding ErrorCollection[ServiceName]}"                                                             
                                                              HorizontalAlignment="Right">
-                                    
+
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
                                     </telerik:RadWatermarkTextBox.InputBindings>
-                                    
+
                                 </telerik:RadWatermarkTextBox>
 
                                 <!--#region Used modules of the service definition-->
@@ -95,9 +89,8 @@
                                                     HorizontalContentAlignment="Center"
                                                     VerticalAlignment="Stretch">
                                     <!--#region Behaviors-->
-
                                     <telerik:RadListBox.DragDropBehavior>
-                                        <telerik:ListBoxDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
+                                        <local:UniqueServiceModuleDragDropBehavior AllowReorder="True" telerik:DragDropManager.AllowDrag="True"/>
                                     </telerik:RadListBox.DragDropBehavior>
 
                                     <telerik:RadListBox.DataConverter>
@@ -172,7 +165,7 @@
                     </telerik:RadListBox.ItemContainerStyle>
 
                     <telerik:RadListBox.DragDropBehavior>
-                        <local:CustomListBoxDragDropBehavior AllowReorder="False" telerik:DragDropManager.AllowDrag="True"/>
+                        <local:CopyItemDragDropBehavior AllowReorder="False" telerik:DragDropManager.AllowDrag="True"/>
                     </telerik:RadListBox.DragDropBehavior>
 
                     <telerik:RadListBox.DataConverter>

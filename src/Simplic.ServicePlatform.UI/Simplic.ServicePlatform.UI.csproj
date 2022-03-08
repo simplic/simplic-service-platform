@@ -57,13 +57,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\CustomListBoxDragDropBehavior.cs" />
-    <Compile Include="Controls\RegexTextBox.cs" />
+    <Compile Include="Behaviors\CopyItemDragDropBehavior.cs" />
+    <Compile Include="Behaviors\UniqueServiceModuleDragDropBehavior.cs" />
     <Compile Include="Converters\CollectionToInvisibilityConverter.cs" />
     <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
     <Compile Include="Converters\ModuleDataConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
-    <Compile Include="Utils\NameRule.cs" />
     <Compile Include="ViewModels\ServiceModuleViewModel.cs" />
     <Compile Include="ViewModels\ServiceDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ServiceViewModel.cs" />
@@ -164,5 +163,6 @@
       <Version>2021.3.914</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

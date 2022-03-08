@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Simplic.Localization;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -18,7 +19,6 @@ namespace Simplic.ServicePlatform.UI
 
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
-        private ServiceViewModel parent;
         private string serviceName;
         private DispatcherTimer timer;
         private ObservableCollection<ServiceModuleViewModel> usedModules;
@@ -54,19 +54,18 @@ namespace Simplic.ServicePlatform.UI
         private void InitializeCommands()
         {
             DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
+
             RenameCommand = new RelayCommand(o =>
             {
                 Model.ServiceName = ServiceName;
                 RaisePropertyChanged(nameof(ServiceName));
-                Parent.FocusedElement = null;
             });
+
             UndoRenameCommand = new RelayCommand(o =>
             {
                 ServiceName = Model.ServiceName;
                 RaisePropertyChanged(nameof(ServiceName));
-                Parent.FocusedElement = null;
             });
-
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -248,7 +247,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets and sets the parent of this viewmodel.
         /// </summary>
-        public ServiceViewModel Parent { get => parent; set => parent = value; }
+        public new ServiceViewModel Parent { get; set; }
 
         /// <summary>
         /// Gets the error.
@@ -295,14 +294,15 @@ namespace Simplic.ServicePlatform.UI
 
         private string CheckServiceName()
         {
+            var localization = CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>();
             if (string.IsNullOrWhiteSpace(ServiceName))
-                return "Name kann nicht leer sein";
+                return localization.Translate("itemBoxProfile_display_name_empty");
 
-            if (parent.Services.Count(x => string.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
-                return "Name ist bereits vergeben";
+            if (Parent.Services.Count(x => string.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
+                return localization.Translate("xaml_name_assigned");
 
             if (ServiceName.Length < 3)
-                return "Name muss mindestens 3 Zeichen lang sein.";
+                return localization.Translate("validation_name_at_least", "3");
             return string.Empty;
         }
 
