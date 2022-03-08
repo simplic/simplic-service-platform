@@ -15,12 +15,14 @@ namespace Simplic.ServicePlatform.UI
     public class ServiceDefinitionViewModel : ViewModelBase, IDataErrorInfo
     {
         #region Fields
+
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private ServiceViewModel parent;
         private string serviceName;
         private DispatcherTimer timer;
         private ObservableCollection<ServiceModuleViewModel> usedModules;
+
         #endregion
 
         /// <summary>
@@ -44,8 +46,7 @@ namespace Simplic.ServicePlatform.UI
 
         private void Initialize()
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(2);
+            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             timer.Tick += Timer_Tick;
             InitializeCommands();
         }
@@ -79,17 +80,15 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         /// <param name="nativeConfigurations">Used configuration values</param>
         /// <param name="targetConfigurations">Configurations that should be overwritten</param>
-        private IEnumerable<ServiceModuleConfiguration> KeepConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
+        private static IEnumerable<ServiceModuleConfiguration> CarryOverConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
         {
             var resultingConfigurations = new List<ServiceModuleConfiguration>(targetConfigurations);
             foreach (var resultingConfiguration in resultingConfigurations)
             {
-                foreach (var nativeConfiguration in nativeConfigurations)
+                foreach (var nativeConfiguration in nativeConfigurations.ToList().Where(nativeConfiguration => nativeConfiguration.Name == resultingConfiguration.Name))
                 {
-                    if (nativeConfiguration.Name == null) continue;
-                    if (nativeConfiguration.Name.Equals(resultingConfiguration.Name))
-                        resultingConfiguration.Value = nativeConfiguration.Value;
-
+                    resultingConfiguration.Value = nativeConfiguration.Value;
+                    break;
                 }
             }
             return resultingConfigurations;
@@ -116,16 +115,11 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public void AddAvailableModule()
         {
-            var newServiceModule = new ServiceModule()
+            var newServiceModule = new ServiceModule
             {
                 Name = Parent.SelectedAvailableModule.Name,
-                Configuration = new List<ServiceModuleConfiguration>
-                    (
-                        Parent.SelectedAvailableModule.ConfigurationDefinition.Select(config =>
-                        {
-                            return new ServiceModuleConfiguration() { Name = config.Name, Value = config.Default };
-                        })
-                    )
+                Configuration = new List<ServiceModuleConfiguration>(Parent.SelectedAvailableModule.ConfigurationDefinition
+                    .Select(config => new ServiceModuleConfiguration { Name = config.Name, Value = config.Default }))
             };
             AddModule(newServiceModule);
         }
@@ -159,7 +153,6 @@ namespace Simplic.ServicePlatform.UI
             Model.Modules = new List<ServiceModule>(UsedModules.Select(m => m.Model));
         }
 
-
         // TODO There is a bug here which leads to the exact same instance of a module been given out.
         /// <summary>
         /// Updates the configurations of the given module with given ones.
@@ -172,7 +165,7 @@ namespace Simplic.ServicePlatform.UI
             {
                 if (module.Model.Name.Equals(moduleName))
                 {
-                    var configurations = KeepConfigValues(module.ConfigurationDefinitions, newConfigurations);
+                    var configurations = CarryOverConfigValues(module.ConfigurationDefinitions, newConfigurations);
                     module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(configurations);
                 }
             }
@@ -188,9 +181,10 @@ namespace Simplic.ServicePlatform.UI
             get => serviceName;
             set
             {
+                if (!string.IsNullOrEmpty(this[value])) return;
                 serviceName = value;
                 RaisePropertyChanged(nameof(ServiceName));
-                if (timer != null) timer.Start();
+                timer?.Start();
             }
         }
 
@@ -262,7 +256,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets the error.
         /// </summary>
-        public string Error { get => null; }
+        public string Error => null;
 
         /// <summary>
         /// Gets or sets the collection of errors.
@@ -284,10 +278,11 @@ namespace Simplic.ServicePlatform.UI
                 {
                     case "ServiceName":
                         if (string.IsNullOrWhiteSpace(ServiceName))
-                            result = "Service Name kann nicht leer sein";
-
-                        else if (parent.Services.Where(x => x.ServiceName.ToLower() == ServiceName.ToLower()).Count() > 1)
-                            result = "Service Name ist bereits vergeben";
+                            result = "Name kann nicht leer sein";
+                        else if (parent.Services.Count(x => String.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
+                            result = "Name ist bereits vergeben";
+                        else if (ServiceName.Length < 3)
+                            result = "Name muss mindestens 3 Zeichen lang sein.";
 
                         break;
                         //parent.Services.FirstOrDefault(x => x.ServiceName == ServiceName) != null
@@ -295,12 +290,9 @@ namespace Simplic.ServicePlatform.UI
                 if (ErrorCollection.ContainsKey(checkString))
                     ErrorCollection[checkString] = result;
                 else if (result != null)
-                {
                     ErrorCollection.Add(checkString, result);
 
-                }
-
-                RaisePropertyChanged("ErrorCollection");
+                RaisePropertyChanged(nameof(ErrorCollection));
                 return result;
             }
         }

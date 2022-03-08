@@ -13,19 +13,23 @@ using System.Windows.Threading;
 namespace Simplic.ServicePlatform.UI
 {
 
-    //ViewModel Stufe 1
+    /// <summary>
+    /// View model for the service.
+    /// </summary>
     public class ServiceViewModel : ViewModelBase
     {
         #region Fields
+
         private readonly IServiceClient serviceClient;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
-        private List<ServiceDefinitionViewModel> servicesToRemove;
+        private readonly List<ServiceDefinitionViewModel> servicesToRemove;
         private UIElement focusedElement;
         private string searchTerm;
-        private DispatcherTimer filterTimer;
+        private readonly DispatcherTimer filterTimer;
         private int keyCounter;
+
         #endregion
 
         /// <summary>
@@ -40,8 +44,7 @@ namespace Simplic.ServicePlatform.UI
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
             LoadServicesAndModules();
-            filterTimer = new DispatcherTimer();
-            filterTimer.Interval = TimeSpan.FromSeconds(0.2);
+            filterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.2) };
             filterTimer.Tick += Timer_Tick;
             keyCounter = 0;
         }
@@ -53,7 +56,6 @@ namespace Simplic.ServicePlatform.UI
         {
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(o => Save(), o => CanSave());
-            //DeleteCommand = new RelayCommand(Delete);
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
         }
 
@@ -95,12 +97,9 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         /// <param name="configurations">Configurations from a module definition</param>
         /// <returns>New configurations.</returns>
-        private IEnumerable<ServiceModuleConfiguration> ModuleConfigurationConverter(IEnumerable<ModuleConfigurationDefinition> configurations)
+        private static IEnumerable<ServiceModuleConfiguration> ModuleConfigurationConverter(IEnumerable<ModuleConfigurationDefinition> configurations)
         {
-            var newConfig = new List<ServiceModuleConfiguration>();
-            foreach (var config in configurations)
-                newConfig.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
-            return newConfig;
+            return configurations.Select(config => new ServiceModuleConfiguration {Name = config.Name, Value = config.Default}).ToList();
         }
 
         private void AddCard(object obj)
@@ -157,31 +156,26 @@ namespace Simplic.ServicePlatform.UI
 
         private Task UpdateAvailableModulesView()
         {
-            if (AvailableModulesCollectionView != null)
-                AvailableModulesCollectionView.Refresh();
+            AvailableModulesCollectionView?.Refresh();
 
             return Task.CompletedTask;
         }
 
         private bool FilterModules(object obj)
         {
-            if (!(obj is ModuleDefinition))
-                return true;
-
             if (string.IsNullOrWhiteSpace(SearchTerm))
                 return true;
 
-            var moduleDefinition = obj as ModuleDefinition;
-
-            if (moduleDefinition.Name.Contains(SearchTerm))
+            if (!(obj is ModuleDefinition moduleDefinition))
                 return true;
 
-            return false;
+            return moduleDefinition.Name.Contains(SearchTerm);
         }
 
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Adds service name to remove list.
         /// </summary>
@@ -190,6 +184,7 @@ namespace Simplic.ServicePlatform.UI
         {
             servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = serviceName }, this));
         }
+
         #endregion
 
         #region Properties
@@ -249,7 +244,7 @@ namespace Simplic.ServicePlatform.UI
         public ICommand SaveCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the commadn for adding a card.
+        /// Gets or sets the command for adding a card.
         /// </summary>
         public ICommand AddCardCommand { get; set; }
 
@@ -276,6 +271,7 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
+
         #endregion
     }
 }
