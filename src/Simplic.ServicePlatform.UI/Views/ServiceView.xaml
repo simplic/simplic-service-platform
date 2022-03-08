@@ -73,22 +73,17 @@
                                                Grid.ColumnSpan="2"
                                                Margin="0,0,5,0"/>
                                 <telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
-                                <telerik:RadWatermarkTextBox x:Name="ServiceNameTextBox" Grid.Row="1" Grid.Column="1"
-                                                             WatermarkContent="Service Example"
-                                                             HorizontalAlignment="Right"
-                                                             FocusManager.FocusedElement="{Binding ElementName=ServiceNameTextBox}">
-                                    <!--Text="{Binding ServiceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
-                                    <telerik:RadWatermarkTextBox.Text>
-                                        <Binding Path="ServiceName"
-                                                 ValidatesOnDataErrors="True"
-                                                 UpdateSourceTrigger="PropertyChanged"/>
-                                    </telerik:RadWatermarkTextBox.Text>
-
-
+                                <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
+                                                             WatermarkContent="Service Example" 
+                                                             Text="{Binding ServiceName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                                             ToolTip="{Binding ErrorCollection[ServiceName]}"                                                             
+                                                             HorizontalAlignment="Right">
+                                    
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
                                         <KeyBinding Key="F1" Command="{Binding UndoRenameCommand}"/>
                                     </telerik:RadWatermarkTextBox.InputBindings>
+                                    
                                 </telerik:RadWatermarkTextBox>
 
                                 <!--#region Used modules of the service definition-->

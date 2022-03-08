@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -10,7 +10,7 @@ using System.Windows.Threading;
 namespace Simplic.ServicePlatform.UI
 {
     //ViewModel Stufe 2
-    public class ServiceDefinitionViewModel : ViewModelBase
+    public class ServiceDefinitionViewModel : ViewModelBase, IDataErrorInfo
     {
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
@@ -18,6 +18,9 @@ namespace Simplic.ServicePlatform.UI
         private string serviceName;
         private DispatcherTimer timer;
         private ObservableCollection<ServiceModuleViewModel> usedModules;
+
+        public string Error { get { return null; } }
+
 
         /// <summary>
         /// Instantiates the view model for given model.
@@ -36,7 +39,44 @@ namespace Simplic.ServicePlatform.UI
             Initialize();
         }
 
-        private void Initialize()
+        public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
+
+        public string this[string checkString]
+        {
+            get
+            {
+                string result = null;
+
+                switch (checkString)
+                {
+                    case "ServiceName":
+                        if (string.IsNullOrWhiteSpace(ServiceName))
+                            result = "Service Name kann nicht leer sein";
+
+                        else if (parent.Services.Where(x => x.ServiceName.ToLower() == ServiceName.ToLower()).Count() > 1)
+                            result = "Service Name ist bereits vergeben";
+
+                        break;
+                            //parent.Services.FirstOrDefault(x => x.ServiceName == ServiceName) != null
+                }
+                if (ErrorCollection.ContainsKey(checkString))
+                    ErrorCollection[checkString] = result;
+                else if (result != null)
+                {
+                    ErrorCollection.Add(checkString, result);
+                    
+                }
+
+                RaisePropertyChanged("ErrorCollection");
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>B
+        /// <param name="other"></param>
+        public ServiceDefinitionViewModel(ServiceDefinitionViewModel other)
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(2);
