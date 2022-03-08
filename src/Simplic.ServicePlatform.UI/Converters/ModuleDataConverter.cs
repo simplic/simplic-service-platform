@@ -53,6 +53,10 @@ namespace Simplic.ServicePlatform.UI
             return null;
         }
 
+        /// <summary>
+        /// Gets the ConvertTo formats.
+        /// </summary>
+        /// <returns>Formats</returns>
         public override string[] GetConvertToFormats()
         {
             return new string[] { typeof(ModuleDefinition).FullName, typeof(ServiceModule).FullName };

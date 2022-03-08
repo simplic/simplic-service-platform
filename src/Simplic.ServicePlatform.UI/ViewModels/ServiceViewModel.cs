@@ -16,6 +16,7 @@ namespace Simplic.ServicePlatform.UI
     //ViewModel Stufe 1
     public class ServiceViewModel : ViewModelBase
     {
+        #region Fields
         private readonly IServiceClient serviceClient;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
@@ -25,11 +26,12 @@ namespace Simplic.ServicePlatform.UI
         private string searchTerm;
         private DispatcherTimer filterTimer;
         private int keyCounter;
+        #endregion
 
         /// <summary>
         /// Instantiates the view model.
         /// </summary>
-        /// <param name="serviceDefinition">service</param>
+        /// <param name="serviceClient">Service client</param>
         public ServiceViewModel(IServiceClient serviceClient)
         {
 
@@ -45,7 +47,7 @@ namespace Simplic.ServicePlatform.UI
         }
 
 
-
+        #region Private Methods
 
         private void InitializeCommands()
         {
@@ -76,7 +78,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Updates all service modules accordingly to module definitions.
         /// </summary>
-        private void UpdateServiceModules() //TODO BUGG HEEEREEERE LEADS TO SAME INSTANCES OF MODULES / CONFIGURATIONS
+        private void UpdateServiceModules()
         {
             foreach (var availableModule in AvailableModules)
             {
@@ -133,10 +135,6 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-        /// <summary>
-        /// Returns whether it should be possible to save.
-        /// </summary>
-        /// <returns>True or False</returns>
         private bool CanSave()
         {
             foreach (var service in Services)
@@ -145,11 +143,6 @@ namespace Simplic.ServicePlatform.UI
             return true;
         }
 
-        /// <summary>
-        /// Event handler for timer tick event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private async void Timer_Tick(object sender, EventArgs e)
         {
             keyCounter++;
@@ -170,7 +163,7 @@ namespace Simplic.ServicePlatform.UI
             return Task.CompletedTask;
         }
 
-        public bool FilterModules(object obj)
+        private bool FilterModules(object obj)
         {
             if (!(obj is ModuleDefinition))
                 return true;
@@ -186,6 +179,9 @@ namespace Simplic.ServicePlatform.UI
             return false;
         }
 
+        #endregion
+
+        #region Public Methods
         /// <summary>
         /// Adds service name to remove list.
         /// </summary>
@@ -194,6 +190,9 @@ namespace Simplic.ServicePlatform.UI
         {
             servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = serviceName }, this));
         }
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the selected service card.
@@ -234,7 +233,15 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the focused element.
         /// </summary>
-        public UIElement FocusedElement { get => focusedElement; set { focusedElement = value; RaisePropertyChanged(nameof(FocusedElement)); } }
+        public UIElement FocusedElement
+        {
+            get => focusedElement;
+            set
+            {
+                focusedElement = value;
+                RaisePropertyChanged(nameof(FocusedElement));
+            }
+        }
 
         /// <summary>
         /// Gets or sets the command for saving.
@@ -265,10 +272,10 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-
         /// <summary>
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
+        #endregion
     }
 }

@@ -5,7 +5,9 @@ using System.Linq;
 
 namespace Simplic.ServicePlatform.UI
 {
-    //Viewmodel Stufe 3
+    /// <summary>
+    /// View model for the service module.
+    /// </summary>
     public class ServiceModuleViewModel : ViewModelBase
     {
         private ServiceModule model;
@@ -24,7 +26,14 @@ namespace Simplic.ServicePlatform.UI
             Model.Configuration = ConfigurationDefinitions.ToList();
         }
 
+        /// <summary>
+        /// Gets or sets the model.
+        /// </summary>
         public ServiceModule Model { get => model; set => model = value; }
+
+        /// <summary>
+        /// Gets or sets the configurations.
+        /// </summary>
         public ObservableCollection<ServiceModuleConfiguration> ConfigurationDefinitions { get; set; }
     }
 }

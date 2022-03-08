@@ -9,18 +9,19 @@ using System.Windows.Threading;
 
 namespace Simplic.ServicePlatform.UI
 {
-    //ViewModel Stufe 2
+    /// <summary>
+    /// View model for the service definition.
+    /// </summary>
     public class ServiceDefinitionViewModel : ViewModelBase, IDataErrorInfo
     {
+        #region Fields
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private ServiceViewModel parent;
         private string serviceName;
         private DispatcherTimer timer;
         private ObservableCollection<ServiceModuleViewModel> usedModules;
-
-        public string Error { get { return null; } }
-
+        #endregion
 
         /// <summary>
         /// Instantiates the view model for given model.
@@ -39,44 +40,9 @@ namespace Simplic.ServicePlatform.UI
             Initialize();
         }
 
-        public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
+        #region Private Methods
 
-        public string this[string checkString]
-        {
-            get
-            {
-                string result = null;
-
-                switch (checkString)
-                {
-                    case "ServiceName":
-                        if (string.IsNullOrWhiteSpace(ServiceName))
-                            result = "Service Name kann nicht leer sein";
-
-                        else if (parent.Services.Where(x => x.ServiceName.ToLower() == ServiceName.ToLower()).Count() > 1)
-                            result = "Service Name ist bereits vergeben";
-
-                        break;
-                            //parent.Services.FirstOrDefault(x => x.ServiceName == ServiceName) != null
-                }
-                if (ErrorCollection.ContainsKey(checkString))
-                    ErrorCollection[checkString] = result;
-                else if (result != null)
-                {
-                    ErrorCollection.Add(checkString, result);
-                    
-                }
-
-                RaisePropertyChanged("ErrorCollection");
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Copy constructor.
-        /// </summary>B
-        /// <param name="other"></param>
-        public ServiceDefinitionViewModel(ServiceDefinitionViewModel other)
+        private void Initialize()
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(2);
@@ -107,6 +73,31 @@ namespace Simplic.ServicePlatform.UI
             RenameCommand.Execute(this);
             timer.Stop();
         }
+
+        /// <summary>
+        /// Overwrites target configuration values with native configuration values.
+        /// </summary>
+        /// <param name="nativeConfigurations">Used configuration values</param>
+        /// <param name="targetConfigurations">Configurations that should be overwritten</param>
+        private IEnumerable<ServiceModuleConfiguration> KeepConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
+        {
+            var resultingConfigurations = new List<ServiceModuleConfiguration>(targetConfigurations);
+            foreach (var resultingConfiguration in resultingConfigurations)
+            {
+                foreach (var nativeConfiguration in nativeConfigurations)
+                {
+                    if (nativeConfiguration.Name == null) continue;
+                    if (nativeConfiguration.Name.Equals(resultingConfiguration.Name))
+                        resultingConfiguration.Value = nativeConfiguration.Value;
+
+                }
+            }
+            return resultingConfigurations;
+        }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Adds a module to the service definition.
@@ -186,33 +177,12 @@ namespace Simplic.ServicePlatform.UI
                 }
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Overwrites target configuration values with native configuration values.
-        /// </summary>
-        /// <param name="nativeConfigurations">Used configuration values</param>
-        /// <param name="targetConfigurations">Configurations that should be overwritten</param>
-        private IEnumerable<ServiceModuleConfiguration> KeepConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
-        {
-            var resultingConfigurations = new List<ServiceModuleConfiguration>(targetConfigurations);
-            foreach (var resultingConfiguration in resultingConfigurations)
-            {
-                foreach (var nativeConfiguration in nativeConfigurations)
-                {
-                    if (nativeConfiguration.Name == null) continue;
-                    if (nativeConfiguration.Name.Equals(resultingConfiguration.Name))
-                        resultingConfiguration.Value = nativeConfiguration.Value;
-
-                }
-            }
-            return resultingConfigurations;
-        }
-
+        #region Properties
         /// <summary>
         /// Gets or sets the service name.
         /// </summary>
-        [StringLength(18, MinimumLength = 3, ErrorMessage = "Muss mindestens 3 Zeichen lang sein.")]
-        [Required(ErrorMessage = "Darf nicht leer sein.")]
         public string ServiceName
         {
             get => serviceName;
@@ -288,5 +258,52 @@ namespace Simplic.ServicePlatform.UI
         /// Gets and sets the parent of this viewmodel.
         /// </summary>
         public ServiceViewModel Parent { get => parent; set => parent = value; }
+
+        /// <summary>
+        /// Gets the error.
+        /// </summary>
+        public string Error { get => null; }
+
+        /// <summary>
+        /// Gets or sets the collection of errors.
+        /// </summary>
+        public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Checks a string for naming conventions.
+        /// </summary>
+        /// <param name="checkString">String to be checked</param>
+        /// <returns>Error message</returns>
+        public string this[string checkString]
+        {
+            get
+            {
+                string result = null;
+
+                switch (checkString)
+                {
+                    case "ServiceName":
+                        if (string.IsNullOrWhiteSpace(ServiceName))
+                            result = "Service Name kann nicht leer sein";
+
+                        else if (parent.Services.Where(x => x.ServiceName.ToLower() == ServiceName.ToLower()).Count() > 1)
+                            result = "Service Name ist bereits vergeben";
+
+                        break;
+                        //parent.Services.FirstOrDefault(x => x.ServiceName == ServiceName) != null
+                }
+                if (ErrorCollection.ContainsKey(checkString))
+                    ErrorCollection[checkString] = result;
+                else if (result != null)
+                {
+                    ErrorCollection.Add(checkString, result);
+
+                }
+
+                RaisePropertyChanged("ErrorCollection");
+                return result;
+            }
+        }
+        #endregion
     }
 }
