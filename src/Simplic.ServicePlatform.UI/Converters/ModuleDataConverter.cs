@@ -13,7 +13,7 @@ namespace Simplic.ServicePlatform.UI
         /// Singleton object for static access.
         /// </summary>
         public static ModuleDataConverter Singleton = new ModuleDataConverter();
-        
+
         /// <summary>
         /// Converts configurations from module definitions to configurations for service modules.
         /// </summary>
@@ -21,10 +21,7 @@ namespace Simplic.ServicePlatform.UI
         /// <returns>New configurations.</returns>
         public IList<ServiceModuleConfiguration> ModuleConfigurationConverter(IEnumerable<ModuleConfigurationDefinition> configurations)
         {
-            var newConfig = new List<ServiceModuleConfiguration>();
-            foreach (var config in configurations)
-                newConfig.Add(new ServiceModuleConfiguration() { Name = config.Name, Value = config.Default });
-            return newConfig;
+            return configurations.Select(config => new ServiceModuleConfiguration() { Name = config.Name, Value = config.Default }).ToList();
         }
 
         /// <summary>
@@ -45,8 +42,7 @@ namespace Simplic.ServicePlatform.UI
         /// <returns>Service module if correct data and format correct, null otherwise.</returns>
         public override object ConvertTo(object data, string format)
         {
-            var moduleDefinition = DataObjectHelper.GetData(data, typeof(ModuleDefinition), false) as IEnumerable<object>;
-            if (moduleDefinition != null && format == typeof(ServiceModuleViewModel).FullName)
+            if (DataObjectHelper.GetData(data, typeof(ModuleDefinition), false) is IEnumerable<object> moduleDefinition && format == typeof(ServiceModuleViewModel).FullName)
             {
                 return new ServiceModuleViewModel(ModuleDefinitionConverter(moduleDefinition.FirstOrDefault() as ModuleDefinition));
             }

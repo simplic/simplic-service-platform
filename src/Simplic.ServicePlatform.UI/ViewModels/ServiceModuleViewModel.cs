@@ -10,11 +10,9 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public class ServiceModuleViewModel : ViewModelBase
     {
-        private ServiceModule model;
-
         public ServiceModuleViewModel(ServiceModule model)
         {
-            Model = new ServiceModule() { Name = model.Name, Configuration = new List<ServiceModuleConfiguration>(model.Configuration) };
+            Model = new ServiceModule { Name = model.Name, Configuration = new List<ServiceModuleConfiguration>(model.Configuration) };
             ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(Model.Configuration);
         }
 
@@ -29,7 +27,7 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the model.
         /// </summary>
-        public ServiceModule Model { get => model; set => model = value; }
+        public ServiceModule Model { get; set; }
 
         /// <summary>
         /// Gets or sets the configurations.

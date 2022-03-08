@@ -55,7 +55,7 @@ namespace Simplic.ServicePlatform.UI
         private void InitializeCommands()
         {
             AddCardCommand = new RelayCommand(AddCard);
-            SaveCommand = new RelayCommand(o => Save(), o => CanSave());
+            SaveCommand = new RelayCommand(Save);
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
         }
 
@@ -117,13 +117,13 @@ namespace Simplic.ServicePlatform.UI
             SelectedServiceCard = null;
         }
 
-        private void Save()
+        private void Save(object obj)
         {
             var errors = false;
             foreach (var service in Services)
             {
                 service.Synch();
-                if (service.Result)
+                if (service.HasErrors())
                 {
                     errors = true;
                     continue; //this servers shouldnt be saved, go to next one
@@ -141,15 +141,6 @@ namespace Simplic.ServicePlatform.UI
             }
 
             if (errors) MessageBox.Show("Ein oder mehrere Services konnten nicht gespeichert werden.");
-        }
-
-        private bool CanSave()
-        {
-            //foreach (var service in Services)
-            //    //if (string.IsNullOrEmpty(service.Model.ServiceName))
-            //    if (service.Result)
-            //        return false;
-            return true;
         }
 
         private async void Timer_Tick(object sender, EventArgs e)

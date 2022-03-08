@@ -81,7 +81,6 @@
                                     
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
-                                        <KeyBinding Key="F1" Command="{Binding UndoRenameCommand}"/>
                                     </telerik:RadWatermarkTextBox.InputBindings>
                                     
                                 </telerik:RadWatermarkTextBox>

@@ -1,6 +1,7 @@
 ﻿using Simplic.Framework.UI;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
 using Telerik.Windows.DragDrop;
@@ -28,28 +29,27 @@ namespace Simplic.ServicePlatform.UI
 
         private void CreateButtons()
         {
-            var cardButtonGroup = new RadRibbonGroup();
-            cardButtonGroup.Header = "Service";
+            var cardButtonGroup = new RadRibbonGroup { Header = "Service" };
 
-            addCardButton = new RibbonButton()
+            addCardButton = new RibbonButton
             {
                 Text = "Add",
                 Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
                 LargeIconName = "service_add_32x",
-                //TextLocalizationKey = "shipment_split_window_splitbutton"
+                TextLocalizationKey = "xaml_add"
             };
 
             cardButtonGroup.Items.Add(addCardButton);
 
-            removeCardButton = new RibbonButton()
+            removeCardButton = new RibbonButton
             {
                 Text = "Remove",
                 Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
                 LargeIconName = "delete_32x",
-                //TextLocalizationKey = "shipment_split_window_splitbutton"
+                TextLocalizationKey = "kanban_remove"
             };
 
-            BindingOperations.SetBinding(removeCardButton, RibbonButton.CommandProperty, new Binding(nameof(ServiceViewModel.DeleteCardCommand))
+            BindingOperations.SetBinding(removeCardButton, ButtonBase.CommandProperty, new Binding(nameof(ServiceViewModel.DeleteCardCommand))
             {
                 Source = DataContext
             });

@@ -153,7 +153,6 @@ namespace Simplic.ServicePlatform.UI
             Model.Modules = new List<ServiceModule>(UsedModules.Select(m => m.Model));
         }
 
-        // TODO There is a bug here which leads to the exact same instance of a module been given out.
         /// <summary>
         /// Updates the configurations of the given module with given ones.
         /// </summary>
@@ -163,11 +162,9 @@ namespace Simplic.ServicePlatform.UI
         {
             foreach (var module in UsedModules)
             {
-                if (module.Model.Name.Equals(moduleName))
-                {
-                    var configurations = CarryOverConfigValues(module.ConfigurationDefinitions, newConfigurations);
-                    module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(configurations);
-                }
+                if (!module.Model.Name.Equals(moduleName)) continue;
+                var configurations = CarryOverConfigValues(module.ConfigurationDefinitions, newConfigurations);
+                module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(configurations);
             }
         }
         #endregion
@@ -263,43 +260,52 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
 
-        public bool Result { get; set; }
+        /// <summary>
+        /// Returns whether this service has errors.
+        /// </summary>
+        public bool HasErrors()
+        {
+            return !string.IsNullOrEmpty(this[nameof(ServiceName)]);
+        }
 
         /// <summary>
         /// Checks a string for naming conventions.
         /// </summary>
-        /// <param name="checkString">String to be checked</param>
+        /// <param name="checkString">String that contains the subject to be checked (e.g. "ServiceName")</param>
         /// <returns>Error message</returns>
         public string this[string checkString]
         {
             get
             {
                 string result = null;
-
                 switch (checkString)
                 {
                     case nameof(ServiceName):
-                        if (string.IsNullOrWhiteSpace(ServiceName))
-                            result = "Name kann nicht leer sein";
-                        else if (parent.Services.Count(x => String.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
-                            result = "Name ist bereits vergeben";
-                        else if (ServiceName.Length < 3)
-                            result = "Name muss mindestens 3 Zeichen lang sein.";
-
+                        result = CheckServiceName();
                         break;
-                        //parent.Services.FirstOrDefault(x => x.ServiceName == ServiceName) != null
                 }
-                if (ErrorCollection.ContainsKey(checkString))
-                    ErrorCollection[checkString] = result;
-                else if (result != null)
-                    ErrorCollection.Add(checkString, result);
-                    Result = true;
-                }
+                if (string.IsNullOrEmpty(result))
+                    return result;
 
+                ErrorCollection[checkString] = result;
                 RaisePropertyChanged(nameof(ErrorCollection));
                 return result;
             }
         }
+
+        private string CheckServiceName()
+        {
+            if (string.IsNullOrWhiteSpace(ServiceName))
+                return "Name kann nicht leer sein";
+
+            if (parent.Services.Count(x => string.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
+                return "Name ist bereits vergeben";
+
+            if (ServiceName.Length < 3)
+                return "Name muss mindestens 3 Zeichen lang sein.";
+            return string.Empty;
+        }
+
         #endregion
     }
 }
