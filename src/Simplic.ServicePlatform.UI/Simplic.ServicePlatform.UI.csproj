@@ -58,10 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\CustomListBoxDragDropBehavior.cs" />
+    <Compile Include="Controls\RegexTextBox.cs" />
     <Compile Include="Converters\CollectionToInvisibilityConverter.cs" />
     <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
     <Compile Include="Converters\ModuleDataConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
+    <Compile Include="Utils\NameRule.cs" />
     <Compile Include="ViewModels\ServiceModuleViewModel.cs" />
     <Compile Include="ViewModels\ServiceDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ServiceViewModel.cs" />

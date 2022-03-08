@@ -103,7 +103,9 @@ namespace Simplic.ServicePlatform.UI
 
         private void AddCard(object obj)
         {
-            Services.Add(new ServiceDefinitionViewModel(new ServiceDefinition(), this));
+            var newServiceCard = new ServiceDefinitionViewModel(new ServiceDefinition(), this);
+            Services.Add(newServiceCard);
+            SelectedServiceCard = newServiceCard;
         }
 
         private void DeleteCard(object obj)

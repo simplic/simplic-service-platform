@@ -13,6 +13,7 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private ServiceViewModel parent;
+        private string serviceName;
 
         public string Error { get { return null; } }
 
