@@ -23,7 +23,7 @@ namespace Simplic.ServicePlatform.UI
         {
             var newConfig = new List<ServiceModuleConfiguration>();
             foreach (var config in configurations)
-                newConfig.Add(new ServiceModuleConfiguration { Name = config.Name, Value = config.Default });
+                newConfig.Add(new ServiceModuleConfiguration() { Name = config.Name, Value = config.Default });
             return newConfig;
         }
 
@@ -34,7 +34,7 @@ namespace Simplic.ServicePlatform.UI
         /// <returns></returns>
         public ServiceModule ModuleDefinitionConverter(ModuleDefinition moduleDefinition)
         {
-            return new ServiceModule { Name = moduleDefinition.Name, Configuration = ModuleConfigurationConverter(moduleDefinition.ConfigurationDefinition) };
+            return new ServiceModule() { Name = moduleDefinition.Name, Configuration = ModuleConfigurationConverter(moduleDefinition.ConfigurationDefinition) };
         }
 
         /// <summary>

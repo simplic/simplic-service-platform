@@ -31,13 +31,18 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
+        <!--#region TBD-->
+        <Label Grid.Row="1" Content="4" FontSize="20"/>
+        <!--#endregion-->
+        
         <!--#region CardView for all Services-->
         <Border Padding="10">
             <telerik:RadCardView x:Name="ServicesCardView"
@@ -71,8 +76,7 @@
                                 <telerik:RadWatermarkTextBox x:Name="ServiceNameTextBox" Grid.Row="1" Grid.Column="1"
                                                              WatermarkContent="Service Example"
                                                              HorizontalAlignment="Right"
-                                                             FocusManager.FocusedElement="{Binding ElementName=ServiceNameTextBox}"
-                                                             Validation.ErrorTemplate="{StaticResource }">
+                                                             FocusManager.FocusedElement="{Binding ElementName=ServiceNameTextBox}">
                                     <!--Text="{Binding ServiceName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"-->
                                     <telerik:RadWatermarkTextBox.Text>
                                         <Binding Path="ServiceName"
@@ -112,10 +116,10 @@
                                             <StackPanel>
                                                 <telerik:Label Content="{Binding Model.Name}"
                                                                Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToInvisibilityConverter}}"
-															   Margin="32,0,0,0"/>
+															   Margin="32,0,0,0" AllowDrop="False"/>
                                                 <telerik:RadExpander Grid.Column="1" Header="{Binding Model.Name}"
                                                                      Visibility="{Binding ConfigurationDefinitions, Converter={StaticResource CollectionToVisibilityConverter}}"
-                                                                     MaxWidth="280">
+                                                                     MaxWidth="280" AllowDrop="False">
                                                     <telerik:RadExpander.Content>
                                                         <telerik:RadListBox ItemsSource="{Binding ConfigurationDefinitions}" AllowDrop="False">
                                                             <telerik:RadListBox.ItemTemplate>
@@ -132,10 +136,6 @@
                                                             </telerik:RadListBox.ItemTemplate>
                                                         </telerik:RadListBox>
                                                     </telerik:RadExpander.Content>
-                                                    <telerik:RadExpander.InputBindings>
-                                                        <KeyBinding Key="Return" Command="{Binding UpdateValuesCommand}"/>
-                                                        <KeyBinding Key="F1" Command="{Binding UndoUpdateValuesCommand}"/>
-                                                    </telerik:RadExpander.InputBindings>
                                                 </telerik:RadExpander>
                                             </StackPanel>
                                         </DataTemplate>

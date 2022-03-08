@@ -14,7 +14,7 @@ namespace Simplic.ServicePlatform.UI
 {
 
     //ViewModel Stufe 1
-    public class ServiceViewModel : Simplic.UI.MVC.ViewModelBase
+    public class ServiceViewModel : ViewModelBase
     {
         private readonly IServiceClient serviceClient;
         private ServiceDefinitionViewModel selectedServiceCard;
@@ -64,7 +64,7 @@ namespace Simplic.ServicePlatform.UI
                 AvailableModulesCollectionView.Filter = FilterModules;
             }).ContinueWith(o =>
             {
-                Services = new ObservableCollection<ServiceDefinitionViewModel>((availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this))).OrderBy(x => x.Model.ServiceName));
+                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)).OrderBy(x => x.Model.ServiceName));
                 UpdateServiceModules();
                 RaisePropertyChanged(nameof(Services));
                 RaisePropertyChanged(nameof(AvailableModules));
@@ -74,13 +74,13 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Updates all service modules accordingly to module definitions.
         /// </summary>
-        private void UpdateServiceModules()
+        private void UpdateServiceModules() //TODO BUGG HEEEREEERE LEADS TO SAME INSTANCES OF MODULES / CONFIGURATIONS
         {
             foreach (var availableModule in AvailableModules)
             {
-                var newConfigurations = ModuleConfigurationConverter(availableModule.ConfigurationDefinition);
                 foreach (var service in Services)
                 {
+                    var newConfigurations = ModuleConfigurationConverter(availableModule.ConfigurationDefinition);
                     service.UpdateConfigurations(availableModule.Name, newConfigurations);
                 }
             }
@@ -116,14 +116,13 @@ namespace Simplic.ServicePlatform.UI
 
         private void Save()
         {
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(Services.FirstOrDefault().Model); //just for debugging purposes
             foreach (var service in Services)
             {
                 service.Synch();
                 serviceClient.SaveService(service.Model);
 
                 if (service.OldServiceName != null && !service.OldServiceName.Equals(service.Model.ServiceName))
-                    servicesToRemove.Add(new ServiceDefinitionViewModel { Model = new ServiceDefinition { ServiceName = service.OldServiceName } });
+                    servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition() { ServiceName = service.OldServiceName }, this));
             }
 
             foreach (var service in servicesToRemove)
@@ -131,14 +130,6 @@ namespace Simplic.ServicePlatform.UI
                 serviceClient.DeleteService(service.Model);
             }
         }
-
-        //private void Delete()
-        //{
-        //    foreach (var service in Services)
-        //    {
-        //        //serviceClient.DeleteService(service.Model);
-        //    }
-        //}
 
         /// <summary>
         /// Returns whether it should be possible to save.
@@ -258,6 +249,9 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the search term.
+        /// </summary>
         public string SearchTerm
         {
             get => searchTerm;

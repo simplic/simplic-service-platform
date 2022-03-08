@@ -16,7 +16,6 @@ namespace Simplic.ServicePlatform
         /// <summary>
         /// Gets or sets the service name
         /// </summary>
-        [Required()]
         public string ServiceName { get; set; }
 
         /// <summary>

@@ -1,9 +1,11 @@
 ﻿using Simplic.UI.MVC;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -14,13 +16,8 @@ namespace Simplic.ServicePlatform.UI
         private ServiceModule selectedServiceModule;
         private ServiceViewModel parent;
         private string serviceName;
-
-        /// <summary>
-        /// Instantiates the view model.
-        /// </summary>
-        public ServiceDefinitionViewModel()
-        {
-        }
+        private DispatcherTimer timer;
+        private ObservableCollection<ServiceModuleViewModel> usedModules;
 
         /// <summary>
         /// Instantiates the view model for given model.
@@ -29,28 +26,21 @@ namespace Simplic.ServicePlatform.UI
         {
             Model = model;
             Parent = parent;
-            UsedModules = model.Modules != null
-                ? new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)))
-                : new ObservableCollection<ServiceModuleViewModel>();
+            UsedModules = new ObservableCollection<ServiceModuleViewModel>();
+            if (model.Modules != null)
+                UsedModules = new ObservableCollection<ServiceModuleViewModel>(model.Modules.Select(m => new ServiceModuleViewModel(m)));
 
             ServiceName = model.ServiceName;
             OldServiceName = model.ServiceName;
 
-            InitializeCommands();
+            Initialize();
         }
 
-        /// <summary>
-        /// Copy constructor.
-        /// </summary>
-        /// <param name="other"></param>
-        public ServiceDefinitionViewModel(ServiceDefinitionViewModel other)
+        private void Initialize()
         {
-            Model = other.Model;
-            Parent = other.Parent;
-            UsedModules = other.UsedModules;
-            ServiceName = other.ServiceName;
-            OldServiceName = other.OldServiceName;
-
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(2);
+            timer.Tick += Timer_Tick;
             InitializeCommands();
         }
 
@@ -72,6 +62,12 @@ namespace Simplic.ServicePlatform.UI
 
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            RenameCommand.Execute(this);
+            timer.Stop();
+        }
+
         /// <summary>
         /// Adds a module to the service definition.
         /// </summary>
@@ -89,14 +85,14 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public void AddAvailableModule()
         {
-            var newServiceModule = new ServiceModule
+            var newServiceModule = new ServiceModule()
             {
                 Name = Parent.SelectedAvailableModule.Name,
                 Configuration = new List<ServiceModuleConfiguration>
                     (
                         Parent.SelectedAvailableModule.ConfigurationDefinition.Select(config =>
                         {
-                            return new ServiceModuleConfiguration { Name = config.Name, Value = config.Default };
+                            return new ServiceModuleConfiguration() { Name = config.Name, Value = config.Default };
                         })
                     )
             };
@@ -132,6 +128,8 @@ namespace Simplic.ServicePlatform.UI
             Model.Modules = new List<ServiceModule>(UsedModules.Select(m => m.Model));
         }
 
+
+        // TODO There is a bug here which leads to the exact same instance of a module been given out.
         /// <summary>
         /// Updates the configurations of the given module with given ones.
         /// </summary>
@@ -143,8 +141,8 @@ namespace Simplic.ServicePlatform.UI
             {
                 if (module.Model.Name.Equals(moduleName))
                 {
-                    overwriteConfigValues(module.ConfigurationDefinitions, newConfigurations);
-                    module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(newConfigurations);
+                    var configurations = KeepConfigValues(module.ConfigurationDefinitions, newConfigurations);
+                    module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(configurations);
                 }
             }
         }
@@ -154,31 +152,35 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         /// <param name="nativeConfigurations">Used configuration values</param>
         /// <param name="targetConfigurations">Configurations that should be overwritten</param>
-        private void overwriteConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
+        private IEnumerable<ServiceModuleConfiguration> KeepConfigValues(IEnumerable<ServiceModuleConfiguration> nativeConfigurations, IEnumerable<ServiceModuleConfiguration> targetConfigurations)
         {
-            foreach (var newConfiguration in targetConfigurations)
-                foreach (var configuration in nativeConfigurations)
+            var resultingConfigurations = new List<ServiceModuleConfiguration>(targetConfigurations);
+            foreach (var resultingConfiguration in resultingConfigurations)
+            {
+                foreach (var nativeConfiguration in nativeConfigurations)
                 {
-                    if (configuration.Name == null) return;
-                    if (configuration.Name.Equals(newConfiguration.Name))
-                        configuration.Value = newConfiguration.Value;
+                    if (nativeConfiguration.Name == null) continue;
+                    if (nativeConfiguration.Name.Equals(resultingConfiguration.Name))
+                        resultingConfiguration.Value = nativeConfiguration.Value;
 
                 }
+            }
+            return resultingConfigurations;
         }
 
         /// <summary>
         /// Gets or sets the service name.
         /// </summary>
-        [Required(ErrorMessage = "Cannot be empty.")]
-        [StringLength(18, MinimumLength = 3, ErrorMessage = "Must be at least 3 characters.")]
+        [StringLength(18, MinimumLength = 3, ErrorMessage = "Muss mindestens 3 Zeichen lang sein.")]
+        [Required(ErrorMessage = "Darf nicht leer sein.")]
         public string ServiceName
         {
             get => serviceName;
             set
             {
-                Validator.ValidateProperty(value, new ValidationContext(this) { MemberName = nameof(ServiceName) });
                 serviceName = value;
                 RaisePropertyChanged(nameof(ServiceName));
+                if (timer != null) timer.Start();
             }
         }
 
@@ -191,26 +193,40 @@ namespace Simplic.ServicePlatform.UI
         /// <summary>
         /// Gets or sets the collection of used modules.
         /// </summary>
-        public ObservableCollection<ServiceModuleViewModel> UsedModules { get; set; }
+        public ObservableCollection<ServiceModuleViewModel> UsedModules
+        {
+            get => usedModules;
+            set
+            {
+                usedModules = value;
+                RaisePropertyChanged(nameof(UsedModules));
+            }
+        }
 
         /// <summary>
         /// Gets or sets the model for the service definition.
         /// </summary>
-        public ServiceDefinition Model { get => model; set => model = value; }
+        public ServiceDefinition Model
+        {
+            get => model;
+            set
+            {
+                model = value;
+                RaisePropertyChanged(nameof(Model));
+            }
+        }
 
         /// <summary>
         /// Gets or sets the selected module.
         /// </summary>
-        public ServiceModule SelectedServiceModule { get => selectedServiceModule; set { selectedServiceModule = value; RaisePropertyChanged(nameof(SelectedServiceModule)); RaisePropertyChanged(nameof(SelectedServiceModuleConfiguration)); } }
-
-        /// <summary>
-        /// Gets the configuration of the selected service module.
-        /// </summary>
-        public IList<ServiceModuleConfiguration> SelectedServiceModuleConfiguration
+        public ServiceModule SelectedServiceModule
         {
-            get => (SelectedServiceModule != null && SelectedServiceModule.Configuration != null)
-                ? SelectedServiceModule.Configuration
-                : new List<ServiceModuleConfiguration>();
+            get => selectedServiceModule;
+            set
+            {
+                selectedServiceModule = value;
+                RaisePropertyChanged(nameof(SelectedServiceModule));
+            }
         }
 
         /// <summary>
