@@ -263,6 +263,8 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
 
+        public bool Result { get; set; }
+
         /// <summary>
         /// Checks a string for naming conventions.
         /// </summary>
@@ -276,7 +278,7 @@ namespace Simplic.ServicePlatform.UI
 
                 switch (checkString)
                 {
-                    case "ServiceName":
+                    case nameof(ServiceName):
                         if (string.IsNullOrWhiteSpace(ServiceName))
                             result = "Name kann nicht leer sein";
                         else if (parent.Services.Count(x => String.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
@@ -291,6 +293,8 @@ namespace Simplic.ServicePlatform.UI
                     ErrorCollection[checkString] = result;
                 else if (result != null)
                     ErrorCollection.Add(checkString, result);
+                    Result = true;
+                }
 
                 RaisePropertyChanged(nameof(ErrorCollection));
                 return result;

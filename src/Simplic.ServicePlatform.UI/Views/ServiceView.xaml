@@ -40,7 +40,7 @@
         </Grid.ColumnDefinitions>
         
         <!--#region TBD-->
-        <Label Grid.Row="1" Content="4" FontSize="20"/>
+        <Label Grid.Row="1" Content="7" FontSize="20"/>
         <!--#endregion-->
         
         <!--#region CardView for all Services-->

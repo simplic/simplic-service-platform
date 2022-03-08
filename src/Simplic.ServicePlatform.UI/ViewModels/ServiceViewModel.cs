@@ -119,9 +119,16 @@ namespace Simplic.ServicePlatform.UI
 
         private void Save()
         {
+            var errors = false;
             foreach (var service in Services)
             {
                 service.Synch();
+                if (service.Result)
+                {
+                    errors = true;
+                    continue; //this servers shouldnt be saved, go to next one
+                }
+
                 serviceClient.SaveService(service.Model);
 
                 if (service.OldServiceName != null && !service.OldServiceName.Equals(service.Model.ServiceName))
@@ -132,13 +139,16 @@ namespace Simplic.ServicePlatform.UI
             {
                 serviceClient.DeleteService(service.Model);
             }
+
+            if (errors) MessageBox.Show("Ein oder mehrere Services konnten nicht gespeichert werden.");
         }
 
         private bool CanSave()
         {
-            foreach (var service in Services)
-                if (!string.IsNullOrEmpty(service.Model.ServiceName))
-                    return false;
+            //foreach (var service in Services)
+            //    //if (string.IsNullOrEmpty(service.Model.ServiceName))
+            //    if (service.Result)
+            //        return false;
             return true;
         }
 
