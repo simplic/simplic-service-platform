@@ -11,7 +11,7 @@ namespace Simplic.ServicePlatform.UI
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class ServiceView : DefaultRibbonWindow 
+    public partial class ServiceView : DefaultRibbonWindow
     {
         private RibbonButton addCardButton;
         private RibbonButton removeCardButton;
@@ -49,7 +49,7 @@ namespace Simplic.ServicePlatform.UI
                 //TextLocalizationKey = "shipment_split_window_splitbutton"
             };
 
-            BindingOperations.SetBinding(removeCardButton, RibbonButton.CommandProperty, new Binding(nameof(ServiceViewModel.DeleteCardCommand)) 
+            BindingOperations.SetBinding(removeCardButton, RibbonButton.CommandProperty, new Binding(nameof(ServiceViewModel.DeleteCardCommand))
             {
                 Source = DataContext
             });
@@ -74,8 +74,15 @@ namespace Simplic.ServicePlatform.UI
         {
             if (DataContext is ServiceViewModel viewModel)
             {
-                viewModel.SaveCommand.Execute(this);
+                if (viewModel.SaveCommand.CanExecute(this))
+                {
+                    base.AllowSave = true;
+                    viewModel.SaveCommand.Execute(this);
+                    return;
+                }
+                MessageBox.Show("Es gibt Fehler unter den Servicenamen, prüfen sie die Servicenamen auf Fehler");
             }
+
             //base.OnSave(e);
         }
 

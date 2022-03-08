@@ -138,7 +138,8 @@ namespace Simplic.ServicePlatform.UI
         private bool CanSave()
         {
             foreach (var service in Services)
-                if (!string.IsNullOrEmpty(service.Model.ServiceName))
+                //if (string.IsNullOrEmpty(service.Model.ServiceName))
+                if(service.Result)    
                     return false;
             return true;
         }

@@ -269,6 +269,8 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public Dictionary<string, string> ErrorCollection { get; private set; } = new Dictionary<string, string>();
 
+        public bool Result { get; set; }
+
         /// <summary>
         /// Checks a string for naming conventions.
         /// </summary>
@@ -297,7 +299,7 @@ namespace Simplic.ServicePlatform.UI
                 else if (result != null)
                 {
                     ErrorCollection.Add(checkString, result);
-
+                    Result = true;
                 }
 
                 RaisePropertyChanged("ErrorCollection");
