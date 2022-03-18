@@ -38,7 +38,6 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="serviceClient">Service client</param>
         public ServiceViewModel(IServiceClient serviceClient)
         {
-
             this.serviceClient = serviceClient;
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             servicesToRemove = new List<ServiceDefinitionViewModel>();
