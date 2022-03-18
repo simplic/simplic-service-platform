@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using Simplic.Localization;
+using Simplic.Studio.UI;
 using Telerik.Windows.DragDrop.Behaviors;
 
 namespace Simplic.ServicePlatform.UI
@@ -11,6 +12,7 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public class UniqueServiceModuleDragDropBehavior : ListBoxDragDropBehavior
     {
+        /// <inheritdoc/>
         public override void Drop(DragDropState state)
         {
             var draggedItems = state.DraggedItems as IEnumerable<ServiceModuleViewModel>;

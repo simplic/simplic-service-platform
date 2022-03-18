@@ -19,8 +19,6 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public class ServiceViewModel : ViewModelBase
     {
-        #region Fields
-
         private readonly IServiceClient serviceClient;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
@@ -30,8 +28,6 @@ namespace Simplic.ServicePlatform.UI
         private string searchTerm;
         private readonly DispatcherTimer filterTimer;
         private int keyCounter;
-
-        #endregion
 
         /// <summary>
         /// Instantiates the view model.
@@ -49,9 +45,6 @@ namespace Simplic.ServicePlatform.UI
             filterTimer.Tick += Timer_Tick;
             keyCounter = 0;
         }
-
-
-        #region Private Methods
 
         private void InitializeCommands()
         {
@@ -184,10 +177,6 @@ namespace Simplic.ServicePlatform.UI
             return moduleDefinition.Name.Contains(SearchTerm);
         }
 
-        #endregion
-
-        #region Public Methods
-
         /// <summary>
         /// Adds service name to remove list.
         /// </summary>
@@ -196,10 +185,6 @@ namespace Simplic.ServicePlatform.UI
         {
             servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = serviceName }, this));
         }
-
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets or sets the selected service card.
@@ -283,7 +268,5 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
-
-        #endregion
     }
 }

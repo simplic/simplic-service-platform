@@ -15,15 +15,11 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public class ServiceDefinitionViewModel : ViewModelBase, IDataErrorInfo
     {
-        #region Fields
-
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private string serviceName;
         private DispatcherTimer timer;
         private ObservableCollection<ServiceModuleViewModel> usedModules;
-
-        #endregion
 
         /// <summary>
         /// Instantiates the view model for given model.
@@ -41,8 +37,6 @@ namespace Simplic.ServicePlatform.UI
 
             Initialize();
         }
-
-        #region Private Methods
 
         private void Initialize()
         {
@@ -73,6 +67,19 @@ namespace Simplic.ServicePlatform.UI
             RenameCommand.Execute(this);
             timer.Stop();
         }
+        private string CheckServiceName()
+        {
+            var localization = CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>();
+            if (string.IsNullOrWhiteSpace(ServiceName))
+                return localization.Translate("itemBoxProfile_display_name_empty");
+
+            if (Parent.Services.Count(x => string.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
+                return localization.Translate("xaml_name_assigned");
+
+            if (ServiceName.Length < 3)
+                return localization.Translate("validation_name_at_least", "3");
+            return string.Empty;
+        }
 
         /// <summary>
         /// Overwrites target configuration values with native configuration values.
@@ -92,10 +99,6 @@ namespace Simplic.ServicePlatform.UI
             }
             return resultingConfigurations;
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Adds a module to the service definition.
@@ -166,9 +169,7 @@ namespace Simplic.ServicePlatform.UI
                 module.ConfigurationDefinitions = new ObservableCollection<ServiceModuleConfiguration>(configurations);
             }
         }
-        #endregion
 
-        #region Properties
         /// <summary>
         /// Gets or sets the service name.
         /// </summary>
@@ -291,21 +292,5 @@ namespace Simplic.ServicePlatform.UI
                 return result;
             }
         }
-
-        private string CheckServiceName()
-        {
-            var localization = CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>();
-            if (string.IsNullOrWhiteSpace(ServiceName))
-                return localization.Translate("itemBoxProfile_display_name_empty");
-
-            if (Parent.Services.Count(x => string.Equals(x.ServiceName, ServiceName, StringComparison.CurrentCultureIgnoreCase)) > 1)
-                return localization.Translate("xaml_name_assigned");
-
-            if (ServiceName.Length < 3)
-                return localization.Translate("validation_name_at_least", "3");
-            return string.Empty;
-        }
-
-        #endregion
     }
 }
