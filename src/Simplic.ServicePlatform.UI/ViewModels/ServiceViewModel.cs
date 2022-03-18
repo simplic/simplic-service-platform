@@ -13,7 +13,6 @@ using Simplic.Localization;
 
 namespace Simplic.ServicePlatform.UI
 {
-
     /// <summary>
     /// View model for the service.
     /// </summary>
