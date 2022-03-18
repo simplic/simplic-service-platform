@@ -55,7 +55,7 @@ namespace Simplic.ServicePlatform.Data.DB
         /// <inheritdoc/>
         public Task Save(ServiceDefinition service)
         {
-            var json = JsonConvert.SerializeObject(service);
+            var json = JsonConvert.SerializeObject(service, Formatting.Indented);
 
             fileService.WriteAllText($"/services/{service.ServiceName}.json", json);
             return Task.CompletedTask;
