@@ -55,7 +55,6 @@ namespace Simplic.ServicePlatform.UI
 
             if (DataContext is ServiceViewModel viewModel)
             {
-
                 addCardButton.Command = viewModel.AddCardCommand;
             }
 
