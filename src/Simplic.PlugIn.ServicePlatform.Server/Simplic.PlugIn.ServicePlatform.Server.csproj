@@ -61,7 +61,7 @@
       <Version>1.0.800</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Collaboration.Hub">
-      <Version>1.0.7100</Version>
+      <Version>1.0.8400</Version>
     </PackageReference>
     <PackageReference Include="Unity.Abstractions">
       <Version>5.11.7</Version>
