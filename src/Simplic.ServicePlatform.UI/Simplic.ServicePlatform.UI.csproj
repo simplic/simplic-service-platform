@@ -127,7 +127,7 @@
       <Version>1.1.20.1208</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Studio.UI">
-      <Version>1.6.2221.923</Version>
+      <Version>1.6.2322.323</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Studio.UI.Input">
       <Version>1.5.821.718</Version>

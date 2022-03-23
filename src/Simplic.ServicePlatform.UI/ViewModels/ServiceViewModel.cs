@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Simplic.Localization;
+using Simplic.Studio.UI;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -128,7 +129,9 @@ namespace Simplic.ServicePlatform.UI
 
             RemoveServices();
             
-            if (errors) MessageBox.Show(CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>().Translate("error_save_services"));
+            if (errors) LocalizedMessageBox.Show("error_save_services", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
+
+
         }
 
         private void CheckRenameAndRegisterRemoval(ServiceDefinitionViewModel service)

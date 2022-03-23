@@ -20,7 +20,7 @@ namespace Simplic.ServicePlatform.UI
             if (state.DestinationItemsSource is IEnumerable<ServiceModuleViewModel> modules &&
                 modules.Any(m => m.Model.Name == draggedModule?.Model.Name))
             {
-                MessageBox.Show(CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>().Translate("validation_already_exists", draggedModule?.Model.Name));
+                LocalizedMessageBox.Show("validation_already_exists", draggedModule?.Model.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             base.Drop(state);
