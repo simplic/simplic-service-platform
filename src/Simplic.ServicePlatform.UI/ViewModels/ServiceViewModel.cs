@@ -130,8 +130,6 @@ namespace Simplic.ServicePlatform.UI
             RemoveServices();
             
             if (errors) LocalizedMessageBox.Show("error_save_services", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
-
-
         }
 
         private void CheckRenameAndRegisterRemoval(ServiceDefinitionViewModel service)
