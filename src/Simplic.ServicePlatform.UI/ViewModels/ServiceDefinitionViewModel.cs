@@ -67,6 +67,7 @@ namespace Simplic.ServicePlatform.UI
             RenameCommand.Execute(this);
             timer.Stop();
         }
+        
         private string CheckServiceName()
         {
             var localization = CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>();
