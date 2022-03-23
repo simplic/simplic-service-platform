@@ -36,5 +36,4 @@ namespace Simplic.ServicePlatform.UI
             throw new NotImplementedException();
         }
     }
-
 }
