@@ -7,6 +7,9 @@ using Telerik.Windows.DragDrop.Behaviors;
 
 namespace Simplic.ServicePlatform.UI
 {
+    /// <summary>
+    /// Converter for modules to service definitions.
+    /// </summary>
     public class ModuleDataConverter : DataConverter
     {
         /// <summary>
