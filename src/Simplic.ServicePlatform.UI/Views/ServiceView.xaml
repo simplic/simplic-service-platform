@@ -52,7 +52,7 @@
                         <Border Padding="5" Width="295">
                             <Grid FocusManager.FocusedElement="{Binding Parent.FocusedElement}">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="30"/>
                                     <RowDefinition Height="25"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
@@ -60,18 +60,13 @@
                                     <ColumnDefinition Width="70"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <telerik:Label Grid.Column="0" Grid.Row="0" Content="ID"/>
-                                <telerik:Label Grid.Column="1" Grid.Row="0" Content="{Binding Model.Id}"
-                                               FontSize="11"
-                                               HorizontalAlignment="Right"
-                                               Grid.ColumnSpan="2"
-                                               Margin="0,0,5,0"/>
-                                <telerik:Label Grid.Column="0" Grid.Row="1" Content="{simplic:Localization Key=xaml_service_name}"/>
-                                <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="1"
+                                <telerik:Label Grid.Column="0" Grid.Row="0" Content="{simplic:Localization Key=xaml_service_name}"/>
+                                <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
                                                              WatermarkContent="{simplic:Localization Key=itembox_servicename}" 
                                                              Text="{Binding ServiceName, ValidatesOnDataErrors=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                              ToolTip="{Binding ErrorCollection[ServiceName]}"                                                             
-                                                             HorizontalAlignment="Right">
+                                                             HorizontalAlignment="Right"
+                                                             MinWidth="200">
 
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
