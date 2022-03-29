@@ -60,13 +60,12 @@
                                     <ColumnDefinition Width="70"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <telerik:Label Grid.Column="0" Grid.Row="0" Content="{simplic:Localization Key=xaml_service_name}"/>
+                                <telerik:Label Grid.Column="0" Grid.Row="0" Content="{simplic:Localization Key=itembox_servicename}"/>
                                 <telerik:RadWatermarkTextBox Grid.Row="0" Grid.Column="1"
                                                              WatermarkContent="{simplic:Localization Key=itembox_servicename}" 
                                                              Text="{Binding ServiceName, ValidatesOnDataErrors=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                              ToolTip="{Binding ErrorCollection[ServiceName]}"                                                             
-                                                             HorizontalAlignment="Right"
-                                                             MinWidth="200">
+                                                             HorizontalAlignment="Stretch">
 
                                     <telerik:RadWatermarkTextBox.InputBindings>
                                         <KeyBinding Key="Return" Command="{Binding RenameCommand}"/>
