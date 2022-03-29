@@ -53,7 +53,7 @@
                             <Grid FocusManager.FocusedElement="{Binding Parent.FocusedElement}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="30"/>
-                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="8"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
