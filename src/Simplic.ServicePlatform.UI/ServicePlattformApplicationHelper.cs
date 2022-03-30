@@ -21,8 +21,6 @@ namespace Simplic.ServicePlatform.UI
                 var view = new ServiceView(serviceClient);
                 view.Show();
             });
-
-
         }
     }
 }
