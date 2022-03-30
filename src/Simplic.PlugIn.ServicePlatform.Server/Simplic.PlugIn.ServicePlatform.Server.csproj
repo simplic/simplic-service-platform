@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A1130BB8-71E4-4CE6-AB45-2DD3585E4877}</ProjectGuid>
+    <ProjectGuid>{35A0F7A0-F499-40E3-BA6F-80DF63B37069}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Simplic.ServicePlatform</RootNamespace>
-    <AssemblyName>Simplic.ServicePlatform</AssemblyName>
+    <RootNamespace>Simplic.PlugIn.ServicePlatform.Server</RootNamespace>
+    <AssemblyName>Simplic.PlugIn.ServicePlatform.Server</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,32 +41,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exception\CanNotStartRequiredModuleException.cs" />
-    <Compile Include="Interface\IServiceClient.cs" />
-    <Compile Include="Interface\IServiceModule.cs" />
-    <Compile Include="Interface\IServiceDefinitionRepository.cs" />
-    <Compile Include="Interface\IModuleDefinitionRepository.cs" />
-    <Compile Include="Interface\IServiceDefinitionService.cs" />
-    <Compile Include="Interface\IModuleDefinitionService.cs" />
-    <Compile Include="Interface\IServiceModuleLookupService.cs" />
-    <Compile Include="Interface\IServiceSession.cs" />
-    <Compile Include="Attribute\ServiceModuleAttribute.cs" />
-    <Compile Include="Model\ServiceModuleConfigurationInstance.cs" />
-    <Compile Include="Model\ModuleConfigurationDefinition.cs" />
-    <Compile Include="Model\ModuleDefinition.cs" />
-    <Compile Include="Model\ServiceModuleInstance.cs" />
-    <Compile Include="Exception\ModuleNotFoundException.cs" />
+    <Compile Include="IServicePlatformClient.cs" />
+    <Compile Include="Mapper\ServicePlatformMapper.cs" />
+    <Compile Include="ServicePlatformHub.cs" />
+    <Compile Include="ServicePlatformModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\ServiceDefinition.cs" />
-    <Compile Include="Model\ServiceModule.cs" />
-    <Compile Include="Model\ServiceModuleConfiguration.cs" />
-    <Compile Include="Exception\ServiceConfigurationNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper">
+      <Version>10.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.SignalR.Core">
+      <Version>2.4.2</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.Collaboration">
+      <Version>1.0.800</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.Collaboration.Hub">
+      <Version>1.0.8400</Version>
+    </PackageReference>
     <PackageReference Include="Unity.Abstractions">
-      <Version>5.11.6</Version>
+      <Version>5.11.7</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Simplic.ServicePlatform\Simplic.ServicePlatform.csproj">
+      <Project>{a1130bb8-71e4-4ce6-ab45-2dd3585e4877}</Project>
+      <Name>Simplic.ServicePlatform</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup />
+  <Import Project="..\Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
