@@ -24,7 +24,6 @@ namespace Simplic.PlugIn.ServicePlatform.Server
 
         public async Task Start(CancellationToken cancellationToken)
         {
-
         }
 
         public async Task Stop()

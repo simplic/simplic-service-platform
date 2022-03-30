@@ -25,8 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.PlugIn.ServicePlatform.Server", "Simplic.PlugIn.ServicePlatform.Server\Simplic.PlugIn.ServicePlatform.Server.csproj", "{35A0F7A0-F499-40E3-BA6F-80DF63B37069}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.PlugIn.ServicePlatform.Client", "Simplic.PlugIn.ServicePlatform.Client\Simplic.PlugIn.ServicePlatform.Client.csproj", "{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.Client", "Simplic.ServicePlatform.Client\Simplic.ServicePlatform.Client.csproj", "{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{D4C9743C-14B5-42E1-9458-AC84F76986A9}"
@@ -41,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0A8F
 	ProjectSection(SolutionItems) = preProject
 		..\simplic-repository\services\definition\simplic.service_platform.json = ..\simplic-repository\services\definition\simplic.service_platform.json
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplic.ServicePlatform.UI", "Simplic.ServicePlatform.UI\Simplic.ServicePlatform.UI.csproj", "{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -73,14 +73,14 @@ Global
 		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35A0F7A0-F499-40E3-BA6F-80DF63B37069}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,9 +91,9 @@ Global
 		{39CD0169-1D4D-4A92-9946-7A8AB701CD6C} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
 		{154944D4-6CAE-4E61-8812-199408A49872} = {B21F0079-EAB8-4E94-A2AF-1874AB50C781}
 		{35A0F7A0-F499-40E3-BA6F-80DF63B37069} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
-		{AC29AAEA-3BCC-4B7F-9C93-AE57F40FB76D} = {3BAFA57D-9364-452E-A084-3BE99F94BBBB}
 		{51B0B53B-7DC1-4FD8-BD14-7DF6381D480C} = {3BAFA57D-9364-452E-A084-3BE99F94BBBB}
 		{0A8FFC1A-6FD0-4502-9EAA-C1D4446F1298} = {97BDF73F-295D-44E3-BFF5-F6FCC8885900}
+		{00A0ED2A-9AC2-4DC5-9A27-C19354B50311} = {D4C9743C-14B5-42E1-9458-AC84F76986A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECF9CC48-3322-44B6-ADAF-835538CBFB83}
