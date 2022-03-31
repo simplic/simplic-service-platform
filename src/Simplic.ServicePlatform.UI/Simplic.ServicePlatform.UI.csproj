@@ -79,10 +79,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Simplic.PlugIn.ServicePlatform.Server\Simplic.PlugIn.ServicePlatform.Server.csproj">
-      <Project>{35A0F7A0-F499-40E3-BA6F-80DF63B37069}</Project>
-      <Name>Simplic.PlugIn.ServicePlatform.Server</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Simplic.ServicePlatform.Data.DB\Simplic.ServicePlatform.Data.DB.csproj">
       <Project>{4900E298-405A-4E15-AF9C-A1F6D9A90B62}</Project>
       <Name>Simplic.ServicePlatform.Data.DB</Name>
