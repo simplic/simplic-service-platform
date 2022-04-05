@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Simplic.PlugIn.Monitoring.Service;
+using Simplic.Localization;
 using Simplic.Studio.UI;
 
 namespace Simplic.ServicePlatform.UI
@@ -20,7 +20,6 @@ namespace Simplic.ServicePlatform.UI
     public class ServiceViewModel : ViewModelBase
     {
         private readonly IServiceClient serviceClient;
-        private readonly LoggingStorageService loggingStorageService;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
@@ -37,7 +36,6 @@ namespace Simplic.ServicePlatform.UI
         public ServiceViewModel(IServiceClient serviceClient)
         {
             this.serviceClient = serviceClient;
-            loggingStorageService = new LoggingStorageService("./data", "servicelogs.db");
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
@@ -130,7 +128,7 @@ namespace Simplic.ServicePlatform.UI
             }
 
             RemoveServices();
-
+            
             if (errors) LocalizedMessageBox.Show("error_save_services", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -178,14 +176,6 @@ namespace Simplic.ServicePlatform.UI
             return moduleDefinition.Name.Contains(SearchTerm);
         }
 
-        private string ParseServiceLog(ServiceDefinition serviceDefinition)
-        {
-            var logMessages = loggingStorageService.Read("servicelogs.db", serviceDefinition.ServiceName);
-            var completeLog = "";
-            logMessages.Select(log => completeLog += $"{log.LogLevel}\t\t{log.Message}\n");
-            return completeLog;
-        }
-
         /// <summary>
         /// Adds service name to remove list.
         /// </summary>
@@ -205,8 +195,6 @@ namespace Simplic.ServicePlatform.UI
             {
                 selectedServiceCard = value;
                 RaisePropertyChanged(nameof(SelectedServiceCard));
-                SelectedServiceLog = ParseServiceLog(SelectedServiceCard.Model);
-                RaisePropertyChanged(nameof(SelectedServiceLog));
             }
         }
 
@@ -279,10 +267,5 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selected service log.
-        /// </summary>
-        public string SelectedServiceLog { get; set; }
     }
 }
