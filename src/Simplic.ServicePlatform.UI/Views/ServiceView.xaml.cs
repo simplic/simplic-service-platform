@@ -61,6 +61,19 @@ namespace Simplic.ServicePlatform.UI
             RadRibbonHomeTab.Items.Add(cardButtonGroup);
         }
 
+        private void ServiceConsoleTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (DataContext is not ServiceViewModel viewmodel) return;
+            switch (e.Key)
+            {
+                case System.Windows.Input.Key.Enter:
+                    // send command to selected service
+                    viewmodel.SelectedServiceLog = string.Empty;
+                    viewmodel.RaisePropertyChanged(nameof(viewmodel.SelectedServiceLog));
+                    break;
+            }
+        }
+
         /// <summary>
         /// Method that is called when the RibbonButton for saving is pressed.
         /// </summary>
