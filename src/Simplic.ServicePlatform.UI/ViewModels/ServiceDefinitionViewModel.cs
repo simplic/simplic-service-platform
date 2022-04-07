@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using System.Windows.Threading;
 using Simplic.Localization;
 
 namespace Simplic.ServicePlatform.UI
@@ -18,7 +17,6 @@ namespace Simplic.ServicePlatform.UI
         private ServiceDefinition model;
         private ServiceModule selectedServiceModule;
         private string serviceName;
-        private DispatcherTimer timer;
         private ObservableCollection<ServiceModuleViewModel> usedModules;
 
         /// <summary>
@@ -35,39 +33,9 @@ namespace Simplic.ServicePlatform.UI
             ServiceName = model.ServiceName;
             OldServiceName = model.ServiceName;
 
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-            timer.Tick += Timer_Tick;
-            InitializeCommands();
-        }
-
-        private void InitializeCommands()
-        {
             DropCommand = new RelayCommand(o => AddAvailableModule(), o => CanAddAvailableModule());
-
-            RenameCommand = new RelayCommand(o =>
-            {
-                Model.ServiceName = ServiceName;
-                RaisePropertyChanged(nameof(ServiceName));
-            });
-
-            UndoRenameCommand = new RelayCommand(o =>
-            {
-                ServiceName = Model.ServiceName;
-                RaisePropertyChanged(nameof(ServiceName));
-            });
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            RenameCommand.Execute(this);
-            timer.Stop();
-        }
-        
         private string CheckServiceName()
         {
             var localization = CommonServiceLocator.ServiceLocator.Current.GetInstance<ILocalizationService>();
@@ -181,8 +149,8 @@ namespace Simplic.ServicePlatform.UI
             {
                 if (!string.IsNullOrEmpty(this[value])) return;
                 serviceName = value;
+                Rename(value);
                 RaisePropertyChanged(nameof(ServiceName));
-                timer?.Start();
             }
         }
 
@@ -237,16 +205,6 @@ namespace Simplic.ServicePlatform.UI
         public ICommand DropCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the rename command.
-        /// </summary>
-        public ICommand RenameCommand { get; set; }
-
-        /// <summary>
-        /// Gets or sets the undo rename command.
-        /// </summary>
-        public ICommand UndoRenameCommand { get; set; }
-
-        /// <summary>
         /// Gets and sets the parent of this viewmodel.
         /// </summary>
         public new ServiceViewModel Parent { get; set; }
@@ -267,6 +225,24 @@ namespace Simplic.ServicePlatform.UI
         public bool HasErrors()
         {
             return !string.IsNullOrEmpty(this[nameof(ServiceName)]);
+        }
+
+        /// <summary>
+        /// Renames the service.
+        /// </summary>
+        /// <param name="name">Desired name</param>
+        public void Rename(string name)
+        {
+            Model.ServiceName = name;
+        }
+
+        /// <summary>
+        /// Undoes the renaming of the service.
+        /// </summary>
+        public void UndoRename()
+        {
+            serviceName = OldServiceName;
+            RaisePropertyChanged(nameof(ServiceName));
         }
 
         /// <summary>
