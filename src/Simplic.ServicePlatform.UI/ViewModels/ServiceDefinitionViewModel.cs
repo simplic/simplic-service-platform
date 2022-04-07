@@ -106,15 +106,6 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
-        /// Update the view.
-        /// </summary>
-        public void Update()
-        {
-            RaisePropertyChanged(nameof(Model));
-            RaisePropertyChanged(nameof(UsedModules));
-        }
-
-        /// <summary>
         /// Synchronizes the bindings with the model.
         /// </summary>
         public void Synch()
@@ -234,15 +225,6 @@ namespace Simplic.ServicePlatform.UI
         public void Rename(string name)
         {
             Model.ServiceName = name;
-        }
-
-        /// <summary>
-        /// Undoes the renaming of the service.
-        /// </summary>
-        public void UndoRename()
-        {
-            serviceName = OldServiceName;
-            RaisePropertyChanged(nameof(ServiceName));
         }
 
         /// <summary>
