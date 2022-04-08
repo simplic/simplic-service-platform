@@ -1,3 +1,5 @@
 <ReleaseNotes>
-  
+	<ChangeSet guid="c13770a2-4fc9-4a28-8595-fe90caf8a0c2" version="1.0.43700.323" date="2022-04-08">
+		<change type="bug">Fixed bug where renaming would not be automatically applied.</change>
+	</ChangeSet>
 </ReleaseNotes>
