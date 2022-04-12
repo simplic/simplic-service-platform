@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceClient.cs" />
     <Compile Include="ServicePlatformClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,9 +55,18 @@
     <PackageReference Include="Simplic.Configuration">
       <Version>7.0.321.705</Version>
     </PackageReference>
+    <PackageReference Include="Simplic.Data">
+      <Version>2.0.222.308</Version>
+    </PackageReference>
     <PackageReference Include="Simplic.WebApi.Client">
       <Version>1.0.421.327</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Simplic.ServicePlatform\Simplic.ServicePlatform.csproj">
+      <Project>{A1130BB8-71E4-4CE6-AB45-2DD3585E4877}</Project>
+      <Name>Simplic.ServicePlatform</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Simplic.ServicePlatform.Shared\Simplic.ServicePlatform.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
