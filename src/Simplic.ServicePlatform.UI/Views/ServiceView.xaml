@@ -176,14 +176,24 @@
         <!--#endregion-->
 
         <!--#region Console-->
-        <telerik:RadTabbedWindow Grid.Row="1" Grid.Column="0" Margin="10,0,10,5"
-                                 CanClose="False">
-            <telerik:RadTabItem Header="Console" CloseButtonVisibility="Collapsed">
-                <telerik:RadWatermarkTextBox Text="{Binding SelectedServiceLog}"
-                                             Background="Black"
-                                             Foreground="LimeGreen"/>
-            </telerik:RadTabItem>
-        </telerik:RadTabbedWindow>
+        <Border Grid.Row="1" Grid.Column="0" Margin="10, 0, 10, 5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <telerik:RadTabbedWindow Grid.Row="0" Grid.Column="0" CanClose="False">
+                    <telerik:RadTabItem Header="Console" CloseButtonVisibility="Collapsed">
+                        <telerik:RadWatermarkTextBox Text="{Binding SelectedServiceLog}"
+                                                     Background="Black"
+                                                     Foreground="LimeGreen"/>
+                    </telerik:RadTabItem>
+                </telerik:RadTabbedWindow>
+                <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="0"
+                                             Text="{Binding CommandText}"
+                                             WatermarkContent="Enter a command.."/>
+            </Grid>
+        </Border>
         <!--#endregion-->
     </Grid>
 </ui:DefaultRibbonWindow>

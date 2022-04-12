@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Simplic.PlugIn.Monitoring.Data;
 using Simplic.PlugIn.Monitoring.Service;
 using Simplic.Studio.UI;
 
@@ -20,7 +21,7 @@ namespace Simplic.ServicePlatform.UI
     public class ServiceViewModel : ViewModelBase
     {
         private readonly IServiceClient serviceClient;
-        private readonly LoggingStorageService loggingStorageService;
+        private readonly LogStorageService logStorageService;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
@@ -37,7 +38,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceViewModel(IServiceClient serviceClient)
         {
             this.serviceClient = serviceClient;
-            loggingStorageService = new LoggingStorageService("./data", "servicelogs.db");
+            logStorageService = new LogStorageService(new LogSQLiteRepository("./data", "servicelogs.db"));
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
@@ -180,7 +181,7 @@ namespace Simplic.ServicePlatform.UI
 
         private string ParseServiceLog(ServiceDefinition serviceDefinition)
         {
-            var logMessages = loggingStorageService.Read("servicelogs.db", serviceDefinition.ServiceName);
+            var logMessages = logStorageService.Read("servicelogs.db", serviceDefinition.ServiceName);
             var completeLog = "";
             logMessages.Select(log => completeLog += $"{log.LogLevel}\t\t{log.Message}\n");
             return completeLog;
@@ -284,5 +285,10 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the selected service log.
         /// </summary>
         public string SelectedServiceLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command text.
+        /// </summary>
+        public string CommandText { get => ""; set => MessageBox.Show("not implemented"); }
     }
 }
