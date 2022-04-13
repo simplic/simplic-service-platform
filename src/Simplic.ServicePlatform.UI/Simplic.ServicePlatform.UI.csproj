@@ -110,10 +110,10 @@
       <Version>1.1.39</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Framework">
-      <Version>8.1.322.201</Version>
+      <Version>8.1.422.412</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Framework.Base">
-      <Version>8.1.422.228</Version>
+      <Version>8.1.622.412</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Framework.EF">
       <Version>8.1.21.1209</Version>
@@ -137,31 +137,31 @@
       <Version>1.3.121.718</Version>
     </PackageReference>
     <PackageReference Include="Simplic.UI">
-      <Version>7.2.1222.201</Version>
+      <Version>7.2.1322.304</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.Data.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.DataVisualization.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.EntityFramework.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.GridView.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.Input.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Controls.RibbonView.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
     <PackageReference Include="Telerik.Windows.Data.for.Wpf.Xaml">
-      <Version>2021.3.914</Version>
+      <Version>2022.1.222</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

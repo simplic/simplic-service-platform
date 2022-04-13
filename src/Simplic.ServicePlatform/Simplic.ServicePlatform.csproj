@@ -64,7 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Unity.Abstractions">
-      <Version>5.11.6</Version>
+      <Version>5.11.7</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

@@ -49,10 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper">
-      <Version>10.0.0</Version>
+      <Version>10.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNet.SignalR.Core">
-      <Version>2.4.2</Version>
+      <Version>2.4.3</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
