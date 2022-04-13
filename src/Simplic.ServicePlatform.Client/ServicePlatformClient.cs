@@ -7,6 +7,7 @@ namespace Simplic.ServicePlatform.Client
     {
         public ServicePlatformClient(IClient client, IConnectionConfigurationService connectionConfigurationService) : base(client, connectionConfigurationService)
         {
+
         }
 
         public override string HubName => "ServicePlatform";
