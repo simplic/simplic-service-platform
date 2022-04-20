@@ -9,18 +9,15 @@ namespace Simplic.ServicePlatform.UI
     public static class ServicePlattformApplicationHelper
     {
         /// <summary>
-        /// This method gets called in simplic studio, it opens the service application configuration ui.
+        /// Opens the service application configuration ui. <br/>
+        /// Called from Simplic Studio.
         /// </summary>
         /// <param name="_"></param>
         public static void ShowEditor(Guid _)
         {
-            IServiceClient serviceClient = CommonServiceLocator.ServiceLocator.Current.GetInstance<IServiceClient>();
-            Application.Current.Dispatcher.Invoke(async () =>
-            {
-                var service = await serviceClient.GetAllServices();
-                var view = new ServiceView(serviceClient);
-                view.Show();
-            });
+            var serviceClient = CommonServiceLocator.ServiceLocator.Current.GetInstance<IServiceClient>();
+            var view = new ServiceView(serviceClient);
+            view.Show();
         }
     }
 }

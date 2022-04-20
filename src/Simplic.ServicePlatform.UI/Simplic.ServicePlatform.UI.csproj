@@ -130,10 +130,16 @@
       <Version>1.1.20.1208</Version>
     </PackageReference>
     <PackageReference Include="Simplic.PlugIn.Monitoring">
-      <Version>1.0.2000</Version>
+      <Version>1.0.400</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.PlugIn.Monitoring.Data">
+      <Version>1.0.400</Version>
     </PackageReference>
     <PackageReference Include="Simplic.PlugIn.Monitoring.Service">
-      <Version>1.0.400</Version>
+      <Version>1.0.700</Version>
+    </PackageReference>
+    <PackageReference Include="Simplic.PlugIn.Monitoring.Utils">
+      <Version>1.0.300</Version>
     </PackageReference>
     <PackageReference Include="Simplic.Studio.UI">
       <Version>1.6.2322.323</Version>

@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Simplic.Log;
 using Simplic.PlugIn.Monitoring.Data;
 using Simplic.PlugIn.Monitoring.Service;
 using Simplic.Studio.UI;
@@ -38,7 +42,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceViewModel(IServiceClient serviceClient)
         {
             this.serviceClient = serviceClient;
-            logStorageService = new LogStorageService(new LogSQLiteRepository("./data", "servicelogs.db"));
+            logStorageService = new LogStorageService(new LogMongoDBRepository("localhost:27017", "service_logs"));
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
@@ -53,6 +57,12 @@ namespace Simplic.ServicePlatform.UI
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(Save);
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
+            ExecuteCommand = new RelayCommand(o =>
+            {
+                var client = new UdpClient();
+                var data = Encoding.UTF8.GetBytes(CommandText);
+                client.Send(data, data.Length, RetrieveEndPoint(RetrieveServiceLog(SelectedServiceCard.Model)));
+            });
         }
 
         private void LoadServicesAndModules()
@@ -179,11 +189,49 @@ namespace Simplic.ServicePlatform.UI
             return moduleDefinition.Name.Contains(SearchTerm);
         }
 
-        private string ParseServiceLog(ServiceDefinition serviceDefinition)
+        private string FormatString(string s, int size)
         {
-            var logMessages = logStorageService.Read("servicelogs.db", serviceDefinition.ServiceName);
+            if (size <= 0) return string.Empty;
+
+            var fstring = new StringBuilder();
+
+            for (var i = 0; i < size; i++)
+            {
+                if (i < s.Length)
+                {
+                    fstring.Append(s[i]);
+                    continue;
+                }
+
+                fstring.Append(" ");
+            }
+
+            return fstring.ToString();
+        }
+
+        private IPEndPoint RetrieveEndPoint(IEnumerable<ServiceLogMessage> logMessages)
+        {
+            var orderedLogMessages = logMessages.OrderBy(x => x.Time);
+            var lastLogMessage = orderedLogMessages.Last();
+            return new IPEndPoint(IPAddress.Parse(lastLogMessage.Ip), lastLogMessage.Port);
+        }
+
+        private IEnumerable<ServiceLogMessage> RetrieveServiceLog(ServiceDefinition serviceDefinition)
+        {
+            var table = $"Simplic {serviceDefinition.ServiceName}".Replace(" ", "_").ToLower();
+            return logStorageService.Read(table, $"ServiceName = {serviceDefinition.ServiceName}").OrderBy(x => x.Time);
+        }
+
+        private string ParseServiceLogString(IEnumerable<ServiceLogMessage> logMessages)
+        {
             var completeLog = "";
-            logMessages.Select(log => completeLog += $"{log.LogLevel}\t\t{log.Message}\n");
+
+            foreach (var log in logMessages)
+            {
+                var tag = $"{log.Time}  {FormatString(log.LogLevel.ToString(), 15)}";
+                completeLog += $"{tag}\t{log.Message}\n";
+            }
+
             return completeLog;
         }
 
@@ -206,7 +254,7 @@ namespace Simplic.ServicePlatform.UI
             {
                 selectedServiceCard = value;
                 RaisePropertyChanged(nameof(SelectedServiceCard));
-                SelectedServiceLog = ParseServiceLog(SelectedServiceCard.Model);
+                SelectedServiceLog = ParseServiceLogString(RetrieveServiceLog(SelectedServiceCard.Model));
                 RaisePropertyChanged(nameof(SelectedServiceLog));
             }
         }
@@ -261,6 +309,11 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for deleting a card.
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for executing a command;
+        /// </summary>
+        public ICommand ExecuteCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the search term.

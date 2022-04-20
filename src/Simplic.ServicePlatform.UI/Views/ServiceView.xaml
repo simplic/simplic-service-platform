@@ -180,7 +180,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <telerik:RadTabbedWindow Grid.Row="0" Grid.Column="0" CanClose="False">
                     <telerik:RadTabItem Header="Console" CloseButtonVisibility="Collapsed">
@@ -190,7 +190,9 @@
                     </telerik:RadTabItem>
                 </telerik:RadTabbedWindow>
                 <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="0"
+                                             Margin ="2, -2, 2, 0"
                                              Text="{Binding CommandText}"
+                                             Background="Black" Foreground="Gainsboro"
                                              WatermarkContent="Enter a command.."/>
             </Grid>
         </Border>
