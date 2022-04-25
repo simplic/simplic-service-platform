@@ -1,8 +1,15 @@
-﻿using Simplic.Framework.UI;
+﻿using System;
+using System.IO;
+using Simplic.Framework.UI;
 using System.Windows.Controls.Primitives;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Threading;
+using System.Xml;
+using Telerik.Windows.Documents.Model;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -13,6 +20,7 @@ namespace Simplic.ServicePlatform.UI
     {
         private RibbonButton addCardButton;
         private RibbonButton removeCardButton;
+        private readonly DispatcherTimer timer;
 
         /// <summary>
         /// Instantiates the view for the given module.
@@ -22,6 +30,13 @@ namespace Simplic.ServicePlatform.UI
             InitializeComponent();
             DataContext = new ServiceViewModel(serviceClient);
             CreateButtons();
+            timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(50),
+                IsEnabled = true
+            };
+            timer.Tick += (sender, args) => RefreshConsole();
+            timer.Start();
         }
 
         private void CreateButtons()
@@ -61,16 +76,29 @@ namespace Simplic.ServicePlatform.UI
             RadRibbonHomeTab.Items.Add(cardButtonGroup);
         }
 
-        private void ServiceConsoleTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+
+        private void CommandBox_OnKeyUp(object sender, KeyEventArgs e)
         {
-            if (DataContext is not ServiceViewModel viewmodel) return;
-            switch (e.Key)
+            if (e.Key != Key.Enter) return;
+
+            if (DataContext is ServiceViewModel viewModel)
             {
-                case System.Windows.Input.Key.Enter:
-                    // send command to selected service
-                    viewmodel.SelectedServiceLog = string.Empty;
-                    viewmodel.RaisePropertyChanged(nameof(viewmodel.SelectedServiceLog));
-                    break;
+                viewModel.ExecuteCommand.Execute(this);
+            }
+        }
+
+        private RadDocument ImportRadDocumentXaml(string xaml)
+        {
+            var stringReader = new StringReader(xaml);
+            var xmlReader = XmlReader.Create(stringReader);
+            return (RadDocument)XamlReader.Load(xmlReader);
+        }
+
+        private void RefreshConsole()
+        {
+            if (DataContext is ServiceViewModel viewModel && !string.IsNullOrWhiteSpace(viewModel.SelectedServiceLogXaml))
+            {
+                LogBox.Document = ImportRadDocumentXaml(viewModel.SelectedServiceLogXaml);
             }
         }
 
@@ -85,6 +113,5 @@ namespace Simplic.ServicePlatform.UI
                 viewModel.SaveCommand.Execute(this);
             }
         }
-
     }
 }

@@ -11,7 +11,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver.Linq;
 using Simplic.Log;
 using Simplic.PlugIn.Monitoring.Data;
 using Simplic.PlugIn.Monitoring.Service;
@@ -33,7 +36,10 @@ namespace Simplic.ServicePlatform.UI
         private UIElement focusedElement;
         private string searchTerm;
         private readonly DispatcherTimer filterTimer;
+        private readonly DispatcherTimer logRefreshTimer;
         private int keyCounter;
+        private string commandString;
+        private readonly Dictionary<LogLevel, Color> logLevelColors;
 
         /// <summary>
         /// Instantiates the view model.
@@ -49,7 +55,31 @@ namespace Simplic.ServicePlatform.UI
             LoadServicesAndModules();
             filterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.2) };
             filterTimer.Tick += Timer_Tick;
+            logRefreshTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+            logRefreshTimer.Tick += (sender, e) => ShowSelectedServiceLog();
             keyCounter = 0;
+            ConsoleStartDate = DateTime.Now.AddDays(-7);
+            ConsoleEndDate = DateTime.Now;
+
+            ShowLogLevel = new Dictionary<string, bool>
+            {
+                {"Trace", false},
+                {"Debug", true},
+                {"Information", true},
+                {"Warning", true},
+                {"Error", true},
+                {"Critical", true}
+            };
+
+            logLevelColors = new Dictionary<LogLevel, Color>
+            {
+                {LogLevel.Trace, Colors.Cyan},
+                {LogLevel.Debug, Colors.Magenta},
+                {LogLevel.Information, Colors.Green},
+                {LogLevel.Warning, Colors.Yellow},
+                {LogLevel.Error, Colors.Red},
+                {LogLevel.Critical, Colors.DarkRed},
+            };
         }
 
         private void InitializeCommands()
@@ -59,9 +89,12 @@ namespace Simplic.ServicePlatform.UI
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
             ExecuteCommand = new RelayCommand(o =>
             {
+                if (string.IsNullOrWhiteSpace(CommandString)) return;
                 var client = new UdpClient();
-                var data = Encoding.UTF8.GetBytes(CommandText);
-                client.Send(data, data.Length, RetrieveEndPoint(RetrieveServiceLog(SelectedServiceCard.Model)));
+                var data = Encoding.UTF8.GetBytes(CommandString);
+                client.Send(data, data.Length, RetrieveEndPoint(RetrieveServiceLogMessages(SelectedServiceCard.Model)));
+                client.Close();
+                CommandString = string.Empty;
             });
         }
 
@@ -213,35 +246,48 @@ namespace Simplic.ServicePlatform.UI
         {
             var orderedLogMessages = logMessages.OrderBy(x => x.Time);
             var lastLogMessage = orderedLogMessages.Last();
-            return new IPEndPoint(IPAddress.Parse(lastLogMessage.Ip), lastLogMessage.Port);
+            var thisExternalIp = new WebClient().DownloadString("https://api.ipify.org");
+            var targetIp = lastLogMessage.Ip == thisExternalIp ? "127.0.0.1" : lastLogMessage.Ip;
+            return new IPEndPoint(IPAddress.Parse(targetIp), lastLogMessage.Port);
         }
 
-        private IEnumerable<ServiceLogMessage> RetrieveServiceLog(ServiceDefinition serviceDefinition)
+        private IEnumerable<ServiceLogMessage> RetrieveServiceLogMessages(ServiceDefinition serviceDefinition)
         {
+            if (serviceDefinition == null || string.IsNullOrWhiteSpace(serviceDefinition.ServiceName))
+                return Enumerable.Empty<ServiceLogMessage>();
             var table = $"Simplic {serviceDefinition.ServiceName}".Replace(" ", "_").ToLower();
-            return logStorageService.Read(table, $"ServiceName = {serviceDefinition.ServiceName}").OrderBy(x => x.Time);
+            var serviceLog = logStorageService.Read(table).Where(IsFiltered).OrderBy(x => x.Time);
+            return serviceLog;
         }
 
-        private string ParseServiceLogString(IEnumerable<ServiceLogMessage> logMessages)
+        private string ParseLogXaml(IEnumerable<ServiceLogMessage> logMessages)
         {
-            var completeLog = "";
 
+            var paragraphs = new List<string>();
             foreach (var log in logMessages)
             {
-                var tag = $"{log.Time}  {FormatString(log.LogLevel.ToString(), 15)}";
-                completeLog += $"{tag}\t{log.Message}\n";
+                var statements = new List<string>
+                {
+                    RadDocumentBuilder.GetSpan(Colors.GhostWhite, log.Time.ToString()),
+                    RadDocumentBuilder.GetSpan(logLevelColors[log.LogLevel], FormatString(log.LogLevel.ToString(), 15)),
+                    RadDocumentBuilder.GetSpan(Colors.WhiteSmoke, log.Message)
+                };
+                paragraphs.Add(RadDocumentBuilder.GetParagraph(statements));
             }
-
-            return completeLog;
+            return RadDocumentBuilder.GetDocument(paragraphs);
         }
 
-        /// <summary>
-        /// Adds service name to remove list.
-        /// </summary>
-        /// <param name="serviceName">Service name</param>
-        public void RegisterServiceRemovalByName(string serviceName)
+        private void ShowSelectedServiceLog()
         {
-            servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = serviceName }, this));
+            var logMessages = RetrieveServiceLogMessages(SelectedServiceCard.Model);
+            SelectedServiceLogXaml = ParseLogXaml(logMessages);
+            RaisePropertyChanged(nameof(SelectedServiceLogXaml));
+        }
+
+        private bool IsFiltered(ServiceLogMessage logMessage)
+        {
+            var inRange = logMessage.Time <= ConsoleEndDate && logMessage.Time >= ConsoleStartDate;
+            return inRange && ShowLogLevel[logMessage.LogLevel.ToString()];
         }
 
         /// <summary>
@@ -254,8 +300,8 @@ namespace Simplic.ServicePlatform.UI
             {
                 selectedServiceCard = value;
                 RaisePropertyChanged(nameof(SelectedServiceCard));
-                SelectedServiceLog = ParseServiceLogString(RetrieveServiceLog(SelectedServiceCard.Model));
-                RaisePropertyChanged(nameof(SelectedServiceLog));
+                ShowSelectedServiceLog();
+                logRefreshTimer.Start();
             }
         }
 
@@ -335,13 +381,36 @@ namespace Simplic.ServicePlatform.UI
         public ICollectionView AvailableModulesCollectionView { get; set; }
 
         /// <summary>
-        /// Gets or sets the selected service log.
+        /// Gets or sets the service log xaml.
         /// </summary>
-        public string SelectedServiceLog { get; set; }
+        public string SelectedServiceLogXaml { get; set; }
 
         /// <summary>
         /// Gets or sets the command text.
         /// </summary>
-        public string CommandText { get => ""; set => MessageBox.Show("not implemented"); }
+        public string CommandString
+        {
+            get => commandString;
+            set
+            {
+                commandString = value;
+                RaisePropertyChanged(nameof(CommandString));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the console start date.
+        /// </summary>
+        public DateTime ConsoleStartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the console end date.
+        /// </summary>
+        public DateTime ConsoleEndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter for log levels.
+        /// </summary>
+        public Dictionary<string, bool> ShowLogLevel { get; set; }
     }
 }

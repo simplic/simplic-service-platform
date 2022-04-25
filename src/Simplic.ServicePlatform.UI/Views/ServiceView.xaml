@@ -176,26 +176,96 @@
         <!--#endregion-->
 
         <!--#region Console-->
-        <Border Grid.Row="1" Grid.Column="0" Margin="10, 0, 10, 5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-                <telerik:RadTabbedWindow Grid.Row="0" Grid.Column="0" CanClose="False">
-                    <telerik:RadTabItem Header="Console" CloseButtonVisibility="Collapsed">
-                        <telerik:RadWatermarkTextBox Text="{Binding SelectedServiceLog}"
+        <telerik:RadTabbedWindow Grid.Row="1" Grid.Column="0"
+                                 Margin="10, 0, 10, 5"
+                                 CanClose="False" CanMove="True">
+            <telerik:RadTabItem Header="Console" CloseButtonVisibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="160"/>
+                    </Grid.ColumnDefinitions>
+
+                    <telerik:RadRichTextBox x:Name="LogBox"
+                                            Grid.Row="0" Grid.Column="0"
+                                            Grid.ColumnSpan="2"
+                                            Background="Black"
+                                            Foreground="LawnGreen"
+                                            FontFamily="Consolas"
+                                            IsReadOnly="True"
+                                            CaretColor="Chartreuse"
+                                            FontSize="12"
+                                            LineBreakingRuleLanguage="None">
+
+                    </telerik:RadRichTextBox>
+
+                    <telerik:RadWatermarkTextBox x:Name="CommandBox"
+                                                     Grid.Row="1" Grid.Column="0"
+                                                     Grid.ColumnSpan="2"
+                                                     Text="{Binding CommandString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      Background="Black"
-                                                     Foreground="LimeGreen"/>
-                    </telerik:RadTabItem>
-                </telerik:RadTabbedWindow>
-                <telerik:RadWatermarkTextBox Grid.Row="1" Grid.Column="0"
-                                             Margin ="2, -2, 2, 0"
-                                             Text="{Binding CommandText}"
-                                             Background="Black" Foreground="Gainsboro"
-                                             WatermarkContent="Enter a command.."/>
-            </Grid>
-        </Border>
+                                                     Foreground="Gainsboro"
+                                                     WatermarkContent="Enter a command.."
+                                                     KeyUp="CommandBox_OnKeyUp"
+                                                     FontFamily="Consolas"
+                                                     BorderThickness="0.5"/>
+
+                    <!--#region Filter-->
+                    <telerik:RadExpander Grid.Column="1"
+                                         Header="Filter"
+                                         Foreground="White"
+                                         ExpandDirection="Left"
+                                         telerik:AnimationManager.IsAnimationEnabled="False">
+                        <StackPanel>
+                            <telerik:RadDateTimePicker DateTimeWatermarkContent="From"
+                                                       SelectedValue="{Binding ConsoleStartDate}"/>
+                            <telerik:RadDateTimePicker DateTimeWatermarkContent="To"
+                                                       SelectedValue="{Binding ConsoleEndDate}"/>
+                            <telerik:Label Content="LogLevel"
+                                           Margin="0,20,0,0"
+                                           Foreground="White"
+                                           FontFamily="Consolas"/>
+                            <Border Padding="10,0,0,0">
+                                <StackPanel>
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Debug], Mode=TwoWay}">
+                                        <telerik:Label Foreground="LightGray" FontSize="12"
+                                                       Padding="0" Content="Debug"
+                                                       FontFamily="Consolas"/>
+                                    </CheckBox>
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Information], Mode=TwoWay}">
+                                        <telerik:Label Foreground="LightGray" FontSize="12"
+                                                       Padding="0" Content="Information"
+                                                       FontFamily="Consolas"/>
+                                    </CheckBox>
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Warning], Mode=TwoWay}">
+                                        <telerik:Label Foreground="LightGray" FontSize="12"
+                                                       Padding="0" Content="Warning"
+                                                       FontFamily="Consolas"/>
+                                    </CheckBox>
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Error], Mode=TwoWay}">
+                                        <telerik:Label Foreground="LightGray"
+                                                       FontSize="12" Padding="0"
+                                                       Content="Error"
+                                                       FontFamily="Consolas"/>
+                                    </CheckBox>
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Critical], Mode=TwoWay}">
+                                        <telerik:Label Foreground="LightGray"
+                                                       FontSize="12" Padding="0"
+                                                       Content="Critical"
+                                                       FontFamily="Consolas"/>
+                                    </CheckBox>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </telerik:RadExpander>
+                    <!--#endregion-->
+                </Grid>
+            </telerik:RadTabItem>
+        </telerik:RadTabbedWindow>
         <!--#endregion-->
     </Grid>
 </ui:DefaultRibbonWindow>
