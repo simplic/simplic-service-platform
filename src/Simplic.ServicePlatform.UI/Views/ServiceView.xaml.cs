@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Simplic.Framework.UI;
 using System.Windows.Controls.Primitives;
@@ -11,9 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Simplic.ServicePlatform.UI.Models;
-using Paragraph = Telerik.Windows.Documents.Model.Paragraph;
-using System.Collections.Generic;
-using Telerik.Windows.Documents.Model;
+using System.Windows;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -83,7 +79,6 @@ namespace Simplic.ServicePlatform.UI
         private void RefreshConsole()
         {
             if (DataContext is not ServiceViewModel viewModel || viewModel.SelectedServiceLog == null || !viewModel.SelectedServiceLog.Any()) return;
-
             var caretAtEnd = LogBox.Document.CaretPosition.IsPositionAtDocumentEnd;
 
             var oldServiceLog = viewModel.SelectedServiceLog.ToList();
@@ -120,18 +115,34 @@ namespace Simplic.ServicePlatform.UI
         private void ServicesCardView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataContext is not ServiceViewModel viewModel) return;
-            //var oldServiceLog = viewModel.SelectedServiceLog;
-            //Task.Run(() =>
-            //{
-            //    while (oldServiceLog.Equals(viewModel.SelectedServiceLog))
-            //        Task.Delay(100);
-            //}).ContinueWith(o =>
-            //{
-            //    LogBox.Document = RadDocumentBuilder.GetDocumentFromXaml(LogHelper.ToXaml(viewModel.SelectedServiceLog));
-            //});
-            LogBox.Document = RadDocumentBuilder.GetDocumentFromXaml(LogHelper.ToXaml(viewModel.SelectedServiceLog));
+
+            if (viewModel.SelectedServiceLogDocument != null)
+                LogBox.Document = viewModel.SelectedServiceLogDocument;
+        }
+
+        private void Filter_OnChange(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not ServiceViewModel viewModel) return;
+
+            viewModel.FilterServiceLogCommand.Execute(this);
+
+            if (viewModel.SelectedServiceLogDocument != null)
+                LogBox.Document = viewModel.SelectedServiceLogDocument;
         }
         #endregion
+
+        private void CheckScrollbarIsDown()
+        {
+            var verticalOffset = LogBox.VerticalOffset;
+            var viewportHeight = LogBox.ViewportHeight;
+            var actualHeight = LogBox.ActualHeight;
+            if (LogBox.VerticalOffset != 0)
+            {
+                MessageBox.Show(LogBox.VerticalOffset + LogBox.ViewportHeight == LogBox.ActualHeight
+                    ? "It is  at the bottom now!"
+                    : "It is not at the bottom now");
+            }
+        }
 
         /// <summary>
         /// Method that is called when the RibbonButton for saving is pressed.
@@ -139,10 +150,9 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="e"></param>
         public override void OnSave(WindowSaveEventArg e)
         {
-            if (DataContext is ServiceViewModel viewModel)
-            {
-                viewModel.SaveCommand.Execute(this);
-            }
+            if (DataContext is not ServiceViewModel viewModel) return;
+
+            viewModel.SaveCommand.Execute(this);
         }
 
     }

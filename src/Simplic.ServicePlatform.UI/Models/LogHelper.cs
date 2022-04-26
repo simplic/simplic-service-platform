@@ -56,7 +56,7 @@ namespace Simplic.ServicePlatform.UI.Models
             var logLine = new List<Inline>
             {
                 RadDocumentBuilder.GetSpan(TimeColor, logMessage.Time.ToString(CultureInfo.CurrentCulture) + ' '),
-                RadDocumentBuilder.GetSpan(LogLevelColors[logMessage.LogLevel], logMessage.LogLevel.ToString() + '\t'),
+                RadDocumentBuilder.GetSpan(LogLevelColors[logMessage.LogLevel], StringUtils.FormatStringSize(logMessage.LogLevel.ToString(), 12) + ' '),
                 RadDocumentBuilder.GetSpan(MessageColor, logMessage.Message)
             };
             return RadDocumentBuilder.GetParagraph(logLine);

@@ -80,6 +80,27 @@ namespace Simplic.ServicePlatform.UI
             return documentString;
         }
 
+        /// <inheritdoc cref="GetDocumentXaml(System.Collections.Generic.IList{string})"/>
+        public static string GetDocumentXaml()
+        {
+            var documentString = @"<t:RadDocument xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" 
+                                                   xmlns:t=""clr-namespace:Telerik.Windows.Documents.Model;assembly=Telerik.Windows.Documents"" 
+                                                   LayoutMode=""FlowNoWrap"" LineSpacing=""13"" LineSpacingType=""Exact""
+                                                   ParagraphDefaultSpacingAfter=""1"" ParagraphDefaultSpacingBefore=""1"" StyleName=""defaultDocumentStyle"">
+                                      <t:RadDocument.Captions>
+                                        <t:CaptionDefinition IsDefault=""True"" IsLinkedToHeading=""False"" Label=""Figure"" LinkedHeadingLevel=""0"" NumberingFormat=""Arabic"" SeparatorType=""Hyphen"" />
+                                        <t:CaptionDefinition IsDefault=""True"" IsLinkedToHeading=""False"" Label=""Table"" LinkedHeadingLevel=""0"" NumberingFormat=""Arabic"" SeparatorType=""Hyphen"" />
+                                      </t:RadDocument.Captions>
+                                      <t:RadDocument.ProtectionSettings>
+                                        <t:DocumentProtectionSettings EnableDocumentProtection=""False"" Enforce=""False"" HashingAlgorithm=""None"" HashingSpinCount=""0"" ProtectionMode=""ReadOnly"" />
+                                      </t:RadDocument.ProtectionSettings>
+                                      <t:Section>
+                                      </t:Section>
+                                    </t:RadDocument>";
+            return documentString;
+        }
+
+
         /// <summary>
         /// Gets a rad document from an xaml.
         /// </summary>
@@ -90,6 +111,15 @@ namespace Simplic.ServicePlatform.UI
             var stringReader = new StringReader(xaml);
             var xmlReader = XmlReader.Create(stringReader);
             return (RadDocument)XamlReader.Load(xmlReader);
+        }
+
+        /// <summary>
+        /// Gets a default rad document with no content.
+        /// </summary>
+        /// <returns></returns>
+        public static RadDocument GetDefaultDocument()
+        {
+            return GetDocumentFromXaml(GetDocumentXaml());
         }
 
         /// <summary>

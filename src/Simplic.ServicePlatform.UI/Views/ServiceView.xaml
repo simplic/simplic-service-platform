@@ -222,37 +222,37 @@
                                          Margin="0,0,30,50">
                         <StackPanel>
                             <telerik:RadDateTimePicker DateTimeWatermarkContent="From"
-                                                       SelectedValue="{Binding ConsoleStartDate}"/>
+                                                       SelectedValue="{Binding ConsoleStartDate}" SelectionChanged="Filter_OnChange"/>
                             <telerik:RadDateTimePicker DateTimeWatermarkContent="To"
-                                                       SelectedValue="{Binding ConsoleEndDate}"/>
+                                                       SelectedValue="{Binding ConsoleEndDate}" SelectionChanged="Filter_OnChange"/>
                             <telerik:Label Content="LogLevel"
                                            Margin="0,20,0,0"
                                            Foreground="White"
                                            FontFamily="Consolas"/>
                             <Border Padding="10,0,0,0">
                                 <StackPanel>
-                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Debug], Mode=TwoWay}">
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Debug], Mode=TwoWay}" Click="Filter_OnChange">
                                         <telerik:Label Foreground="LightGray" FontSize="12"
                                                        Padding="0" Content="Debug"
                                                        FontFamily="Consolas"/>
                                     </CheckBox>
-                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Information], Mode=TwoWay}">
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Information], Mode=TwoWay}" Click="Filter_OnChange">
                                         <telerik:Label Foreground="LightGray" FontSize="12"
                                                        Padding="0" Content="Information"
                                                        FontFamily="Consolas"/>
                                     </CheckBox>
-                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Warning], Mode=TwoWay}">
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Warning], Mode=TwoWay}" Click="Filter_OnChange">
                                         <telerik:Label Foreground="LightGray" FontSize="12"
                                                        Padding="0" Content="Warning"
                                                        FontFamily="Consolas"/>
                                     </CheckBox>
-                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Error], Mode=TwoWay}">
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Error], Mode=TwoWay}" Click="Filter_OnChange">
                                         <telerik:Label Foreground="LightGray"
                                                        FontSize="12" Padding="0"
                                                        Content="Error"
                                                        FontFamily="Consolas"/>
                                     </CheckBox>
-                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Critical], Mode=TwoWay}">
+                                    <CheckBox VerticalContentAlignment="Center" IsChecked="{Binding ShowLogLevel[Critical], Mode=TwoWay}" Click="Filter_OnChange">
                                         <telerik:Label Foreground="LightGray"
                                                        FontSize="12" Padding="0"
                                                        Content="Critical"

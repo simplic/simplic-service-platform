@@ -15,7 +15,9 @@ using System.Windows.Threading;
 using Simplic.Log;
 using Simplic.PlugIn.Monitoring.Data;
 using Simplic.PlugIn.Monitoring.Service;
+using Simplic.ServicePlatform.UI.Models;
 using Simplic.Studio.UI;
+using Telerik.Windows.Documents.Model;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -81,13 +83,30 @@ namespace Simplic.ServicePlatform.UI
                 client.Close();
                 CommandString = string.Empty;
             });
+
+            FilterServiceLogCommand = new RelayCommand(o =>
+            {
+                if (SelectedServiceLog == null) return;
+
+                SelectedServiceLogDocument = RadDocumentBuilder.GetDefaultDocument();
+
+                foreach (var logMessage in SelectedServiceLog)
+                    if (IsFiltered(logMessage))
+                        SelectedServiceLogDocument.Sections.Last.Blocks.Add(LogHelper.ToParagraph(logMessage));
+            });
+
             InitializeServiceLogCommand = new RelayCommand(o =>
             {
                 if (SelectedServiceCard == null || SelectedServiceCard.Model == null) return;
 
                 SelectedServiceLog = RetrieveServiceLogMessages(SelectedServiceCard.Model);
+                SelectedServiceLogDocument = RadDocumentBuilder.GetDefaultDocument();
+                foreach (var logMessage in SelectedServiceLog)
+                    SelectedServiceLogDocument.Sections.Last.Blocks.Add(LogHelper.ToParagraph(logMessage));
+
                 RaisePropertyChanged(nameof(SelectedServiceLog));
             });
+
             RefreshServiceLogCommand = new RelayCommand(o =>
             {
                 if (SelectedServiceCard == null || SelectedServiceCard.Model == null) return;
@@ -236,7 +255,7 @@ namespace Simplic.ServicePlatform.UI
             if (serviceDefinition == null || string.IsNullOrWhiteSpace(serviceDefinition.ServiceName))
                 return Enumerable.Empty<ServiceLogMessage>();
             var table = $"Simplic {serviceDefinition.ServiceName}".Replace(" ", "_").ToLower();
-            return logStorageService.Read(table).Where(IsFiltered).OrderBy(x => x.Time); ;
+            return logStorageService.Read(table).OrderBy(x => x.Time); ;
         }
 
         private IEnumerable<ServiceLogMessage> RetrieveMissingServiceLogMessages(ServiceDefinition serviceDefinition, IEnumerable<ServiceLogMessage> serviceLog)
@@ -246,9 +265,7 @@ namespace Simplic.ServicePlatform.UI
             var table = $"Simplic {serviceDefinition.ServiceName}".Replace(" ", "_").ToLower();
 
             var lastLog = serviceLog.Last();
-            return logStorageService.Read(table, $"{nameof(lastLog.UnixTimestamp)} > {lastLog.UnixTimestamp}")
-                                    .Where(IsFiltered).OrderBy(x => x.Time); // TODO: only read messages that have a unix timestamp > last log message
-
+            return logStorageService.Read(table, $"{nameof(lastLog.UnixTimestamp)} > {lastLog.UnixTimestamp}").OrderBy(x => x.Time);
         }
 
         private bool IsFiltered(ServiceLogMessage logMessage)
@@ -337,6 +354,11 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         public ICommand RefreshServiceLogCommand { get; set; }
 
+        /// <summary>
+        /// Gets or sets the command for filtering the service log.
+        /// </summary>
+        public ICommand FilterServiceLogCommand { get; set; }
+
 
         /// <summary>
         /// Gets or sets the search term.
@@ -356,11 +378,6 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
-
-        /// <summary>
-        /// Gets or sets the service log xaml.
-        /// </summary>
-        public IEnumerable<ServiceLogMessage> SelectedServiceLog { get; set; }
 
         /// <summary>
         /// Gets or sets the command text.
@@ -389,5 +406,15 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the filter for log levels.
         /// </summary>
         public Dictionary<string, bool> ShowLogLevel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service log.
+        /// </summary>
+        public IEnumerable<ServiceLogMessage> SelectedServiceLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected service log document.
+        /// </summary>
+        public RadDocument SelectedServiceLogDocument { get; set; }
     }
 }
