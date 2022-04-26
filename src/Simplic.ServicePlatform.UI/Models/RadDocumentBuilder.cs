@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Xml;
+using Telerik.Windows.Documents.Layout;
+using Telerik.Windows.Documents.Model;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -16,9 +20,10 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="foreground">Foreground color</param>
         /// <param name="text">Text to display</param>
         /// <returns>Run statement as string</returns>
-        public static string GetSpan(Color foreground, string text)
+        public static string GetSpanXaml(Color foreground, string text)
         {
-            return $@"<t:Span ForeColor=""{foreground}"" Text=""{XmlConvert.EncodeName(text)}"" />";
+            return $@"<t:Span FontSize=""12"" FontFamily=""Consolas"" ForeColor=""{foreground}"" Text=""{text}"" />";
+            //return $@"<t:Span FontSize=""12"" FontFamily=""Consolas"" ForeColor=""{foreground}"" Text=""{XmlConvert.EncodeName(text)}"" />";
         }
 
         /// <summary>
@@ -26,35 +31,41 @@ namespace Simplic.ServicePlatform.UI
         /// </summary>
         /// <param name="content">Content of the paragraph</param>
         /// <returns>Paragraph statement as string</returns>
-        public static string GetParagraph(string content)
+        public static string GetParagraphXaml(string content)
         {
-            return $@"<t:Paragraph>{XmlConvert.EncodeName(content)}</t:Paragraph>";
+            return $@"<t:Paragraph>{content}</t:Paragraph>";
+            //return $@"<t:Paragraph>{XmlConvert.EncodeName(content)}</t:Paragraph>";
         }
 
-        /// <inheritdoc cref="GetParagraph(string)"/>
-        public static string GetParagraph(IList<string> contents)
+        /// <inheritdoc cref="GetParagraphXaml"/>
+        public static string GetParagraphXaml(IList<string> contents)
         {
             var contentBuilder = new StringBuilder();
             foreach (var item in contents)
-                contentBuilder.Append(XmlConvert.EncodeName(item));
+                contentBuilder.Append(item);
+            //contentBuilder.Append(XmlConvert.EncodeName(item));
             return $@"<t:Paragraph>{contentBuilder}</t:Paragraph>";
         }
 
         /// <summary>
-        /// Gets a rad document.
+        /// Gets a rad document as string.
         /// </summary>
         /// <param name="paragraphs"></param>
         /// <returns>Rad document as string</returns>
-        public static string GetDocument(IList<string> paragraphs)
+        public static string GetDocumentXaml(IList<string> paragraphs)
         {
             var paragraphsBuilder = new StringBuilder();
 
             foreach (var paragraph in paragraphs)
             {
-                paragraphsBuilder.Append(XmlConvert.EncodeName(paragraph));
+                paragraphsBuilder.Append(paragraph);
+                //paragraphsBuilder.Append(XmlConvert.EncodeName(paragraph));
             }
 
-            var documentString = $@"<t:RadDocument xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:t=""clr-namespace:Telerik.Windows.Documents.Model;assembly=Telerik.Windows.Documents"" xmlns:s=""clr-namespace:Telerik.Windows.Documents.Model.Styles;assembly=Telerik.Windows.Documents"" xmlns:r=""clr-namespace:Telerik.Windows.Documents.Model.Revisions;assembly=Telerik.Windows.Documents"" xmlns:n=""clr-namespace:Telerik.Windows.Documents.Model.Notes;assembly=Telerik.Windows.Documents"" xmlns:th=""clr-namespace:Telerik.Windows.Documents.Model.Themes;assembly=Telerik.Windows.Documents"" xmlns:sdt=""clr-namespace:Telerik.Windows.Documents.Model.StructuredDocumentTags;assembly=Telerik.Windows.Documents"" LayoutMode=""Flow"" LineSpacing=""1.15"" LineSpacingType=""Auto"" ParagraphDefaultSpacingAfter=""12"" ParagraphDefaultSpacingBefore=""0"" StyleName=""defaultDocumentStyle"">
+            var documentString = $@"<t:RadDocument xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" 
+                                                   xmlns:t=""clr-namespace:Telerik.Windows.Documents.Model;assembly=Telerik.Windows.Documents"" 
+                                                   LayoutMode=""FlowNoWrap"" LineSpacing=""13"" LineSpacingType=""Exact""
+                                                   ParagraphDefaultSpacingAfter=""1"" ParagraphDefaultSpacingBefore=""1"" StyleName=""defaultDocumentStyle"">
                                       <t:RadDocument.Captions>
                                         <t:CaptionDefinition IsDefault=""True"" IsLinkedToHeading=""False"" Label=""Figure"" LinkedHeadingLevel=""0"" NumberingFormat=""Arabic"" SeparatorType=""Hyphen"" />
                                         <t:CaptionDefinition IsDefault=""True"" IsLinkedToHeading=""False"" Label=""Table"" LinkedHeadingLevel=""0"" NumberingFormat=""Arabic"" SeparatorType=""Hyphen"" />
@@ -62,31 +73,52 @@ namespace Simplic.ServicePlatform.UI
                                       <t:RadDocument.ProtectionSettings>
                                         <t:DocumentProtectionSettings EnableDocumentProtection=""False"" Enforce=""False"" HashingAlgorithm=""None"" HashingSpinCount=""0"" ProtectionMode=""ReadOnly"" />
                                       </t:RadDocument.ProtectionSettings>
-                                      <t:RadDocument.Styles>
-                                        <s:StyleDefinition DisplayName=""defaultDocumentStyle"" IsCustom=""False"" IsDefault=""False"" IsPrimary=""True"" Name=""defaultDocumentStyle"" Type=""Default"">
-                                          <s:StyleDefinition.ParagraphStyle>
-                                            <s:ParagraphProperties LineSpacing=""1.15"" SpacingAfter=""12"" />
-                                          </s:StyleDefinition.ParagraphStyle>
-                                          <s:StyleDefinition.SpanStyle>
-                                            <s:SpanProperties FontFamily=""Verdana"" FontSize=""16"" FontStyle=""Normal"" FontWeight=""Normal"" />
-                                          </s:StyleDefinition.SpanStyle>
-                                        </s:StyleDefinition>
-                                        <s:StyleDefinition DisplayName=""Normal"" IsCustom=""False"" IsDefault=""True"" IsPrimary=""True"" Name=""Normal"" Type=""Paragraph"" UIPriority=""0"" />
-                                        <s:StyleDefinition DisplayName=""Table Normal"" IsCustom=""False"" IsDefault=""True"" IsPrimary=""False"" Name=""TableNormal"" Type=""Table"" UIPriority=""59"">
-                                          <s:StyleDefinition.TableStyle>
-                                            <s:TableProperties CellPadding=""5,0,5,0"">
-                                              <s:TableProperties.TableLook>
-                                                <t:TableLook />
-                                              </s:TableProperties.TableLook>
-                                            </s:TableProperties>
-                                          </s:StyleDefinition.TableStyle>
-                                        </s:StyleDefinition>
-                                      </t:RadDocument.Styles>
                                       <t:Section>
                                         {paragraphsBuilder}
                                       </t:Section>
                                     </t:RadDocument>";
             return documentString;
+        }
+
+        /// <summary>
+        /// Gets a rad document from an xaml.
+        /// </summary>
+        /// <param name="xaml"></param>
+        /// <returns>RadDocument</returns>
+        public static RadDocument GetDocumentFromXaml(string xaml)
+        {
+            var stringReader = new StringReader(xaml);
+            var xmlReader = XmlReader.Create(stringReader);
+            return (RadDocument)XamlReader.Load(xmlReader);
+        }
+
+        /// <summary>
+        /// Gets a span with default font size and font family.
+        /// </summary>
+        /// <param name="foreground"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static Span GetSpan(Color foreground, string text)
+        {
+            var span = new Span();
+            span.ForeColor = foreground;
+            span.Text = text;
+            span.FontSize = 12;
+            span.FontFamily = new FontFamily("Consolas");
+            return span;
+        }
+
+        /// <summary>
+        /// Gets a paragraph containing given inlines.
+        /// </summary>
+        /// <param name="inlines"></param>
+        /// <returns></returns>
+        public static Paragraph GetParagraph(IEnumerable<Inline> inlines)
+        {
+            var paragraph = new Paragraph();
+            foreach (var inline in inlines)
+                paragraph.Inlines.Add(inline);
+            return paragraph;
         }
     }
 }

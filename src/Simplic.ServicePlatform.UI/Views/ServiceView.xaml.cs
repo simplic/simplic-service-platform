@@ -1,14 +1,18 @@
 ﻿using System;
-using System.IO;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 using Simplic.Framework.UI;
 using System.Windows.Controls.Primitives;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Threading;
-using System.Xml;
+using Simplic.ServicePlatform.UI.Models;
+using Paragraph = Telerik.Windows.Documents.Model.Paragraph;
+using System.Collections.Generic;
 using Telerik.Windows.Documents.Model;
 
 namespace Simplic.ServicePlatform.UI
@@ -76,7 +80,28 @@ namespace Simplic.ServicePlatform.UI
             RadRibbonHomeTab.Items.Add(cardButtonGroup);
         }
 
+        private void RefreshConsole()
+        {
+            if (DataContext is not ServiceViewModel viewModel || viewModel.SelectedServiceLog == null || !viewModel.SelectedServiceLog.Any()) return;
 
+            var caretAtEnd = LogBox.Document.CaretPosition.IsPositionAtDocumentEnd;
+
+            var oldServiceLog = viewModel.SelectedServiceLog.ToList();
+            viewModel.RefreshServiceLogCommand.Execute(this);
+            var newServiceLog = viewModel.SelectedServiceLog.ToList();
+
+            if (oldServiceLog.Count >= newServiceLog.Count) return;
+
+            for (var i = oldServiceLog.Count; i < newServiceLog.Count; i++)
+            {
+                LogBox.Document.Sections.Last.Blocks.Add(LogHelper.ToParagraph(newServiceLog[i]));
+            }
+
+            if (caretAtEnd)
+                LogBox.Document.CaretPosition.MoveToDocumentEnd();
+        }
+
+        #region Event Handlers
         private void CommandBox_OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
@@ -87,20 +112,26 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-        private RadDocument ImportRadDocumentXaml(string xaml)
+        private void LogBox_OnDocumentChanged(object sender, EventArgs e)
         {
-            var stringReader = new StringReader(xaml);
-            var xmlReader = XmlReader.Create(stringReader);
-            return (RadDocument)XamlReader.Load(xmlReader);
+            LogBox.Document.CaretPosition.MoveToDocumentEnd();
         }
 
-        private void RefreshConsole()
+        private void ServicesCardView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataContext is ServiceViewModel viewModel && !string.IsNullOrWhiteSpace(viewModel.SelectedServiceLogXaml))
-            {
-                LogBox.Document = ImportRadDocumentXaml(viewModel.SelectedServiceLogXaml);
-            }
+            if (DataContext is not ServiceViewModel viewModel) return;
+            //var oldServiceLog = viewModel.SelectedServiceLog;
+            //Task.Run(() =>
+            //{
+            //    while (oldServiceLog.Equals(viewModel.SelectedServiceLog))
+            //        Task.Delay(100);
+            //}).ContinueWith(o =>
+            //{
+            //    LogBox.Document = RadDocumentBuilder.GetDocumentFromXaml(LogHelper.ToXaml(viewModel.SelectedServiceLog));
+            //});
+            LogBox.Document = RadDocumentBuilder.GetDocumentFromXaml(LogHelper.ToXaml(viewModel.SelectedServiceLog));
         }
+        #endregion
 
         /// <summary>
         /// Method that is called when the RibbonButton for saving is pressed.
@@ -113,5 +144,6 @@ namespace Simplic.ServicePlatform.UI
                 viewModel.SaveCommand.Execute(this);
             }
         }
+
     }
 }
