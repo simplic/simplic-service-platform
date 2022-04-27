@@ -19,6 +19,11 @@ namespace Simplic.ServicePlatform
         public string ServiceName { get; set; }
 
         /// <summary>
+        /// Gets or sets the port of the service.
+        /// </summary>
+        public int Port { get; set; }
+
+        /// <summary>
         /// Gets or sets all modules in this service.
         /// </summary>
         public IList<ServiceModule> Modules { get; set; } = new List<ServiceModule>();

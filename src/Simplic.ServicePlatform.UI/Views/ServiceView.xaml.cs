@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Simplic.ServicePlatform.UI.Models;
 using System.Windows;
+using MongoDB.Bson;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -79,8 +80,6 @@ namespace Simplic.ServicePlatform.UI
         private void RefreshConsole()
         {
             if (DataContext is not ServiceViewModel viewModel || viewModel.SelectedServiceLog == null || !viewModel.SelectedServiceLog.Any()) return;
-            var caretAtEnd = LogBox.Document.CaretPosition.IsPositionAtDocumentEnd;
-
             var oldServiceLog = viewModel.SelectedServiceLog.ToList();
             viewModel.RefreshServiceLogCommand.Execute(this);
             var newServiceLog = viewModel.SelectedServiceLog.ToList();
@@ -92,8 +91,12 @@ namespace Simplic.ServicePlatform.UI
                 LogBox.Document.Sections.Last.Blocks.Add(LogHelper.ToParagraph(newServiceLog[i]));
             }
 
-            if (caretAtEnd)
-                LogBox.Document.CaretPosition.MoveToDocumentEnd();
+            /* Get offset doesn't work because Top and Bottom are zero */
+            var lastBlock = LogBox.Document.Sections.Last().Blocks.Last();
+            var lastBlockStartY = lastBlock.Children.First.BoundingRectangle.Top;
+            var lastBlockEndY = lastBlock.Children.Last().LastLayoutBox.BoundingRectangle.Bottom;
+            var offset = lastBlockEndY - lastBlockStartY;
+            LogBox.ScrollToVerticalOffset(offset);
         }
 
         #region Event Handlers
@@ -129,6 +132,11 @@ namespace Simplic.ServicePlatform.UI
             if (viewModel.SelectedServiceLogDocument != null)
                 LogBox.Document = viewModel.SelectedServiceLogDocument;
         }
+
+        private void ScrollToBottomButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            LogBox.ScrollToVerticalOffset(1E9);
+        }
         #endregion
 
         private void CheckScrollbarIsDown()
@@ -154,6 +162,5 @@ namespace Simplic.ServicePlatform.UI
 
             viewModel.SaveCommand.Execute(this);
         }
-
     }
 }

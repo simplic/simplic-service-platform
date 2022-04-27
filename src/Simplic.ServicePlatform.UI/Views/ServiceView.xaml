@@ -219,7 +219,7 @@
                                          Foreground="White"
                                          ExpandDirection="Left"
                                          telerik:AnimationManager.IsAnimationEnabled="False"
-                                         Margin="0,0,30,50">
+                                         Margin="0,0,18,20">
                         <StackPanel>
                             <telerik:RadDateTimePicker DateTimeWatermarkContent="From"
                                                        SelectedValue="{Binding ConsoleStartDate}" SelectionChanged="Filter_OnChange"/>
@@ -262,6 +262,15 @@
                             </Border>
                         </StackPanel>
                     </telerik:RadExpander>
+                    <!--#endregion-->
+
+                    <!--#region Scroll To Bottom Button-->
+                    <telerik:RadButton Grid.Row="0" Grid.Column="1"
+                                       Width="20" Height="20"
+                                       Margin="0,0,18,0"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom"
+                                       Content="▼" Click="ScrollToBottomButton_OnClick"/>
                     <!--#endregion-->
                 </Grid>
             </telerik:RadTabItem>
