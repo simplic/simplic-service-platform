@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Simplic.ServicePlatform.UI.Models;
 using System.Windows;
-using MongoDB.Bson;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -136,6 +135,26 @@ namespace Simplic.ServicePlatform.UI
         private void ScrollToBottomButton_OnClick(object sender, RoutedEventArgs e)
         {
             LogBox.ScrollToVerticalOffset(1E9);
+        }
+
+        private void ConsoleWindow_OnWindowStateChanged(object sender, EventArgs e)
+        {
+            switch (ConsoleWindow.WindowState)
+            {
+                case WindowState.Minimized:
+                    LogBox.Visibility = Visibility.Collapsed;
+                    CommandBox.Visibility = Visibility.Collapsed;
+                    Filter.Visibility = Visibility.Collapsed;
+                    ScrollToBottomButton.Visibility = Visibility.Collapsed;
+                    break;
+                case WindowState.Maximized:
+                case WindowState.Normal:
+                    LogBox.Visibility = Visibility.Visible;
+                    CommandBox.Visibility = Visibility.Visible;
+                    Filter.Visibility = Visibility.Visible;
+                    ScrollToBottomButton.Visibility = Visibility.Visible;
+                    break;
+            }
         }
         #endregion
 

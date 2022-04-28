@@ -177,10 +177,12 @@
         <!--#endregion-->
 
         <!--#region Console-->
-        <telerik:RadTabbedWindow Grid.Row="1" Grid.Column="0"
+        <telerik:RadTabbedWindow x:Name="ConsoleWindow"
+                                 Grid.Row="1" Grid.Column="0"
                                  Margin="10, 0, 10, 5"
-                                 CanClose="False" CanMove="True">
-            <telerik:RadTabItem Header="Console" CloseButtonVisibility="Collapsed">
+                                 CanClose="False" CanMove="True"
+                                 WindowStateChanged="ConsoleWindow_OnWindowStateChanged">
+            <telerik:RadTabItem x:Name="ConsoleTab" Header="Console" IsDragDisabled="False" CloseButtonVisibility="Collapsed">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -214,7 +216,8 @@
                                                  BorderThickness="0.5"/>
 
                     <!--#region Filter-->
-                    <telerik:RadExpander Grid.Column="1"
+                    <telerik:RadExpander x:Name="Filter"
+                                         Grid.Column="1"
                                          Header="Filter"
                                          Foreground="White"
                                          ExpandDirection="Left"
@@ -265,7 +268,8 @@
                     <!--#endregion-->
 
                     <!--#region Scroll To Bottom Button-->
-                    <telerik:RadButton Grid.Row="0" Grid.Column="1"
+                    <telerik:RadButton x:Name="ScrollToBottomButton"
+                                       Grid.Row="0" Grid.Column="1"
                                        Width="20" Height="20"
                                        Margin="0,0,18,0"
                                        HorizontalAlignment="Right"
