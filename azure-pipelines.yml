@@ -36,10 +36,6 @@ steps:
       restoreSolution: "**/*.sln"
       feedsToUse: select
       vstsFeed: f7087ef5-bf6f-48b2-8b8b-5e513f4a7a9e
-  - task: MSBuild@1
-    inputs:
-      solution: "**/*.sln"
-      configuration: $(buildConfiguration)
 
   - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
       - template: version-number-update-token-template.yml@infrastructure
@@ -48,6 +44,12 @@ steps:
           git_user: $(git_user)
           git_token: $(git_token)
           branch_name: ${{ replace(variables['Build.SourceBranch'], 'refs/heads/', '') }}
+
+  - task: MSBuild@1
+    inputs:
+      solution: "**/*.sln"
+      configuration: $(buildConfiguration)
+
 
   - task: VSTest@2
     inputs:
