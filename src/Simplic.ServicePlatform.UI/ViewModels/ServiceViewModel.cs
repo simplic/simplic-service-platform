@@ -101,8 +101,11 @@ namespace Simplic.ServicePlatform.UI
 
                 SelectedServiceLog = RetrieveServiceLogMessages(SelectedServiceCard.Model);
                 SelectedServiceLogDocument = RadDocumentBuilder.GetDefaultDocument();
+
                 foreach (var logMessage in SelectedServiceLog)
+                {
                     SelectedServiceLogDocument.Sections.Last.Blocks.Add(LogHelper.ToParagraph(logMessage));
+                }
 
                 RaisePropertyChanged(nameof(SelectedServiceLog));
             });
@@ -112,7 +115,10 @@ namespace Simplic.ServicePlatform.UI
                 if (SelectedServiceCard == null || SelectedServiceCard.Model == null) return;
 
                 foreach (var missingLog in RetrieveMissingServiceLogMessages(SelectedServiceCard.Model, SelectedServiceLog))
+                {
                     SelectedServiceLog = SelectedServiceLog.Append(missingLog);
+                }
+
                 RaisePropertyChanged(nameof(SelectedServiceLog));
             });
         }

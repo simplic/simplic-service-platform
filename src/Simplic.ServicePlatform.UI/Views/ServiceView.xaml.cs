@@ -91,11 +91,11 @@ namespace Simplic.ServicePlatform.UI
             }
 
             /* Get offset doesn't work because Top and Bottom are zero */
-            var lastBlock = LogBox.Document.Sections.Last().Blocks.Last();
-            var lastBlockStartY = lastBlock.Children.First.BoundingRectangle.Top;
-            var lastBlockEndY = lastBlock.Children.Last().LastLayoutBox.BoundingRectangle.Bottom;
-            var offset = lastBlockEndY - lastBlockStartY;
-            LogBox.ScrollToVerticalOffset(offset);
+            //var lastBlock = LogBox.Document.Sections.Last().Blocks.Last();
+            //var lastBlockStartY = lastBlock.Children.First.BoundingRectangle.Top;
+            //var lastBlockEndY = lastBlock.Children.Last().LastLayoutBox.BoundingRectangle.Bottom;
+            //var offset = lastBlockEndY - lastBlockStartY;
+            //LogBox.ScrollToVerticalOffset(offset);
         }
 
         #region Event Handlers
