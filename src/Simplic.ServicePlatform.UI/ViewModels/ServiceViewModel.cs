@@ -4,13 +4,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Simplic.Localization;
+using Simplic.Log;
+using Simplic.PlugIn.Monitoring.Data;
+using Simplic.PlugIn.Monitoring.Service;
+using Simplic.ServicePlatform.UI.Models;
 using Simplic.Studio.UI;
+using Telerik.Windows.Documents.Model;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -20,6 +27,7 @@ namespace Simplic.ServicePlatform.UI
     public class ServiceViewModel : ViewModelBase
     {
         private readonly IServiceClient serviceClient;
+        private readonly LogStorageService logStorageService;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
@@ -28,6 +36,7 @@ namespace Simplic.ServicePlatform.UI
         private string searchTerm;
         private readonly DispatcherTimer filterTimer;
         private int keyCounter;
+        private string commandString;
 
         /// <summary>
         /// Instantiates the view model.
@@ -36,6 +45,7 @@ namespace Simplic.ServicePlatform.UI
         public ServiceViewModel(IServiceClient serviceClient)
         {
             this.serviceClient = serviceClient;
+            logStorageService = new LogStorageService(new LogMongoDBRepository("localhost:27017", "service_logs"));
             Services = new ObservableCollection<ServiceDefinitionViewModel>();
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
@@ -43,6 +53,18 @@ namespace Simplic.ServicePlatform.UI
             filterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.2) };
             filterTimer.Tick += Timer_Tick;
             keyCounter = 0;
+            ConsoleStartDate = DateTime.Now.AddDays(-7);
+            ConsoleEndDate = DateTime.Now;
+
+            ShowLogLevel = new Dictionary<string, bool>
+            {
+                {"Trace", false},
+                {"Debug", true},
+                {"Information", true},
+                {"Warning", true},
+                {"Error", true},
+                {"Critical", true}
+            };
         }
 
         private void InitializeCommands()
@@ -50,6 +72,55 @@ namespace Simplic.ServicePlatform.UI
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(Save);
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
+            ExecuteCommand = new RelayCommand(o =>
+            {
+                if (string.IsNullOrWhiteSpace(CommandString) || SelectedServiceLog == null) return;
+                if (!SelectedServiceLog.Any())
+                    MessageBox.Show("Unable to retrieve endpoint: Service has not send any logs yet.");
+                var client = new UdpClient();
+                var data = Encoding.UTF8.GetBytes(CommandString);
+                client.Send(data, data.Length, RetrieveEndPoint(SelectedServiceLog));
+                client.Close();
+                CommandString = string.Empty;
+            });
+
+            FilterServiceLogCommand = new RelayCommand(o =>
+            {
+                if (SelectedServiceLog == null) return;
+
+                SelectedServiceLogDocument = RadDocumentBuilder.GetDefaultDocument();
+
+                foreach (var logMessage in SelectedServiceLog)
+                    if (IsFiltered(logMessage))
+                        SelectedServiceLogDocument.Sections.Last.Blocks.Add(LogHelper.ToParagraph(logMessage));
+            });
+
+            InitializeServiceLogCommand = new RelayCommand(o =>
+            {
+                if (SelectedServiceCard == null || SelectedServiceCard.Model == null) return;
+
+                SelectedServiceLog = RetrieveServiceLogMessages(SelectedServiceCard.Model);
+                SelectedServiceLogDocument = RadDocumentBuilder.GetDefaultDocument();
+
+                foreach (var logMessage in SelectedServiceLog)
+                {
+                    SelectedServiceLogDocument.Sections.Last.Blocks.Add(LogHelper.ToParagraph(logMessage));
+                }
+
+                RaisePropertyChanged(nameof(SelectedServiceLog));
+            });
+
+            RefreshServiceLogCommand = new RelayCommand(o =>
+            {
+                if (SelectedServiceCard == null || SelectedServiceCard.Model == null) return;
+
+                foreach (var missingLog in RetrieveMissingServiceLogMessages(SelectedServiceCard.Model, SelectedServiceLog))
+                {
+                    SelectedServiceLog = SelectedServiceLog.Append(missingLog);
+                }
+
+                RaisePropertyChanged(nameof(SelectedServiceLog));
+            });
         }
 
         private void LoadServicesAndModules()
@@ -128,7 +199,7 @@ namespace Simplic.ServicePlatform.UI
             }
 
             RemoveServices();
-            
+
             if (errors) LocalizedMessageBox.Show("error_save_services", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -176,13 +247,37 @@ namespace Simplic.ServicePlatform.UI
             return moduleDefinition.Name.Contains(SearchTerm);
         }
 
-        /// <summary>
-        /// Adds service name to remove list.
-        /// </summary>
-        /// <param name="serviceName">Service name</param>
-        public void RegisterServiceRemovalByName(string serviceName)
+        private static IPEndPoint RetrieveEndPoint(IEnumerable<ServiceLogMessage> logMessages)
         {
-            servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = serviceName }, this));
+            var orderedLogMessages = logMessages.OrderBy(x => x.Time);
+            var lastLogMessage = orderedLogMessages.Last();
+            var thisExternalIp = new WebClient().DownloadString("https://api.ipify.org");
+            var targetIp = lastLogMessage.Ip == thisExternalIp ? "127.0.0.1" : lastLogMessage.Ip;
+            return new IPEndPoint(IPAddress.Parse(targetIp), lastLogMessage.Port);
+        }
+
+        private IEnumerable<ServiceLogMessage> RetrieveServiceLogMessages(ServiceDefinition serviceDefinition)
+        {
+            if (serviceDefinition == null || string.IsNullOrWhiteSpace(serviceDefinition.ServiceName))
+                return Enumerable.Empty<ServiceLogMessage>();
+            var table = $"Simplic {serviceDefinition.ServiceName}".Replace(" ", "_").ToLower();
+            return logStorageService.Read(table).OrderBy(x => x.Time); ;
+        }
+
+        private IEnumerable<ServiceLogMessage> RetrieveMissingServiceLogMessages(ServiceDefinition serviceDefinition, IEnumerable<ServiceLogMessage> serviceLog)
+        {
+            if (serviceDefinition == null || string.IsNullOrWhiteSpace(serviceDefinition.ServiceName) || serviceLog == null)
+                return Enumerable.Empty<ServiceLogMessage>();
+            var table = $"Simplic {serviceDefinition.ServiceName}".Replace(" ", "_").ToLower();
+
+            var lastLog = serviceLog.Last();
+            return logStorageService.Read(table, $"{nameof(lastLog.UnixTimestamp)} > {lastLog.UnixTimestamp}").OrderBy(x => x.Time);
+        }
+
+        private bool IsFiltered(ServiceLogMessage logMessage)
+        {
+            var inRange = logMessage.Time <= ConsoleEndDate && logMessage.Time >= ConsoleStartDate;
+            return inRange && ShowLogLevel[logMessage.LogLevel.ToString()];
         }
 
         /// <summary>
@@ -195,6 +290,7 @@ namespace Simplic.ServicePlatform.UI
             {
                 selectedServiceCard = value;
                 RaisePropertyChanged(nameof(SelectedServiceCard));
+                InitializeServiceLogCommand.Execute(this);
             }
         }
 
@@ -250,6 +346,27 @@ namespace Simplic.ServicePlatform.UI
         public ICommand DeleteCardCommand { get; set; }
 
         /// <summary>
+        /// Gets or sets the command for executing a command.
+        /// </summary>
+        public ICommand ExecuteCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for initializing the console.
+        /// </summary>
+        public ICommand InitializeServiceLogCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for refreshing the service log.
+        /// </summary>
+        public ICommand RefreshServiceLogCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for filtering the service log.
+        /// </summary>
+        public ICommand FilterServiceLogCommand { get; set; }
+
+
+        /// <summary>
         /// Gets or sets the search term.
         /// </summary>
         public string SearchTerm
@@ -267,5 +384,43 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command text.
+        /// </summary>
+        public string CommandString
+        {
+            get => commandString;
+            set
+            {
+                commandString = value;
+                RaisePropertyChanged(nameof(CommandString));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the console start date.
+        /// </summary>
+        public DateTime ConsoleStartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the console end date.
+        /// </summary>
+        public DateTime ConsoleEndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filter for log levels.
+        /// </summary>
+        public Dictionary<string, bool> ShowLogLevel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service log.
+        /// </summary>
+        public IEnumerable<ServiceLogMessage> SelectedServiceLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected service log document.
+        /// </summary>
+        public RadDocument SelectedServiceLogDocument { get; set; }
     }
 }
