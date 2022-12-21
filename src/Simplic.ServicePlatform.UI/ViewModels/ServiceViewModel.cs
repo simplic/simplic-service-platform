@@ -25,9 +25,10 @@ namespace Simplic.ServicePlatform.UI
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
         private readonly List<ServiceDefinitionViewModel> servicesToRemove;
         private UIElement focusedElement;
-        private string searchTerm;
-        private readonly DispatcherTimer filterTimer;
-        private int keyCounter;
+        private string serviceSearchTerm;
+        private string moduleSearchTerm;
+        private readonly DispatcherTimer serviceFilterTimer;
+        private readonly DispatcherTimer moduleFilterTimer;
 
         /// <summary>
         /// Instantiates the view model.
@@ -40,9 +41,11 @@ namespace Simplic.ServicePlatform.UI
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
             LoadServicesAndModules();
-            filterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.2) };
-            filterTimer.Tick += Timer_Tick;
-            keyCounter = 0;
+            serviceFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
+            serviceFilterTimer.Tick += ServiceFilterTimerTick;
+            moduleFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
+            moduleFilterTimer.Tick += ModuleFilterTimerTick;
+            MessageBox.Show("Debug5");
         }
 
         private void InitializeCommands()
@@ -60,10 +63,14 @@ namespace Simplic.ServicePlatform.UI
                 AvailableModules = new ObservableCollection<ModuleDefinition>((await serviceClient.GetAllModules()).OrderBy(x => x.Name));
 
                 AvailableModulesCollectionView = CollectionViewSource.GetDefaultView(AvailableModules);
-                AvailableModulesCollectionView.Filter = FilterModules;
+                AvailableModulesCollectionView.Filter = FilterModule;
             }).ContinueWith(o =>
             {
                 Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)).OrderBy(x => x.Model.ServiceName));
+
+                ServicesCollectionView = CollectionViewSource.GetDefaultView(Services);
+                ServicesCollectionView.Filter = FilterService;
+
                 UpdateServiceModules();
                 RaisePropertyChanged(nameof(Services));
                 RaisePropertyChanged(nameof(AvailableModules));
@@ -128,7 +135,7 @@ namespace Simplic.ServicePlatform.UI
             }
 
             RemoveServices();
-            
+
             if (errors) LocalizedMessageBox.Show("error_save_services", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -146,34 +153,48 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-        private async void Timer_Tick(object sender, EventArgs e)
+        private void ServiceFilterTimerTick(object sender, EventArgs e)
         {
-            keyCounter++;
-
-            if (keyCounter >= 2)
-            {
-                await UpdateAvailableModulesView();
-                keyCounter = 0;
-                filterTimer.Stop();
-            }
+            UpdateServicesView();
+            moduleFilterTimer.Stop();
         }
 
-        private Task UpdateAvailableModulesView()
+        private void ModuleFilterTimerTick(object sender, EventArgs e)
+        {
+            UpdateAvailableModulesView();
+            moduleFilterTimer.Stop();
+        }
+
+        private void UpdateAvailableModulesView()
         {
             AvailableModulesCollectionView?.Refresh();
-
-            return Task.CompletedTask;
         }
 
-        private bool FilterModules(object obj)
+        private void UpdateServicesView()
         {
-            if (string.IsNullOrWhiteSpace(SearchTerm))
+            ServicesCollectionView?.Refresh();
+        }
+
+        private bool FilterService(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(ServiceSearchTerm))
+                return true;
+
+            if (!(obj is ServiceDefinitionViewModel serviceDefinition))
+                return false;
+
+            return serviceDefinition.ServiceName.Contains(ServiceSearchTerm);
+        }
+
+        private bool FilterModule(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(ModuleSearchTerm))
                 return true;
 
             if (!(obj is ModuleDefinition moduleDefinition))
                 return true;
 
-            return moduleDefinition.Name.Contains(SearchTerm);
+            return moduleDefinition.Name.Contains(ModuleSearchTerm);
         }
 
         /// <summary>
@@ -250,16 +271,30 @@ namespace Simplic.ServicePlatform.UI
         public ICommand DeleteCardCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the search term.
+        /// Gets or sets the service search term.
         /// </summary>
-        public string SearchTerm
+        public string ServiceSearchTerm
         {
-            get => searchTerm;
+            get => serviceSearchTerm;
             set
             {
-                searchTerm = value;
-                RaisePropertyChanged(nameof(SearchTerm));
-                filterTimer.Start();
+                serviceSearchTerm = value;
+                RaisePropertyChanged(nameof(ServiceSearchTerm));
+                serviceFilterTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the module search term.
+        /// </summary>
+        public string ModuleSearchTerm
+        {
+            get => moduleSearchTerm;
+            set
+            {
+                moduleSearchTerm = value;
+                RaisePropertyChanged(nameof(ModuleSearchTerm));
+                moduleFilterTimer.Start();
             }
         }
 
@@ -267,5 +302,10 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the available modules collection view
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the services collection view
+        /// </summary>
+        public ICollectionView ServicesCollectionView { get; set; }
     }
 }
