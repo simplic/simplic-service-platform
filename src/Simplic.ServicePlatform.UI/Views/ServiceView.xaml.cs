@@ -3,6 +3,7 @@ using System.Windows.Controls.Primitives;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
 using System.Windows.Data;
+using System.Windows;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -22,6 +23,7 @@ namespace Simplic.ServicePlatform.UI
             InitializeComponent();
             DataContext = new ServiceViewModel(serviceClient);
             CreateButtons();
+
         }
 
         private void CreateButtons()
@@ -72,6 +74,5 @@ namespace Simplic.ServicePlatform.UI
                 viewModel.SaveCommand.Execute(this);
             }
         }
-
     }
 }

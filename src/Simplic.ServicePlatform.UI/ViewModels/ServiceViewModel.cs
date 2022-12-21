@@ -45,7 +45,6 @@ namespace Simplic.ServicePlatform.UI
             serviceFilterTimer.Tick += ServiceFilterTimerTick;
             moduleFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
             moduleFilterTimer.Tick += ModuleFilterTimerTick;
-            MessageBox.Show("Debug5");
         }
 
         private void InitializeCommands()
@@ -156,7 +155,7 @@ namespace Simplic.ServicePlatform.UI
         private void ServiceFilterTimerTick(object sender, EventArgs e)
         {
             UpdateServicesView();
-            moduleFilterTimer.Stop();
+            serviceFilterTimer.Stop();
         }
 
         private void ModuleFilterTimerTick(object sender, EventArgs e)
@@ -183,7 +182,7 @@ namespace Simplic.ServicePlatform.UI
             if (!(obj is ServiceDefinitionViewModel serviceDefinition))
                 return false;
 
-            return serviceDefinition.ServiceName.Contains(ServiceSearchTerm);
+            return serviceDefinition.ServiceName.ToLower().Contains(ServiceSearchTerm.ToLower());
         }
 
         private bool FilterModule(object obj)
