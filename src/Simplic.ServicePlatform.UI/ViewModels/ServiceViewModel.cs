@@ -22,6 +22,11 @@ namespace Simplic.ServicePlatform.UI
         public ServiceDefinitionViewModel Service { get; set; }
     }
 
+    /// <summary>
+    /// Used for the Collapse/Expand event.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
 
     /// <summary>
@@ -55,7 +60,6 @@ namespace Simplic.ServicePlatform.UI
             serviceFilterTimer.Tick += ServiceFilterTimerTick;
             moduleFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
             moduleFilterTimer.Tick += ModuleFilterTimerTick;
-            MessageBox.Show("Debug2");
         }
 
         private void InitializeCommands()
@@ -114,6 +118,10 @@ namespace Simplic.ServicePlatform.UI
             return configurations.Select(config => new ServiceModuleConfiguration { Name = config.Name, Value = config.Default }).ToList();
         }
 
+        /// <summary>
+        /// Adds a new service.
+        /// </summary>
+        /// <param name="obj"></param>
         private void AddCard(object obj)
         {
             var newServiceCard = new ServiceDefinitionViewModel(new ServiceDefinition(), this);
@@ -121,6 +129,10 @@ namespace Simplic.ServicePlatform.UI
             SelectedServiceCard = newServiceCard;
         }
 
+        /// <summary>
+        /// Removes a service.
+        /// </summary>
+        /// <param name="obj"></param>
         private void DeleteCard(object obj)
         {
             Services.Remove(SelectedServiceCard);
@@ -129,6 +141,10 @@ namespace Simplic.ServicePlatform.UI
             SelectedServiceCard = null;
         }
 
+        /// <summary>
+        /// Collapses all service cards.
+        /// </summary>
+        /// <param name="obj"></param>
         private void CollapseAll(object obj)
         {
             foreach (ServiceDefinitionViewModel model in Services)
@@ -136,6 +152,11 @@ namespace Simplic.ServicePlatform.UI
                 CollapseEvent?.Invoke(this, new CollapseEventArgs(model));
             }
         }
+
+        /// <summary>
+        /// Expands all service cards.
+        /// </summary>
+        /// <param name="obj"></param>
         private void ExpandAll(object obj)
         {
             foreach (ServiceDefinitionViewModel model in Services)
@@ -144,7 +165,10 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-
+        /// <summary>
+        /// Saves changes.
+        /// </summary>
+        /// <param name="obj"></param>
         private void Save(object obj)
         {
             var errors = false;
@@ -173,6 +197,9 @@ namespace Simplic.ServicePlatform.UI
                 servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = service.OldServiceName }, this));
         }
 
+        /// <summary>
+        /// Removes services marked for removal.
+        /// </summary>
         private void RemoveServices()
         {
             foreach (var service in servicesToRemove)
@@ -193,16 +220,27 @@ namespace Simplic.ServicePlatform.UI
             moduleFilterTimer.Stop();
         }
 
+        /// <summary>
+        /// Updates the filtered list of available modules.
+        /// </summary>
         private void UpdateAvailableModulesView()
         {
             AvailableModulesCollectionView?.Refresh();
         }
 
+        /// <summary>
+        /// Updates the filtered list of services.
+        /// </summary>
         private void UpdateServicesView()
         {
             ServicesCollectionView?.Refresh();
         }
 
+        /// <summary>
+        /// Checks whether the service matches the search term.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private bool FilterService(object obj)
         {
             if (string.IsNullOrWhiteSpace(ServiceSearchTerm))
@@ -214,6 +252,11 @@ namespace Simplic.ServicePlatform.UI
             return serviceDefinition.ServiceName.ToLower().Contains(ServiceSearchTerm.ToLower());
         }
 
+        /// <summary>
+        /// Checks whether the module matches the search term.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         private bool FilterModule(object obj)
         {
             if (string.IsNullOrWhiteSpace(ModuleSearchTerm))
@@ -284,12 +327,12 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
-        /// Will be invoked when a card should be collapsed
+        /// Will be invoked when a card should be collapsed.
         /// </summary>
         public event CollapseEventHandler CollapseEvent;
 
         /// <summary>
-        /// Will be invoked when a card should be expanded
+        /// Will be invoked when a card should be expanded.
         /// </summary>
         public event CollapseEventHandler ExpandEvent;
 
@@ -309,12 +352,12 @@ namespace Simplic.ServicePlatform.UI
         public ICommand DeleteCardCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the command for collapsing all cards.
+        /// Gets or sets the command for collapsing all service cards.
         /// </summary>
         public ICommand CollapseAllCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the command for expanding all cards.
+        /// Gets or sets the command for expanding all service cards.
         /// </summary>
         public ICommand ExpandAllCommand { get; set; }
 
@@ -347,12 +390,12 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
-        /// Gets or sets the services collection view
+        /// Gets or sets the services collection view.
         /// </summary>
         public ICollectionView ServicesCollectionView { get; set; }
 
         /// <summary>
-        /// Gets or sets the available modules collection view
+        /// Gets or sets the available modules collection view.
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
     }
