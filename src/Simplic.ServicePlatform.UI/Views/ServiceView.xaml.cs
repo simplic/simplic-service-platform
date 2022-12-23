@@ -1,9 +1,7 @@
 ﻿using Simplic.Framework.UI;
-using System.Windows.Controls.Primitives;
 using Simplic.Studio.UI.Navigation;
 using Telerik.Windows.Controls;
-using System.Windows.Data;
-using System.Windows;
+using Telerik.Windows.Controls.RibbonView;
 
 namespace Simplic.ServicePlatform.UI
 {
@@ -12,8 +10,14 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public partial class ServiceView : DefaultRibbonWindow
     {
+        private readonly ServiceViewModel viewModel;
+        
         private RibbonButton addCardButton;
         private RibbonButton removeCardButton;
+        private RibbonButton collapseAllButton;
+        private RibbonButton expandAllButton;
+
+        private RadCardView services;
 
         /// <summary>
         /// Instantiates the view for the given module.
@@ -21,9 +25,12 @@ namespace Simplic.ServicePlatform.UI
         public ServiceView(IServiceClient serviceClient)
         {
             InitializeComponent();
-            DataContext = new ServiceViewModel(serviceClient);
+            viewModel = new ServiceViewModel(serviceClient);
+            viewModel.CollapseEvent += OnCollapse;
+            viewModel.ExpandEvent += OnExpand;
+            services = (RadCardView)FindName("ServicesCardView");
+            DataContext = viewModel;
             CreateButtons();
-
         }
 
         private void CreateButtons()
@@ -33,7 +40,7 @@ namespace Simplic.ServicePlatform.UI
             addCardButton = new RibbonButton
             {
                 Text = "Add",
-                Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
+                Size = ButtonSize.Large,
                 LargeIconName = "service_add_32x",
                 TextLocalizationKey = "xaml_add"
             };
@@ -43,22 +50,35 @@ namespace Simplic.ServicePlatform.UI
             removeCardButton = new RibbonButton
             {
                 Text = "Remove",
-                Size = Telerik.Windows.Controls.RibbonView.ButtonSize.Large,
+                Size = ButtonSize.Large,
                 LargeIconName = "delete_32x",
                 TextLocalizationKey = "kanban_remove"
             };
 
-            BindingOperations.SetBinding(removeCardButton, ButtonBase.CommandProperty, new Binding(nameof(ServiceViewModel.DeleteCardCommand))
-            {
-                Source = DataContext
-            });
-
             cardButtonGroup.Items.Add(removeCardButton);
 
-            if (DataContext is ServiceViewModel viewModel)
+            collapseAllButton = new RibbonButton
             {
-                addCardButton.Command = viewModel.AddCardCommand;
-            }
+                Text = "Collapse All",
+                Size = ButtonSize.Small,
+                TextLocalizationKey = "ssp_collapse_all"
+            };
+
+            cardButtonGroup.Items.Add(collapseAllButton);
+
+            expandAllButton = new RibbonButton
+            {
+                Text = "Expand All",
+                Size = ButtonSize.Small,
+                TextLocalizationKey = "ssp_expand_all"
+            };
+
+            cardButtonGroup.Items.Add(expandAllButton);
+
+            addCardButton.Command = viewModel.AddCardCommand;
+            removeCardButton.Command = viewModel.DeleteCardCommand;
+            collapseAllButton.Command = viewModel.CollapseAllCommand;
+            expandAllButton.Command = viewModel.ExpandAllCommand;
 
             RadRibbonHomeTab.Items.Add(cardButtonGroup);
         }
@@ -74,5 +94,15 @@ namespace Simplic.ServicePlatform.UI
                 viewModel.SaveCommand.Execute(this);
             }
         }
+
+        private void OnCollapse(object sender, CollapseEventArgs args)
+        {
+            services.Collapse(args.Service);
+        }
+        private void OnExpand(object sender, CollapseEventArgs args)
+        {
+            services.Expand(args.Service);
+        }
+
     }
 }

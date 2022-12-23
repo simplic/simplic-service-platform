@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <telerik:Label Content="{simplic:Localization Key=xaml_available_services}"/>
+                <telerik:Label Content="{simplic:Localization Key=ssp_services}"/>
                 <telerik:RadWatermarkTextBox Grid.Row="1"
                                      Text="{Binding ServiceSearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      WatermarkContent="{simplic:Localization Key=search}"/>

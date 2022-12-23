@@ -4,16 +4,26 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Simplic.Localization;
 using Simplic.Studio.UI;
 
 namespace Simplic.ServicePlatform.UI
 {
+    public class CollapseEventArgs : EventArgs
+    {
+        public CollapseEventArgs(ServiceDefinitionViewModel service)
+        {
+            Service = service;
+        }
+
+        public ServiceDefinitionViewModel Service { get; set; }
+    }
+
+    public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
+
     /// <summary>
     /// View model for the service.
     /// </summary>
@@ -45,6 +55,7 @@ namespace Simplic.ServicePlatform.UI
             serviceFilterTimer.Tick += ServiceFilterTimerTick;
             moduleFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
             moduleFilterTimer.Tick += ModuleFilterTimerTick;
+            MessageBox.Show("Debug2");
         }
 
         private void InitializeCommands()
@@ -52,6 +63,8 @@ namespace Simplic.ServicePlatform.UI
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(Save);
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
+            CollapseAllCommand = new RelayCommand(CollapseAll);
+            ExpandAllCommand = new RelayCommand(ExpandAll);
         }
 
         private void LoadServicesAndModules()
@@ -115,6 +128,22 @@ namespace Simplic.ServicePlatform.UI
             RaisePropertyChanged(nameof(Services));
             SelectedServiceCard = null;
         }
+
+        private void CollapseAll(object obj)
+        {
+            foreach (ServiceDefinitionViewModel model in Services)
+            {
+                CollapseEvent?.Invoke(this, new CollapseEventArgs(model));
+            }
+        }
+        private void ExpandAll(object obj)
+        {
+            foreach (ServiceDefinitionViewModel model in Services)
+            {
+                ExpandEvent?.Invoke(this, new CollapseEventArgs(model));
+            }
+        }
+
 
         private void Save(object obj)
         {
@@ -255,6 +284,16 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
+        /// Will be invoked when a card should be collapsed
+        /// </summary>
+        public event CollapseEventHandler CollapseEvent;
+
+        /// <summary>
+        /// Will be invoked when a card should be expanded
+        /// </summary>
+        public event CollapseEventHandler ExpandEvent;
+
+        /// <summary>
         /// Gets or sets the command for saving.
         /// </summary>
         public ICommand SaveCommand { get; set; }
@@ -268,6 +307,16 @@ namespace Simplic.ServicePlatform.UI
         /// Gets or sets the command for deleting a card.
         /// </summary>
         public ICommand DeleteCardCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for collapsing all cards.
+        /// </summary>
+        public ICommand CollapseAllCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for expanding all cards.
+        /// </summary>
+        public ICommand ExpandAllCommand { get; set; }
 
         /// <summary>
         /// Gets or sets the service search term.
@@ -298,13 +347,13 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
-        /// Gets or sets the available modules collection view
-        /// </summary>
-        public ICollectionView AvailableModulesCollectionView { get; set; }
-
-        /// <summary>
         /// Gets or sets the services collection view
         /// </summary>
         public ICollectionView ServicesCollectionView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available modules collection view
+        /// </summary>
+        public ICollectionView AvailableModulesCollectionView { get; set; }
     }
 }
