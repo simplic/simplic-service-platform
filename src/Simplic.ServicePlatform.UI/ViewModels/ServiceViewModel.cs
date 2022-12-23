@@ -142,24 +142,24 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
-        /// Collapses all service cards.
+        /// Collapses all visible service cards.
         /// </summary>
         /// <param name="obj"></param>
         private void CollapseAll(object obj)
         {
-            foreach (ServiceDefinitionViewModel model in Services)
+            foreach (ServiceDefinitionViewModel model in ServicesCollectionView)
             {
                 CollapseEvent?.Invoke(this, new CollapseEventArgs(model));
             }
         }
 
         /// <summary>
-        /// Expands all service cards.
+        /// Expands all visible service cards.
         /// </summary>
         /// <param name="obj"></param>
         private void ExpandAll(object obj)
         {
-            foreach (ServiceDefinitionViewModel model in Services)
+            foreach (ServiceDefinitionViewModel model in ServicesCollectionView)
             {
                 ExpandEvent?.Invoke(this, new CollapseEventArgs(model));
             }
