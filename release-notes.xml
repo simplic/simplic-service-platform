@@ -2,4 +2,8 @@
   <ChangeSet guid="c13770a2-4fc9-4a28-8595-fe90caf8a0c2" version="1.0.43700.323" date="2022-04-08">
     <change type="bug">Fixed bug where renaming would not be automatically applied.</change>
   </ChangeSet>
+  <ChangeSet>
+    <Change type="enhancement">Adds a searchbar for AppServers in the AppServer modules view</Change>
+    <Change type="enhancement">Adds buttons to collapse/expand all AppServers int the AppServer modules view</Change>
+  </ChangeSet>
 </ReleaseNotes>
