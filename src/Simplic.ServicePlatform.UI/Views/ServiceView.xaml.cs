@@ -61,6 +61,7 @@ namespace Simplic.ServicePlatform.UI
             {
                 Text = "Collapse All",
                 Size = ButtonSize.Large,
+                LargeIconName = "usermanagement_collapse_all_32x",
                 TextLocalizationKey = "ssp_collapse_all"
             };
 
@@ -70,6 +71,7 @@ namespace Simplic.ServicePlatform.UI
             {
                 Text = "Expand All",
                 Size = ButtonSize.Large,
+                LargeIconName = "usermanagement_expand_all_32x",
                 TextLocalizationKey = "ssp_expand_all"
             };
 
