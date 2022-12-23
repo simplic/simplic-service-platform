@@ -60,7 +60,7 @@ namespace Simplic.ServicePlatform.UI
             collapseAllButton = new RibbonButton
             {
                 Text = "Collapse All",
-                Size = ButtonSize.Small,
+                Size = ButtonSize.Large,
                 TextLocalizationKey = "ssp_collapse_all"
             };
 
@@ -69,7 +69,7 @@ namespace Simplic.ServicePlatform.UI
             expandAllButton = new RibbonButton
             {
                 Text = "Expand All",
-                Size = ButtonSize.Small,
+                Size = ButtonSize.Large,
                 TextLocalizationKey = "ssp_expand_all"
             };
 
