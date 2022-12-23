@@ -75,21 +75,21 @@ namespace Simplic.ServicePlatform.UI
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
                 AvailableModules = new ObservableCollection<ModuleDefinition>((await serviceClient.GetAllModules()).OrderBy(x => x.Name));
 
                 AvailableModulesCollectionView = CollectionViewSource.GetDefaultView(AvailableModules);
                 AvailableModulesCollectionView.Filter = FilterModule;
-            }).ContinueWith(o =>
-            {
+
+                RaisePropertyChanged(nameof(AvailableModules));
+
+                availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
                 Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)).OrderBy(x => x.Model.ServiceName));
 
                 ServicesCollectionView = CollectionViewSource.GetDefaultView(Services);
                 ServicesCollectionView.Filter = FilterService;
 
                 UpdateServiceModules();
-                RaisePropertyChanged(nameof(Services));
-                RaisePropertyChanged(nameof(AvailableModules));
+                RaisePropertyChanged(nameof(ServicesCollectionView));
             });
         }
 
@@ -124,9 +124,12 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="obj"></param>
         private void AddCard(object obj)
         {
-            var newServiceCard = new ServiceDefinitionViewModel(new ServiceDefinition(), this);
-            Services.Add(newServiceCard);
-            SelectedServiceCard = newServiceCard;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var newServiceCard = new ServiceDefinitionViewModel(new ServiceDefinition(), this);
+                Services.Add(newServiceCard);
+                SelectedServiceCard = newServiceCard;
+            });
         }
 
         /// <summary>
@@ -135,10 +138,13 @@ namespace Simplic.ServicePlatform.UI
         /// <param name="obj"></param>
         private void DeleteCard(object obj)
         {
-            Services.Remove(SelectedServiceCard);
-            servicesToRemove.Add(new ServiceDefinitionViewModel(SelectedServiceCard.Model, this));
-            RaisePropertyChanged(nameof(Services));
-            SelectedServiceCard = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Services.Remove(SelectedServiceCard);
+                servicesToRemove.Add(new ServiceDefinitionViewModel(SelectedServiceCard.Model, this));
+                RaisePropertyChanged(nameof(Services));
+                SelectedServiceCard = null;
+            });
         }
 
         /// <summary>
@@ -234,6 +240,7 @@ namespace Simplic.ServicePlatform.UI
         private void UpdateServicesView()
         {
             ServicesCollectionView?.Refresh();
+            RaisePropertyChanged(nameof(ServicesCollectionView));
         }
 
         /// <summary>
