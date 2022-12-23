@@ -159,7 +159,7 @@
                     <RowDefinition Height="28"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <telerik:Label Content="{simplic:Localization Key=xaml_available_modules}"/>
+                <telerik:Label Content="{simplic:Localization Key=ssp_available_modules}"/>
                 <telerik:RadWatermarkTextBox Text="{Binding ModuleSearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              WatermarkContent="{simplic:Localization Key=search}" Grid.Row="1"/>
                 <telerik:RadListBox Grid.Row="2"
