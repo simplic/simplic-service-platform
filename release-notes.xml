@@ -3,7 +3,7 @@
     <change type="bug">Fixed bug where renaming would not be automatically applied.</change>
   </ChangeSet>
   <ChangeSet>
-    <Change type="enhancement">Adds a searchbar for AppServers in the AppServer modules view</Change>
-    <Change type="enhancement">Adds buttons to collapse/expand all AppServers int the AppServer modules view</Change>
+    <Change type="enhancement">Adds a searchbar for AppServers in the AppServer modules view.</Change>
+    <Change type="enhancement">Adds buttons to collapse/expand all AppServers int the AppServer modules view.</Change>
   </ChangeSet>
 </ReleaseNotes>
