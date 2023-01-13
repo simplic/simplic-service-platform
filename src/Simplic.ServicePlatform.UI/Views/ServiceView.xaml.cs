@@ -39,7 +39,6 @@ namespace Simplic.ServicePlatform.UI
 
             addCardButton = new RibbonButton
             {
-                Text = "Add",
                 Size = ButtonSize.Large,
                 LargeIconName = "service_add_32x",
                 TextLocalizationKey = "xaml_add"
@@ -49,7 +48,6 @@ namespace Simplic.ServicePlatform.UI
 
             removeCardButton = new RibbonButton
             {
-                Text = "Remove",
                 Size = ButtonSize.Large,
                 LargeIconName = "delete_32x",
                 TextLocalizationKey = "kanban_remove"
@@ -59,7 +57,6 @@ namespace Simplic.ServicePlatform.UI
 
             collapseAllButton = new RibbonButton
             {
-                Text = "Collapse All",
                 Size = ButtonSize.Large,
                 LargeIconName = "usermanagement_collapse_all_32x",
                 TextLocalizationKey = "ssp_collapse_all"
@@ -69,7 +66,6 @@ namespace Simplic.ServicePlatform.UI
 
             expandAllButton = new RibbonButton
             {
-                Text = "Expand All",
                 Size = ButtonSize.Large,
                 LargeIconName = "usermanagement_expand_all_32x",
                 TextLocalizationKey = "ssp_expand_all"
