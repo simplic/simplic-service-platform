@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\CopyItemDragDropBehavior.cs" />
     <Compile Include="Behaviors\UniqueServiceModuleDragDropBehavior.cs" />
+    <Compile Include="CollapseEventArgs.cs" />
     <Compile Include="Converters\CollectionToInvisibilityConverter.cs" />
     <Compile Include="Converters\CollectionToVisibilityConverter.cs" />
     <Compile Include="Converters\ModuleDataConverter.cs" />

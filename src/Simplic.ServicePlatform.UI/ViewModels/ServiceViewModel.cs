@@ -12,28 +12,18 @@ using Simplic.Studio.UI;
 
 namespace Simplic.ServicePlatform.UI
 {
-    public class CollapseEventArgs : EventArgs
-    {
-        public CollapseEventArgs(ServiceDefinitionViewModel service)
-        {
-            Service = service;
-        }
-
-        public ServiceDefinitionViewModel Service { get; set; }
-    }
-
-    /// <summary>
-    /// Used for the Collapse/Expand event.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
-    public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
-
     /// <summary>
     /// View model for the service.
     /// </summary>
     public class ServiceViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Used for the Collapse/Expand event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
+
         private readonly IServiceClient serviceClient;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
