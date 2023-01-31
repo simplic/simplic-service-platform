@@ -4,6 +4,6 @@
   </ChangeSet>
   <ChangeSet>
     <Change type="enhancement">Adds a searchbar for AppServers in the AppServer modules view.</Change>
-    <Change type="enhancement">Adds buttons to collapse/expand all AppServers int the AppServer modules view.</Change>
+    <Change type="enhancement">Adds buttons to collapse/expand all AppServers in the AppServer modules view.</Change>
   </ChangeSet>
 </ReleaseNotes>
