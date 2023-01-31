@@ -7,6 +7,10 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public class CollapseEventArgs : EventArgs
     {
+        /// <summary>
+        /// Instantiates new Collapse/Expand event Arguments
+        /// </summary>
+        /// <param name="service"></param>
         public CollapseEventArgs(ServiceDefinitionViewModel service)
         {
             Service = service;
