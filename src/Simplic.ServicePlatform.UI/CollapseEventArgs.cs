@@ -12,6 +12,9 @@ namespace Simplic.ServicePlatform.UI
             Service = service;
         }
 
+        /// <summary>
+        /// Gets or sets the service view model that has ben collapsed/expanded
+        /// </summary>
         public ServiceDefinitionViewModel Service { get; set; }
 
     }

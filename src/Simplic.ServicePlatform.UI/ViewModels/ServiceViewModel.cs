@@ -17,13 +17,6 @@ namespace Simplic.ServicePlatform.UI
     /// </summary>
     public class ServiceViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Used for the Collapse/Expand event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
-
         private readonly IServiceClient serviceClient;
         private ServiceDefinitionViewModel selectedServiceCard;
         private ModuleDefinition selectedAvailableModule;
@@ -51,6 +44,13 @@ namespace Simplic.ServicePlatform.UI
             moduleFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
             moduleFilterTimer.Tick += ModuleFilterTimerTick;
         }
+
+        /// <summary>
+        /// Used for the Collapse/Expand event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
 
         private void InitializeCommands()
         {
