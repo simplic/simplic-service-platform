@@ -13,6 +13,5 @@ namespace Simplic.ServicePlatform.UI
         }
 
         public ServiceDefinitionViewModel Service { get; set; }
-
     }
 }
