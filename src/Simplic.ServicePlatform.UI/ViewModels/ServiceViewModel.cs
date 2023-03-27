@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Simplic.Localization;
 using Simplic.Studio.UI;
 
 namespace Simplic.ServicePlatform.UI
@@ -25,9 +23,10 @@ namespace Simplic.ServicePlatform.UI
         private ObservableCollection<ServiceDefinition> availableServiceDefinitions;
         private readonly List<ServiceDefinitionViewModel> servicesToRemove;
         private UIElement focusedElement;
-        private string searchTerm;
-        private readonly DispatcherTimer filterTimer;
-        private int keyCounter;
+        private string serviceSearchTerm;
+        private string moduleSearchTerm;
+        private readonly DispatcherTimer serviceFilterTimer;
+        private readonly DispatcherTimer moduleFilterTimer;
 
         /// <summary>
         /// Instantiates the view model.
@@ -40,33 +39,47 @@ namespace Simplic.ServicePlatform.UI
             servicesToRemove = new List<ServiceDefinitionViewModel>();
             InitializeCommands();
             LoadServicesAndModules();
-            filterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.2) };
-            filterTimer.Tick += Timer_Tick;
-            keyCounter = 0;
+            serviceFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
+            serviceFilterTimer.Tick += ServiceFilterTimerTick;
+            moduleFilterTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
+            moduleFilterTimer.Tick += ModuleFilterTimerTick;
         }
+
+        /// <summary>
+        /// Used for the Collapse/Expand event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public delegate void CollapseEventHandler(object sender, CollapseEventArgs args);
 
         private void InitializeCommands()
         {
             AddCardCommand = new RelayCommand(AddCard);
             SaveCommand = new RelayCommand(Save);
             DeleteCardCommand = new RelayCommand(DeleteCard, o => SelectedServiceCard != null);
+            CollapseAllCommand = new RelayCommand(CollapseAll);
+            ExpandAllCommand = new RelayCommand(ExpandAll);
         }
 
         private void LoadServicesAndModules()
         {
             Application.Current.Dispatcher.Invoke(async () =>
             {
-                availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
                 AvailableModules = new ObservableCollection<ModuleDefinition>((await serviceClient.GetAllModules()).OrderBy(x => x.Name));
 
                 AvailableModulesCollectionView = CollectionViewSource.GetDefaultView(AvailableModules);
-                AvailableModulesCollectionView.Filter = FilterModules;
-            }).ContinueWith(o =>
-            {
-                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)).OrderBy(x => x.Model.ServiceName));
-                UpdateServiceModules();
-                RaisePropertyChanged(nameof(Services));
+                AvailableModulesCollectionView.Filter = FilterModule;
+
                 RaisePropertyChanged(nameof(AvailableModules));
+
+                availableServiceDefinitions = new ObservableCollection<ServiceDefinition>(await serviceClient.GetAllServices());
+                Services = new ObservableCollection<ServiceDefinitionViewModel>(availableServiceDefinitions.Select(m => new ServiceDefinitionViewModel(m, this)).OrderBy(x => x.Model.ServiceName));
+
+                ServicesCollectionView = CollectionViewSource.GetDefaultView(Services);
+                ServicesCollectionView.Filter = FilterService;
+
+                UpdateServiceModules();
+                RaisePropertyChanged(nameof(ServicesCollectionView));
             });
         }
 
@@ -95,21 +108,63 @@ namespace Simplic.ServicePlatform.UI
             return configurations.Select(config => new ServiceModuleConfiguration { Name = config.Name, Value = config.Default }).ToList();
         }
 
+        /// <summary>
+        /// Adds a new service.
+        /// </summary>
+        /// <param name="obj"></param>
         private void AddCard(object obj)
         {
-            var newServiceCard = new ServiceDefinitionViewModel(new ServiceDefinition(), this);
-            Services.Add(newServiceCard);
-            SelectedServiceCard = newServiceCard;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var newServiceCard = new ServiceDefinitionViewModel(new ServiceDefinition(), this);
+                Services.Add(newServiceCard);
+                SelectedServiceCard = newServiceCard;
+            });
         }
 
+        /// <summary>
+        /// Removes a service.
+        /// </summary>
+        /// <param name="obj"></param>
         private void DeleteCard(object obj)
         {
-            Services.Remove(SelectedServiceCard);
-            servicesToRemove.Add(new ServiceDefinitionViewModel(SelectedServiceCard.Model, this));
-            RaisePropertyChanged(nameof(Services));
-            SelectedServiceCard = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Services.Remove(SelectedServiceCard);
+                servicesToRemove.Add(new ServiceDefinitionViewModel(SelectedServiceCard.Model, this));
+                RaisePropertyChanged(nameof(Services));
+                SelectedServiceCard = null;
+            });
         }
 
+        /// <summary>
+        /// Collapses all visible service cards.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CollapseAll(object obj)
+        {
+            foreach (ServiceDefinitionViewModel model in ServicesCollectionView)
+            {
+                CollapseEvent?.Invoke(this, new CollapseEventArgs(model));
+            }
+        }
+
+        /// <summary>
+        /// Expands all visible service cards.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ExpandAll(object obj)
+        {
+            foreach (ServiceDefinitionViewModel model in ServicesCollectionView)
+            {
+                ExpandEvent?.Invoke(this, new CollapseEventArgs(model));
+            }
+        }
+
+        /// <summary>
+        /// Saves changes.
+        /// </summary>
+        /// <param name="obj"></param>
         private void Save(object obj)
         {
             var errors = false;
@@ -128,7 +183,7 @@ namespace Simplic.ServicePlatform.UI
             }
 
             RemoveServices();
-            
+
             if (errors) LocalizedMessageBox.Show("error_save_services", "Error", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -138,6 +193,9 @@ namespace Simplic.ServicePlatform.UI
                 servicesToRemove.Add(new ServiceDefinitionViewModel(new ServiceDefinition { ServiceName = service.OldServiceName }, this));
         }
 
+        /// <summary>
+        /// Removes services marked for removal.
+        /// </summary>
         private void RemoveServices()
         {
             foreach (var service in servicesToRemove)
@@ -146,34 +204,65 @@ namespace Simplic.ServicePlatform.UI
             }
         }
 
-        private async void Timer_Tick(object sender, EventArgs e)
+        private void ServiceFilterTimerTick(object sender, EventArgs e)
         {
-            keyCounter++;
-
-            if (keyCounter >= 2)
-            {
-                await UpdateAvailableModulesView();
-                keyCounter = 0;
-                filterTimer.Stop();
-            }
+            UpdateServicesView();
+            serviceFilterTimer.Stop();
         }
 
-        private Task UpdateAvailableModulesView()
+        private void ModuleFilterTimerTick(object sender, EventArgs e)
+        {
+            UpdateAvailableModulesView();
+            moduleFilterTimer.Stop();
+        }
+
+        /// <summary>
+        /// Updates the filtered list of available modules.
+        /// </summary>
+        private void UpdateAvailableModulesView()
         {
             AvailableModulesCollectionView?.Refresh();
-
-            return Task.CompletedTask;
         }
 
-        private bool FilterModules(object obj)
+        /// <summary>
+        /// Updates the filtered list of services.
+        /// </summary>
+        private void UpdateServicesView()
         {
-            if (string.IsNullOrWhiteSpace(SearchTerm))
+            ServicesCollectionView?.Refresh();
+            RaisePropertyChanged(nameof(ServicesCollectionView));
+        }
+
+        /// <summary>
+        /// Checks whether the service matches the search term.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private bool FilterService(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(ServiceSearchTerm))
+                return true;
+
+            if (!(obj is ServiceDefinitionViewModel serviceDefinition))
+                return false;
+
+            return serviceDefinition.ServiceName.ToLower().Contains(ServiceSearchTerm.ToLower());
+        }
+
+        /// <summary>
+        /// Checks whether the module matches the search term.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private bool FilterModule(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(ModuleSearchTerm))
                 return true;
 
             if (!(obj is ModuleDefinition moduleDefinition))
                 return true;
 
-            return moduleDefinition.Name.Contains(SearchTerm);
+            return moduleDefinition.Name.Contains(ModuleSearchTerm);
         }
 
         /// <summary>
@@ -235,6 +324,16 @@ namespace Simplic.ServicePlatform.UI
         }
 
         /// <summary>
+        /// Will be invoked when a card should be collapsed.
+        /// </summary>
+        public event CollapseEventHandler CollapseEvent;
+
+        /// <summary>
+        /// Will be invoked when a card should be expanded.
+        /// </summary>
+        public event CollapseEventHandler ExpandEvent;
+
+        /// <summary>
         /// Gets or sets the command for saving.
         /// </summary>
         public ICommand SaveCommand { get; set; }
@@ -250,21 +349,50 @@ namespace Simplic.ServicePlatform.UI
         public ICommand DeleteCardCommand { get; set; }
 
         /// <summary>
-        /// Gets or sets the search term.
+        /// Gets or sets the command for collapsing all service cards.
         /// </summary>
-        public string SearchTerm
+        public ICommand CollapseAllCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the command for expanding all service cards.
+        /// </summary>
+        public ICommand ExpandAllCommand { get; set; }
+
+        /// <summary>
+        /// Gets or sets the service search term.
+        /// </summary>
+        public string ServiceSearchTerm
         {
-            get => searchTerm;
+            get => serviceSearchTerm;
             set
             {
-                searchTerm = value;
-                RaisePropertyChanged(nameof(SearchTerm));
-                filterTimer.Start();
+                serviceSearchTerm = value;
+                RaisePropertyChanged(nameof(ServiceSearchTerm));
+                serviceFilterTimer.Start();
             }
         }
 
         /// <summary>
-        /// Gets or sets the available modules collection view
+        /// Gets or sets the module search term.
+        /// </summary>
+        public string ModuleSearchTerm
+        {
+            get => moduleSearchTerm;
+            set
+            {
+                moduleSearchTerm = value;
+                RaisePropertyChanged(nameof(ModuleSearchTerm));
+                moduleFilterTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the services collection view.
+        /// </summary>
+        public ICollectionView ServicesCollectionView { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available modules collection view.
         /// </summary>
         public ICollectionView AvailableModulesCollectionView { get; set; }
     }
